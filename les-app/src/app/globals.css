@@ -1,42 +1,57 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  background-color: #D3D3D3;
+  color: #1E1E1E;
+  font-family: Arial, sans-serif;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.btn-primary {
+  background-color: #7B001C;
+  border-color: #7B001C;
+  color: #FFFFFF;
+}
+.btn-secondary {
+  background-color: #C49A3A;
+  border-color: #C49A3A;
+  color: #1E1E1E;
+}
+.btn-success {
+  background-color: #008000;
+  border-color: #008000;
+  color: #FFFFFF;
+}
+.btn-error {
+  background-color: #7B001C;
+  border-color: #7B001C;
+  color: #FFFFFF;
+}
+.btn-warning {
+  background-color: #FFFF00;
+  border-color: #FFFF00;
+  color: #1E1E1E;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+.card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.text-primary {
+  color: #7B001C;
 }
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.text-secondary {
+  color: #C49A3A;
 }
+.text-success {
+  color: #008000;
+}
+.text-error {
+  color: #7B001C;
+}
+.text-warning {
+  color: #FFFF00;
+}
+.text-inactive {
+  color: #D3D3D3;
+}/*# sourceMappingURL=globals.css.map */
