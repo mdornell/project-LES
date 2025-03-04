@@ -1,1 +1,84 @@
 /* You can add global styles to this file, and also import other style files */
+$primary: #7B001C;
+$secondary: #C49A3A;
+$neutral: #A9A9A9;
+$black: #1E1E1E;
+$white: #FFFFFF;
+$background: #D3D3D3;
+$success: #008000;
+$error: #7B001C;
+$warning: #FFFF00;
+$inactive: #D3D3D3;
+
+body {
+    padding: 0;
+    margin: 0;
+    background-color: $background;
+    color: $black;
+    font-family: Arial, sans-serif;
+}
+
+.btn {
+    &-primary {
+        background-color: $primary;
+        border-color: $primary;
+        color: $white;
+    }
+
+    &-secondary {
+        background-color: $secondary;
+        border-color: $secondary;
+        color: $black;
+    }
+
+    &-success {
+        background-color: $success;
+        border-color: $success;
+        color: $white;
+    }
+
+    &-error {
+        background-color: $error;
+        border-color: $error;
+        color: $white;
+    }
+
+    &-warning {
+        background-color: $warning;
+        border-color: $warning;
+        color: $black;
+    }
+}
+
+.card {
+    background-color: $white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.text {
+    &-primary {
+        color: $primary;
+    }
+
+    &-secondary {
+        color: $secondary;
+    }
+
+    &-success {
+        color: $success;
+    }
+
+    &-error {
+        color: $error;
+    }
+
+    &-warning {
+        color: $warning;
+    }
+
+    &-inactive {
+        color: $inactive;
+    }
+}
