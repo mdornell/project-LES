@@ -4,13 +4,13 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
     ports:
       - "5432:5432"
     networks:
       - postgres_network
+    volumes:
+      - C:\Users\Marco\Documents\PostgreSQL\dockerPostgres:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -24,6 +24,8 @@ services:
       - postgres
     networks:
       - postgres_network
+    volumes:
+      - C:\Users\Marco\Documents\PostgreSQL\dockerPgAdmin:/var/lib/pgadmin
 
 networks:
   postgres_network:
