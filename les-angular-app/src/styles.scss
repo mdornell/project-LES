@@ -58,6 +58,11 @@ body {
 }
 
 .text {
+    &-link {
+        color: $black;
+        text-decoration: none;
+    }
+
     &-primary {
         color: $primary;
     }
