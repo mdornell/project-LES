@@ -1,0 +1,35 @@
+<div *ngIf="usuarios as usuarios">
+    <table class="table table-bordered">
+        <!-- Table Header -->
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" class="col-10">Nome</th>
+                <th scope="col" class="text-center">
+                    <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um usuario">
+                        <i class="bi bi-person-plus"></i>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody>
+            <tr *ngFor="let element of usuarios">
+
+                <!-- Nome Column -->
+                <td class="col-10">{{element.nome}}</td>
+
+                <!-- Ações Column -->
+                <td class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-sm btn-primary px-4" (click)="onEdit(element)"
+                        aria-label="Editar um usuario">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger px-4" aria-label="Remover um Ator"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(element)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

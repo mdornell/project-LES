@@ -18,7 +18,8 @@
                         <p>Esqueceu sua senha ?</p>
                     </a>
                 </div>
-                <button class="btn btn-login w-100 text-center" [routerLink]="['/home']">Entrar</button>
+                <button class="btn btn-login w-100 text-center" (click)="loginActivate()"
+                    [routerLink]="['/usuario']">Entrar</button>
             </form>
         </div>
     </div>
