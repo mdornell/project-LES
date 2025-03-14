@@ -2,6 +2,7 @@ package com.example.les_api.domain.usuario;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import com.example.les_api.domain.UsuarioRole;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Data
 public class Usuario implements UserDetails {
 
     @Id
@@ -30,6 +32,9 @@ public class Usuario implements UserDetails {
 
     @Column(nullable = false)
     private String senha;
+
+    @Column(nullable = false)
+    private String nome;
 
     private UsuarioRole role;
 
