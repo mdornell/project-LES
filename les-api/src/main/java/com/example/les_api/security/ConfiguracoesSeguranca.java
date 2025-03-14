@@ -1,9 +1,7 @@
 package com.example.les_api.security;
 
 import com.example.les_api.service.AutorizacaoService;
-
-import java.net.Authenticator;
-
+import com.example.les_api.service.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,26 +19,27 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ConfiguracoesSeguranca {
 
     private final AutorizacaoService autorizacaoService;
+    private final TokenService tokenService;
 
-    ConfiguracoesSeguranca(AutorizacaoService autorizacaoService) {
+    ConfiguracoesSeguranca(AutorizacaoService autorizacaoService, TokenService tokenService) {
         this.autorizacaoService = autorizacaoService;
+        this.tokenService = tokenService;
     }
-    
+
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/usuarios").hasRole("ADMIN")
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/cadastrar").permitAll()
                 .anyRequest().authenticated()
             )
             .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
