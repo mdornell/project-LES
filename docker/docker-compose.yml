@@ -10,7 +10,8 @@ services:
     networks:
       - postgres_network
     volumes:
-      - C:\Users\Ronan\Documents\Docker\Postgres:/var/lib/postgresql/data
+      - C:\Users\Marco\Documents\PostgreSQL\dockerPostgres:/var/lib/postgresql/data
+      # - C:\Users\Ronan\Documents\Docker\Postgres:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -25,7 +26,8 @@ services:
     networks:
       - postgres_network
     volumes:
-      - C:\Users\Ronan\Documents\Docker\PgAdim:/var/lib/pgadmin
+      - C:\Users\Marco\Documents\PostgreSQL\dockerPgAdmin:/var/lib/pgadmin
+      # - C:\Users\Ronan\Documents\Docker\PgAdim:/var/lib/pgadmin
 
 networks:
   postgres_network:

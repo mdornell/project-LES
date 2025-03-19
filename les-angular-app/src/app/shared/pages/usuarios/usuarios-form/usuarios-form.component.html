@@ -4,11 +4,34 @@
         <div class="card-body">
             <h5 class="card-title">Adicionar usuarios</h5>
             <form [formGroup]="form">
+                <!-- Nome -->
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome:</label>
-                    <input type="text" class="form-control" formControlName="nome" pattern="^[A-Za-zÀ-ÿ\s]+$"
+                    <input type="text" class="form-control" id="nome" formControlName="nome" pattern="^[A-Za-zÀ-ÿ\s]+$"
                         title="Apenas letras são permitidas." minlength="3" maxlength="150" required />
                 </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" formControlName="email"
+                        title="Insira um email válido." required />
+                </div>
+
+                <!-- Senha -->
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha:</label>
+                    <input type="password" class="form-control" id="senha" formControlName="senha" minlength="6"
+                        maxlength="150" required />
+                </div>
+
+                <!-- Data Aniversario -->
+                <div class="mb-3">
+                    <label for="dataAniversario" class="form-label">Data de Aniversário:</label>
+                    <input type="date" class="form-control" id="dataAniversario" formControlName="dataAniversario"
+                        required />
+                </div>
+
                 <div class="d-flex justify-content-center">
                     <button (click)="onSubmit()" class="btn btn-primary mx-2" [disabled]="form.invalid">Inserir</button>
                     <button (click)="onCancel()" class="btn btn-secondary mx-2">Cancelar</button>

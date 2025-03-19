@@ -29,7 +29,10 @@ export class UsuariosFormComponent implements OnInit {
     ) {
         this.form = this.fb.group({
             _id: [0],
-            nome: ['']
+            nome: [''],
+            email: [''],
+            senha: [''],
+            dataNascimento: [''],
         });
     }
 
@@ -37,7 +40,10 @@ export class UsuariosFormComponent implements OnInit {
         const usuario: Usuario = this.route.snapshot.data['usuario'];
         this.form.setValue({
             _id: usuario._id,
-            nome: usuario.nome
+            nome: usuario.nome,
+            email: usuario.email,
+            senha: usuario.senha,
+            dataNascimento: usuario.dataNascimento,
         });
     }
 
