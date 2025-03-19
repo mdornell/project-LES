@@ -1,7 +1,9 @@
 package com.example.les_api.security;
 
-import com.example.les_api.service.AutorizacaoService;
+import com.example.les_api.service.CustomUserDetailsService;
 import com.example.les_api.service.TokenService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,38 +15,39 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class ConfiguracoesSeguranca {
 
-    private final AutorizacaoService autorizacaoService;
-    private final TokenService tokenService;
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
-    ConfiguracoesSeguranca(AutorizacaoService autorizacaoService, TokenService tokenService) {
-        this.autorizacaoService = autorizacaoService;
-        this.tokenService = tokenService;
-    }
+    @Autowired
+    FiltroSeguranca filtro;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/cadastrar").permitAll()
-                .anyRequest().authenticated()
-            )
-            .build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(filtro, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
