@@ -1,0 +1,45 @@
+<div class="d-flex vh-100 bg-light">
+    <!-- Sidebar -->
+    <aside class="d-flex flex-column p-3 bg-white shadow h-100" style="width: 250px;">
+        <div class="d-flex justify-content-center mb-3">
+            <a href="/home">
+                <img src="/assets/img/logo.png" alt="Logo" class="rounded-circle" width="50" height="50">
+            </a>
+        </div>
+
+        <nav>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-dark fw-bold">
+                        <i class="bi bi-box"></i> Produtos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active fw-bold">
+                        <i class="bi bi-person"></i> Clientes
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <hr>
+
+        <ul class="nav flex-column small">
+            <li><a href="home/user" class="nav-link text-secondary buttom">Funcionários</a></li>
+            <li><a href="#" class="nav-link text-secondary">Clientes em aberto</a></li>
+            <li><a href="#" class="nav-link text-secondary">Consumo diário</a></li>
+            <li><a href="#" class="nav-link text-secondary">Clientes diário</a></li>
+            <li><a href="#" class="nav-link text-secondary">Aniversariantes do dia</a></li>
+            <li><a href="#" class="nav-link text-secondary">Ticket médio</a></li>
+            <li><a href="#" class="nav-link text-secondary">Última compra</a></li>
+            <li><a href="#" class="nav-link text-secondary">Relatório de produto</a></li>
+            <li><a href="#" class="nav-link text-secondary">Controle de saída</a></li>
+            <li><a href="#" class="nav-link text-secondary">DRE Diário</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="justify-content-center flex-grow-1 mg-3 p-3 bg-light">
+        <router-outlet></router-outlet>
+    </main>
+</div>

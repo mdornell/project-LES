@@ -1,0 +1,11 @@
+@import "../../styles/variables.scss";
+
+aside {
+    .nav-link.active {
+        color: $black !important;
+    }
+
+    .nav-link:hover {
+        color: $black !important;
+    }
+}

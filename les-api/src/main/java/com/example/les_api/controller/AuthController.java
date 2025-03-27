@@ -27,21 +27,21 @@ public class AuthController {
     private final TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        Usuario usuario = this.usuarioRepository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
-        if(passwordEncoder.matches(body.senha(), usuario.getPassword())) {
+    public ResponseEntity login(@RequestBody LoginRequestDTO body) {
+        Usuario usuario = this.usuarioRepository.findByEmail(body.email())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (passwordEncoder.matches(body.senha(), usuario.getPassword())) {
             String token = this.tokenService.generateToken(usuario);
             return ResponseEntity.ok(new ResponseDTO(usuario.getName(), token));
         }
         return ResponseEntity.badRequest().build();
     }
 
-
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
+    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
         Optional<Usuario> usuario = this.usuarioRepository.findByEmail(body.email());
 
-        if(usuario.isEmpty()) {
+        if (usuario.isEmpty()) {
             Usuario novoUsuario = new Usuario();
             novoUsuario.setPassword(passwordEncoder.encode(body.senha()));
             novoUsuario.setEmail(body.email());

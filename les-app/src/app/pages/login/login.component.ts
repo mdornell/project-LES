@@ -36,18 +36,23 @@ export class LoginComponent {
         this.loginForm = new FormGroup({
             email: new FormControl('', [Validators.required, Validators.email]),
             password: new FormControl('', [Validators.required, Validators.minLength(6)])
-        })
+        });
     }
 
     submit() {
-        console.log(this.loginForm.value)
         this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-            next: () => this.toastService.success("Login feito com sucesso!"),
+            next: (response) => {
+                const token = response.token; // Supondo que o token está na propriedade 'token' da resposta
+                localStorage.setItem('auth-token', token); // Armazena o token no localStorage
+                this.toastService.success("Login feito com sucesso!");
+                this.router.navigate(["/home"]); // Redirecionamento após login
+            },
             error: () => this.toastService.error("Erro inesperado! Tente novamente mais tarde")
-        })
+        });
     }
 
     navigate() {
-        this.router.navigate(["signup"])
+        localStorage.removeItem('authToken'); // Remove o token do localStorage
+        this.router.navigate(["/signup"]);
     }
 }

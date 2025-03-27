@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { take } from 'rxjs';
 import { Usuario } from '../types/usuario';
@@ -9,12 +9,12 @@ import { Usuario } from '../types/usuario';
 })
 export class UsuarioService {
 
-    private readonly urlUsuario = 'api/usuario';
+    private readonly urlUsuario = 'http://localhost:8080/funcionario';
 
     constructor(private httpCliente: HttpClient) { }
 
     list() {
-        return this.httpCliente.get<Usuario[]>(this.urlUsuario + '/list');
+        return this.httpCliente.get<Usuario[]>(this.urlUsuario, { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') });
     }
 
     listById(id: number) {
