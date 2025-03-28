@@ -21,8 +21,8 @@ export const routes: Routes = [
         children: [
             { path: '', component: WelcomeComponent },
             { path: 'user', component: UsuariosComponent },
-            { path: 'user/new', component: UsuariosFormComponent, resolve: { ator: UsuarioResolver } },
-            { path: 'user/edit/:id', component: UsuariosFormComponent, resolve: { ator: UsuarioResolver } }
+            { path: 'user/new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
+            { path: 'user/edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } }
         ]
     }
 

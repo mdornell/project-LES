@@ -23,7 +23,7 @@ export class UsuarioService {
     }
 
     save(record: Partial<Usuario>) {
-        console.log(record._id);
+        console.log("ID USER: " + record._id);
         if (record._id) {
             return this.update(record);
         }
@@ -35,7 +35,7 @@ export class UsuarioService {
     }
 
     private update(record: Partial<Usuario>) {
-        return this.httpCliente.put(this.apiUrl + record._id, record, this.apiAuth).pipe(take(1));
+        return this.httpCliente.put(this.apiUrl + "/" + record._id, record, this.apiAuth).pipe(take(1));
     }
 
     remove(record: Usuario) {

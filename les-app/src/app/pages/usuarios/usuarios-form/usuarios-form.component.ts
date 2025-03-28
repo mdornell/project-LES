@@ -44,7 +44,7 @@ export class UsuariosFormComponent implements OnInit {
             _id: usuario._id,
             nome: usuario.nome,
             email: usuario.email,
-            senha: usuario.senha,
+            senha: '',
             cargo: usuario.cargo,
             codigoRFID: usuario.codigoRFID,
         });

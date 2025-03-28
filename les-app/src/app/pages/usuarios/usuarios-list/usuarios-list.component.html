@@ -4,10 +4,10 @@
         <thead class="table-dark">
             <tr>
                 <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-4">Nome</th>
+                <th scope="col" class="col-3">Nome</th>
                 <th scope="col" class="col-3">Email</th>
-                <th scope="col" class="col-3">Cargo</th>
-                <th scope="col" class="col-4">Código RFID</th>
+                <th scope="col" class="col-2">Cargo</th>
+                <th scope="col" class="col-2">Código RFID</th>
                 <th scope="col" class="text-center">
                     <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um usuario">
                         <i class="bi bi-person-plus"></i>
@@ -17,13 +17,13 @@
         </thead>
         <!-- Table Body -->
         <tbody>
-            <tr *ngFor="let element of usuarios">
+            <tr *ngFor="let element of usuarios | slice: 0:5">
 
-                <td class="col-1">{{element._id}}</td>
-                <td class="col-4">{{element.nome}}</td>
+                <td class="col-1 text-center">{{element._id}}</td>
+                <td class="col-3 text-truncate">{{element.nome}}</td>
                 <td class="col-3">{{element.email}}</td>
-                <td class="col-3">{{element.cargo}}</td>
-                <td class="col-4">{{element.codigoRFID}}</td>
+                <td class="col-2">{{element.cargo}}</td>
+                <td class="col-3 text-center">{{element.codigoRFID}}</td>
 
                 <!-- Ações Column -->
                 <td class="d-flex justify-content-center gap-2">
@@ -38,5 +38,6 @@
                 </td>
             </tr>
         </tbody>
+
     </table>
 </div>

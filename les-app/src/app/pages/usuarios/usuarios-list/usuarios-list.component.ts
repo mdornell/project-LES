@@ -37,4 +37,6 @@ export class UsuariosListComponent {
     onSelected(usuario: Usuario) {
         this.usuarioSelected.emit(usuario);
     }
+
+
 }

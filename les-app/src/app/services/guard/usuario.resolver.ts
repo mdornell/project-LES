@@ -12,9 +12,11 @@ export class UsuarioResolver implements Resolve<Usuario> {
     constructor(private service: UsuarioService) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<Usuario> {
-        console.log(route.params['id']);
         if (route.params && route.params['id']) {
-            return this.service.listById(route.params['id']);
+            return this.service.listById(route.params['id'])
+            // .pipe(
+            //     tap(usuario => console.log("Usuário carregado:", usuario))
+            // );
         }
         return of({
             _id: 0,
@@ -23,7 +25,7 @@ export class UsuarioResolver implements Resolve<Usuario> {
             senha: '',
             cargo: '',
             codigoRFID: ''
-        });
+        } as Usuario);
     }
 }
 
