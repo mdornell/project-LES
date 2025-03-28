@@ -37,6 +37,11 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarioService.buscarPorId(id));
     }
 
+    @GetMapping("/rfid/{rfid}")
+    public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable String rfid) {
+        return ResponseEntity.ok(funcionarioService.buscarPorRfid(rfid));
+    }
+
     @PostMapping
     public ResponseEntity<FuncionarioDTO> salvar(@RequestBody Funcionario funcionario) {
         return ResponseEntity.ok(funcionarioService.salvar(funcionario));

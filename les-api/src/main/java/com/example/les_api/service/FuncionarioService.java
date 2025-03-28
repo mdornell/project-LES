@@ -31,6 +31,12 @@ public class FuncionarioService {
         return new FuncionarioDTO(funcionario);
     }
 
+    public FuncionarioDTO buscarPorRfid(String rfid) {
+        Funcionario funcionario = funcionarioRepository.findByCodigoRFID(rfid)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        return new FuncionarioDTO(funcionario);
+    }
+
     public FuncionarioDTO salvar(Funcionario funcionario) {
         funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha())); // Criptografando a senha
         return new FuncionarioDTO(funcionarioRepository.save(funcionario));

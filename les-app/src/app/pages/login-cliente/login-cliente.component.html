@@ -1,0 +1,29 @@
+<div class="nfc-container d-flex justify-content-center align-items-center">
+    <div class="nfc-card text-center">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="assets/img/logo.png" alt="Logo" class="logo-image" width="50" height="50">
+            </div>
+        </div>
+        <form [formGroup]="rfidForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3 text-start">
+                <label for="rfid" class="form-label">RFID</label>
+                <input type="text" class="form-control" id="rfid" formControlName="rfid">
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="rfidForm.invalid">Entrar</button>
+        </form>
+
+        <!-- Exibir dados do usuário após a leitura -->
+        <div *ngIf="usuario" class="user-info mt-3">
+            <h4>Dados do Usuário</h4>
+            <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>RFID:</strong> {{ usuario.codigoRFID }}</p>
+        </div>
+
+        <!-- Exibir mensagem de erro caso não encontre usuário -->
+        <div *ngIf="erro" class="error-message mt-3">
+            <p class="text-danger">{{ erro }}</p>
+        </div>
+    </div>
+</div>
