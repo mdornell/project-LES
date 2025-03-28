@@ -19,10 +19,11 @@ export class UsuarioService {
     }
 
     listById(id: number) {
-        return this.httpCliente.get<Usuario>(this.apiUrl + '/list/' + id, this.apiAuth).pipe(take(1));
+        return this.httpCliente.get<Usuario>(this.apiUrl + "/" + id, this.apiAuth).pipe(take(1));
     }
 
     save(record: Partial<Usuario>) {
+        console.log(record._id);
         if (record._id) {
             return this.update(record);
         }
