@@ -9,7 +9,7 @@ import { Usuario } from '../types/usuario';
 })
 export class UsuarioService {
 
-    private readonly urlUsuario = 'http://localhost:8080/funcionario';
+    private readonly urlUsuario = 'funcionario';
 
     constructor(private httpCliente: HttpClient) { }
 
