@@ -25,8 +25,14 @@ public class FuncionarioService {
         return funcionarios.stream().map(FuncionarioDTO::new).collect(Collectors.toList());
     }
 
-    public FuncionarioDTO buscarPorId(String id) {
+    public FuncionarioDTO buscarPorId(Integer id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        return new FuncionarioDTO(funcionario);
+    }
+
+    public FuncionarioDTO buscarPorRfid(String rfid) {
+        Funcionario funcionario = funcionarioRepository.findByCodigoRFID(rfid)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
         return new FuncionarioDTO(funcionario);
     }
@@ -36,7 +42,7 @@ public class FuncionarioService {
         return new FuncionarioDTO(funcionarioRepository.save(funcionario));
     }
 
-    public FuncionarioDTO atualizar(String id, Funcionario funcionarioAtualizado) {
+    public FuncionarioDTO atualizar(Integer id, Funcionario funcionarioAtualizado) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
@@ -52,7 +58,7 @@ public class FuncionarioService {
         return new FuncionarioDTO(funcionarioRepository.save(funcionario));
     }
 
-    public void deletar(String id) {
+    public void deletar(Integer id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
         funcionarioRepository.delete(funcionario);

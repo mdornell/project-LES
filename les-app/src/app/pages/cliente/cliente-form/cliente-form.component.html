@@ -1,0 +1,52 @@
+<!-- Formulario -->
+<section class="container mb-4 mt-5">
+    <div class="card container">
+        <div class="card-body">
+            <h5 class="card-title">Adicionar usuarios</h5>
+            <form [formGroup]="form">
+
+                <!-- Codigo RFID -->
+                <div class="mb-3">
+                    <label for="codigoRFID" class="form-label">Código RFID:</label>
+                    <input type="text" class="form-control" id="codigoRFID" formControlName="codigoRFID" minlength="5"
+                        maxlength="10" required />
+                </div>
+
+                <!-- Cargo -->
+                <div class="mb-3">
+                    <label for="cargo" class="form-label">Cargo:</label>
+                    <input type="text" class="form-control" id="cargo" formControlName="cargo"
+                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Apenas letras são permitidas." minlength="3" maxlength="150"
+                        required />
+                </div>
+
+                <!-- Nome -->
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome:</label>
+                    <input type="text" class="form-control" id="nome" formControlName="nome" pattern="^[A-Za-zÀ-ÿ\s]+$"
+                        title="Apenas letras são permitidas." minlength="3" maxlength="150" required />
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" formControlName="email"
+                        title="Insira um email válido." required />
+                </div>
+
+                <!-- Senha -->
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha:</label>
+                    <input type="password" class="form-control" id="senha" formControlName="senha" minlength="5"
+                        maxlength="150" required />
+                </div>
+
+
+                <div class="d-flex justify-content-center">
+                    <button (click)="onSubmit()" class="btn btn-primary mx-2" [disabled]="form.invalid">Inserir</button>
+                    <button (click)="onCancel()" class="btn btn-secondary mx-2">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

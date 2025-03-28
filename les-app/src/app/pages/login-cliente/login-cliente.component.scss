@@ -1,0 +1,53 @@
+.nfc-container {
+    height: 100vh;
+    background-color: #800020;
+    /* Burgundy */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nfc-card {
+    background-color: #d3d3d3;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+
+.btn-primary {
+    background-color: #800020;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #5a0015;
+}
+
+.user-info {
+    margin-top: 15px;
+    text-align: left;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
