@@ -1,5 +1,9 @@
 @import "../../styles/variables.scss";
 
+.border-radius {
+    border-radius: 7.5%;
+}
+
 form {
     width: 100%;
     display: flex;
@@ -7,6 +11,7 @@ form {
     gap: 24px;
     margin-bottom: 34px;
 
+    a,
     span {
         font-size: 14px;
         text-decoration: underline;

@@ -52,7 +52,6 @@ export class LoginComponent {
     }
 
     navigate() {
-        localStorage.removeItem('authToken'); // Remove o token do localStorage
         this.router.navigate(["/signup"]);
     }
 }

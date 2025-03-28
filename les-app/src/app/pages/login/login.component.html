@@ -1,11 +1,21 @@
-<app-default-login-layout title="Login into your account" primaryBtnText="Login Now" secondaryBtnText="Signup Now"
-    (submit)="submit()" (navigate)="navigate()" [disablePrimaryBtn]="!loginForm.valid">
-    <form [formGroup]="loginForm">
-        <app-primary-input formControlName="email" inputName="email" type="email" label="Email"
-            placeholder="johndoe@gmail.com">
-        </app-primary-input>
-        <app-primary-input formControlName="password" inputName="password" type="password" label="Senha">
-        </app-primary-input>
-        <span>Esqueceu sua senha?</span>
-    </form>
-</app-default-login-layout>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="box p-5 shadow border-radius">
+        <app-default-login-layout title="Login into your account" primaryBtnText="Login Now"
+            secondaryBtnText="Signup Now" (submit)="submit()" (navigate)="navigate()"
+            [disablePrimaryBtn]="!loginForm.valid">
+            <form [formGroup]="loginForm">
+                <app-primary-input formControlName="email" inputName="email" type="email" label="Email"
+                    placeholder="johndoe@gmail.com">
+                    <img src="/assets/svg/email-icon.svg" />
+                </app-primary-input>
+                <app-primary-input formControlName="password" inputName="password" type="password" label="Senha">
+                    <img src="/assets/svg/password-icon.svg" />
+                </app-primary-input>
+                <div class="d-flex justify-content-between">
+                    <a (click)="navigate()">Cadastre-se</a>
+                    <span>Esqueceu sua senha?</span>
+                </div>
+            </form>
+        </app-default-login-layout>
+    </div>
+</div>

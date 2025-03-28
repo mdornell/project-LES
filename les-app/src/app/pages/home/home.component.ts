@@ -13,4 +13,10 @@ import { RouterOutlet } from '@angular/router';
 })
 export class HomeComponent {
 
+    logout(): void {
+        console.log('User logged out');
+        localStorage.removeItem('authToken'); // Clear the token
+        // Navigate to the login page or root route
+        window.location.href = '';
+    }
 }

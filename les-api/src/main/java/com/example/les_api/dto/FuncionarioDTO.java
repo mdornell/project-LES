@@ -1,6 +1,7 @@
 package com.example.les_api.dto;
 
 import com.example.les_api.domain.funcionario.Funcionario;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FuncionarioDTO {
-    private String id;
+
+    @JsonProperty("_id")
+    private Integer id;
+
     private String nome;
     private String codigoRFID;
     private String cargo;

@@ -9,16 +9,17 @@ import { Usuario } from '../types/usuario';
 })
 export class UsuarioService {
 
-    private readonly urlUsuario = 'funcionario';
+    apiUrl: string = 'http://localhost:8080/funcionario';
+    apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
     constructor(private httpCliente: HttpClient) { }
 
     list() {
-        return this.httpCliente.get<Usuario[]>(this.urlUsuario, { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') });
+        return this.httpCliente.get<Usuario[]>(this.apiUrl, this.apiAuth);
     }
 
     listById(id: number) {
-        return this.httpCliente.get<Usuario>(this.urlUsuario + '/list/' + id).pipe(take(1));
+        return this.httpCliente.get<Usuario>(this.apiUrl + '/list/' + id, this.apiAuth).pipe(take(1));
     }
 
     save(record: Partial<Usuario>) {
@@ -29,14 +30,14 @@ export class UsuarioService {
     }
 
     private create(record: Partial<Usuario>) {
-        return this.httpCliente.post<Usuario>(this.urlUsuario + '/add', record).pipe(take(1));
+        return this.httpCliente.post<Usuario>(this.apiUrl, record, this.apiAuth).pipe(take(1));
     }
 
     private update(record: Partial<Usuario>) {
-        return this.httpCliente.put(this.urlUsuario + '/update/' + record._id, record).pipe(take(1));
+        return this.httpCliente.put(this.apiUrl + record._id, record, this.apiAuth).pipe(take(1));
     }
 
     remove(record: Usuario) {
-        return this.httpCliente.delete(this.urlUsuario + '/delete/' + record._id).pipe(take(1));
+        return this.httpCliente.delete(this.apiUrl + "/" + record._id, this.apiAuth).pipe(take(1));
     }
 }

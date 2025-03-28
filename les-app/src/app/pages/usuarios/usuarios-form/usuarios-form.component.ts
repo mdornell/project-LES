@@ -33,7 +33,8 @@ export class UsuariosFormComponent implements OnInit {
             nome: [''],
             email: [''],
             senha: [''],
-            dataNascimento: [''],
+            cargo: [''],
+            codigoRFID: [''],
         });
     }
 
@@ -44,7 +45,8 @@ export class UsuariosFormComponent implements OnInit {
             nome: usuario.nome,
             email: usuario.email,
             senha: usuario.senha,
-            dataNascimento: usuario.dataNascimento,
+            cargo: usuario.cargo,
+            codigoRFID: usuario.codigoRFID,
         });
     }
 
