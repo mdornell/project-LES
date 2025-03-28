@@ -1,6 +1,6 @@
 export interface Cliente {
     _id: number;
-    nome: string;
+    nomeCliente: string;
     email: string;
     senha: string;
     codigoRFID: string;

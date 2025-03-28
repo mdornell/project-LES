@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Cliente } from '../../../types/cliente';
 
@@ -21,38 +21,40 @@ export class ClienteFormComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private usuarioService: UsuarioService,
-        private router: Router,
+        // private router: Router, // Removed as it is unused
         private route: ActivatedRoute,
         private snackBar: MatSnackBar,
         private location: Location
     ) {
         this.form = this.fb.group({
             _id: [0],
-            nome: [''],
+            nomeCliente: [''],
             email: [''],
             senha: [''],
             codigoRFID: [''],
+            aniversario: ['yyyy-mm-dd'],
         });
     }
 
     ngOnInit(): void {
-        const cliente: Cliente = this.route.snapshot.data['usuario'];
+        const cliente: Cliente = this.route.snapshot.data['cliente']; // Ensure cliente is initialized
         this.form.setValue({
             _id: cliente._id,
-            nome: cliente.nome,
+            nomeCliente: cliente.nomeCliente,
             email: cliente.email,
-            senha: '',
+            senha: cliente.senha || '',
             codigoRFID: cliente.codigoRFID,
+            aniversario: cliente.aniversario || 'yyyy-mm-dd'
         });
     }
 
     onSubmit() {
         if (this.form.valid) {
             this.usuarioService.save(this.form.value)
-                .subscribe(
-                    result => this.onSuccess(),
-                    error => this.onErro()
-                );
+                .subscribe({
+                    next: () => this.onSuccess(),
+                    error: () => this.onErro()
+                }); // Updated to use observer object
         } else {
             this.snackBar.open('Formulario Invalido', 'X', { duration: 5000 });
         }

@@ -30,7 +30,11 @@ export class ClienteListComponent {
     }
 
     onEdit(cliente: Cliente) {
-        this.router.navigate(['edit', cliente._id], { relativeTo: this.route });
+        if (cliente && cliente._id) {
+            this.router.navigate(['edit', cliente._id], { relativeTo: this.route });
+        } else {
+            console.error('Cliente _id is undefined');
+        }
     }
 
     onSelected(cliente: Cliente) {

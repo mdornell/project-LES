@@ -21,7 +21,7 @@ export class ClienteResolver implements Resolve<Cliente> {
         }
         return of({
             _id: 0,
-            nome: '',
+            nomeCliente: '',
             email: '',
             senha: '',
             codigoRFID: '',
