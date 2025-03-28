@@ -2,46 +2,49 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UsuarioService } from '../../services/usuario.service';
-import { Usuario } from '../../types/usuario';
-import { UsuariosListComponent } from '../usuarios/usuarios-list/usuarios-list.component';
+import { ClienteService } from '../../services/cliente.service';
+import { Cliente } from '../../types/cliente';
+import { ClienteListComponent } from './cliente-list/cliente-list.component';
+
+
 
 @Component({
     selector: 'app-cliente',
     standalone: true,
     imports: [
-        UsuariosListComponent,
+        ClienteListComponent,
         CommonModule
     ],
     templateUrl: './cliente.component.html',
     styleUrl: './cliente.component.scss'
 })
 export class ClienteComponent {
-    usuarios$: Observable<Usuario[]>;
-    usuarioSelected: Usuario | null = null;
+
+    clientes$: Observable<Cliente[]>;
+    clienteSelected: Cliente | null = null;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private usuarioService: UsuarioService
+        private clienteService: ClienteService
     ) {
-        this.usuarios$ = this.usuarioService.list();
+        this.clientes$ = this.clienteService.list();
     }
 
     ngOnInit() {
     }
 
-    onUsuarioSelected(usuario: Usuario) {
-        this.usuarioSelected = usuario;
+    onClienteSelected(cliente: Cliente) {
+        this.clienteSelected = cliente;
     }
 
     onDelete() {
-        if (this.usuarioSelected?._id) {
-            this.usuarioService.remove(this.usuarioSelected).
+        if (this.clienteSelected?._id) {
+            this.clienteService.remove(this.clienteSelected).
                 subscribe(() => {
-                    this.usuarios$ = this.usuarioService.list();
+                    this.clientes$ = this.clienteService.list();
                 });
         }
-        this.usuarioSelected = null;
+        this.clienteSelected = null;
     }
 }

@@ -27,7 +27,6 @@ export class ClienteService {
     }
 
     save(record: Partial<Cliente>) {
-        console.log("ID USER: " + record._id);
         if (record._id) {
             return this.update(record);
         }

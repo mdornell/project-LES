@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Usuario } from '../../../types/usuario';
+import { Cliente } from '../../../types/cliente';
 
 @Component({
     selector: 'app-cliente-list',
@@ -14,8 +14,8 @@ import { Usuario } from '../../../types/usuario';
 })
 export class ClienteListComponent {
 
-    @Input() usuarios: Usuario[] = []
-    @Output() usuarioSelected: EventEmitter<Usuario> = new EventEmitter<Usuario>();
+    @Input() clientes: Cliente[] = []
+    @Output() clienteSelected: EventEmitter<Cliente> = new EventEmitter<Cliente>();
 
     constructor(
         private router: Router,
@@ -29,11 +29,11 @@ export class ClienteListComponent {
         this.router.navigate(['new'], { relativeTo: this.route });
     }
 
-    onEdit(usuario: Usuario) {
-        this.router.navigate(['edit', usuario._id], { relativeTo: this.route });
+    onEdit(cliente: Cliente) {
+        this.router.navigate(['edit', cliente._id], { relativeTo: this.route });
     }
 
-    onSelected(usuario: Usuario) {
-        this.usuarioSelected.emit(usuario);
+    onSelected(cliente: Cliente) {
+        this.clienteSelected.emit(cliente);
     }
 }

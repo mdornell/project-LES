@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Usuario } from '../../../types/usuario';
+import { Cliente } from '../../../types/cliente';
 
 @Component({
     selector: 'app-cliente-form',
@@ -31,23 +31,20 @@ export class ClienteFormComponent implements OnInit {
             nome: [''],
             email: [''],
             senha: [''],
-            cargo: [''],
             codigoRFID: [''],
         });
     }
 
     ngOnInit(): void {
-        const usuario: Usuario = this.route.snapshot.data['usuario'];
+        const cliente: Cliente = this.route.snapshot.data['usuario'];
         this.form.setValue({
-            _id: usuario._id,
-            nome: usuario.nome,
-            email: usuario.email,
+            _id: cliente._id,
+            nome: cliente.nome,
+            email: cliente.email,
             senha: '',
-            cargo: usuario.cargo,
-            codigoRFID: usuario.codigoRFID,
+            codigoRFID: cliente.codigoRFID,
         });
     }
-
 
     onSubmit() {
         if (this.form.valid) {
