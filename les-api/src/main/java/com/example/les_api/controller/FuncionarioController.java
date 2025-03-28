@@ -33,7 +33,7 @@ public class FuncionarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable String id) {
+    public ResponseEntity<FuncionarioDTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(funcionarioService.buscarPorId(id));
     }
 
@@ -43,12 +43,12 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FuncionarioDTO> atualizar(@PathVariable String id, @RequestBody Funcionario funcionario) {
+    public ResponseEntity<FuncionarioDTO> atualizar(@PathVariable Integer id, @RequestBody Funcionario funcionario) {
         return ResponseEntity.ok(funcionarioService.atualizar(id, funcionario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         funcionarioService.deletar(id);
         return ResponseEntity.noContent().build();
     }

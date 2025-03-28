@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.example.les_api.domain.funcionario.Funcionario;
 
 @Repository
-public interface FuncionarioRepository extends JpaRepository<Funcionario, String> {
+public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer> {
     Optional<Funcionario> findByCodigoRFID(String codigoRFID);
 }
