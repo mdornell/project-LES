@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { UsuarioService } from '../../../services/usuario.service';
+import { ClienteService } from '../../../services/cliente.service';
 import { Cliente } from '../../../types/cliente';
 
 @Component({
@@ -20,7 +20,7 @@ export class ClienteFormComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private usuarioService: UsuarioService,
+        private clienteService: ClienteService,
         // private router: Router, // Removed as it is unused
         private route: ActivatedRoute,
         private snackBar: MatSnackBar,
@@ -50,7 +50,7 @@ export class ClienteFormComponent implements OnInit {
 
     onSubmit() {
         if (this.form.valid) {
-            this.usuarioService.save(this.form.value)
+            this.clienteService.save(this.form.value)
                 .subscribe({
                     next: () => this.onSuccess(),
                     error: () => this.onErro()
