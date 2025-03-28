@@ -1,9 +1,12 @@
 package com.example.les_api.dto;
 
-import com.example.les_api.domain.cliente.Cliente;
-import lombok.*;
-
 import java.util.Date;
+
+import com.example.les_api.domain.cliente.Cliente;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +26,7 @@ public class ClienteDTO {
         this.nomeCliente = cliente.getNomeCliente();
         this.email = cliente.getEmail();
         this.saldo = cliente.getSaldo();
-        this.codRFID = cliente.getCodRFID();
+        this.codRFID = cliente.getCodigoRFID();
         this.ativo = cliente.getAtivo();
         this.dataAniversario = cliente.getDataAniversario();
     }

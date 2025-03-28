@@ -14,11 +14,11 @@
         </form>
 
         <!-- Exibir dados do usuário após a leitura -->
-        <div *ngIf="usuario" class="user-info mt-3">
+        <div *ngIf="cliente" class="user-info mt-3">
             <h4>Dados do Usuário</h4>
-            <p><strong>Nome:</strong> {{ usuario.nome }}</p>
-            <p><strong>Email:</strong> {{ usuario.email }}</p>
-            <p><strong>RFID:</strong> {{ usuario.codigoRFID }}</p>
+            <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+            <p><strong>Email:</strong> {{ cliente.email }}</p>
+            <p><strong>RFID:</strong> {{ cliente.codigoRFID }}</p>
         </div>
 
         <!-- Exibir mensagem de erro caso não encontre usuário -->

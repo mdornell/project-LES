@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UsuarioService } from '../../services/usuario.service';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
     selector: 'app-login-cliente',
@@ -16,10 +16,10 @@ import { UsuarioService } from '../../services/usuario.service';
 export class LoginClienteComponent {
 
     rfidForm: FormGroup;
-    usuario: any = null;
+    cliente: any = null;
     erro: string = '';
 
-    constructor(private fb: FormBuilder, private usuarioService: UsuarioService) {
+    constructor(private fb: FormBuilder, private clienteService: ClienteService) {
         this.rfidForm = this.fb.group({
             rfid: ['', Validators.required]
         });
@@ -30,15 +30,15 @@ export class LoginClienteComponent {
     onSubmit(): void {
         if (this.rfidForm.valid) {
             const rfid = this.rfidForm.value.rfid;
-            this.usuario = null; // Reseta os dados do usuário
+            this.cliente = null; // Reseta os dados do cliente
             this.erro = ''; // Reseta a mensagem de erro
 
-            this.usuarioService.listByRfid(rfid).subscribe(
-                usuario => {
-                    this.usuario = usuario;
+            this.clienteService.listByRfid(rfid).subscribe(
+                cliente => {
+                    this.cliente = cliente;
                 },
                 error => {
-                    this.erro = 'Usuário não encontrado ou erro ao buscar.';
+                    this.erro = 'Cliente não encontrado ou erro ao buscar.';
                 }
             );
         }

@@ -1,13 +1,22 @@
 package com.example.les_api.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.service.ClienteService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/cliente")
@@ -26,6 +35,11 @@ public class ClienteController {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
+    @GetMapping("/rfid/{rfid}")
+    public ResponseEntity<ClienteDTO> buscarPorRFID(@PathVariable String rfid) {
+        return ResponseEntity.ok(clienteService.buscarPorRFID(rfid));
+    }
+
     @PostMapping
     public ResponseEntity<ClienteDTO> salvar(@RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.salvar(cliente));
@@ -42,4 +56,3 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 }
-

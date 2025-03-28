@@ -1,9 +1,17 @@
 package com.example.les_api.domain.cliente;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "cliente")
@@ -19,7 +27,7 @@ public class Cliente {
     private String nomeCliente;
     private String email;
     private Double saldo;
-    private String codRFID;
+    private String codigoRFID;
     private Boolean ativo;
 
     @Temporal(TemporalType.DATE)

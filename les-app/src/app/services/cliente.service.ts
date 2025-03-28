@@ -9,6 +9,7 @@ import { Cliente } from '../types/cliente';
 export class ClienteService {
 
     apiUrl: string = 'http://localhost:8080/cliente';
+
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
     constructor(private httpCliente: HttpClient) { }
