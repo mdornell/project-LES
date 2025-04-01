@@ -10,4 +10,5 @@ import com.example.les_api.domain.funcionario.Funcionario;
 @Repository
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer> {
     Optional<Funcionario> findByCodigoRFID(String codigoRFID);
+    Optional<Funcionario> findByEmail(String email);
 }

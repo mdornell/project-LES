@@ -11,19 +11,19 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.les_api.domain.usuario.Usuario;
+import com.example.les_api.domain.funcionario.Funcionario;
 
 @Service
 public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
-    public String generateToken(Usuario usuario){
+    public String generateToken(Funcionario funcionario){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             String token = JWT.create()
                     .withIssuer("login-auth-api")
-                    .withSubject(usuario.getEmail())
+                    .withSubject(funcionario.getEmail())
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
             return token;
