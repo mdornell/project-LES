@@ -1,1 +1,42 @@
-<p>produto-list works!</p>
+<div *ngIf="produtos as produtos">
+    <table class="table table-bordered">
+        <!-- Table Header -->
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" class="col-2 text-center">Código</th>
+                <th scope="col" class="col-2">Nome</th>
+                <th scope="col" class="col-5">Descrição</th>
+                <th scope="col" class="col-1">Preço</th>
+                <th scope="col" class="col-1">Qtd.</th>
+                <th scope="col" class="text-center">
+                    <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um produto">
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody>
+            <tr *ngFor="let produto of produtos | slice: 0:5">
+                <td class="col-1">{{produto.codigoBarras}}</td>
+                <td class="col-2 text-truncate">{{produto.nome}}</td>
+                <td class="col-3">{{produto.descricao}}</td>
+                <td class="col-1">{{produto.preco | currency}}</td>
+                <td class="col-1">{{produto.quantidade}}</td>
+
+                <!-- Ações Column -->
+                <td class="d-flex justify-content-center gap-1">
+                    <button class="btn btn-sm btn-primary px-3" (click)="onEdit(produto)"
+                        aria-label="Editar um produto">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger px-3" aria-label="Remover um produto"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(produto)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
