@@ -43,4 +43,9 @@ export class LoginClienteComponent {
             );
         }
     }
+
+    voltarHome(): void {
+        // Navega para a página inicial
+        window.location.href = '/home';
+    }
 }
