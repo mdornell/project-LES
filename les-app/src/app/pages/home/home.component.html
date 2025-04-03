@@ -1,6 +1,6 @@
-<div class="d-flex vh-100 bg-light">
+<div class="d-flex vh-100">
     <!-- Sidebar -->
-    <aside class="d-flex flex-column p-3 bg-white shadow h-100" style="width: 250px;">
+    <aside class="d-flex flex-column p-3 bg-white shadow h-100">
         <div class="d-flex justify-content-center mb-2">
             <a href="/home">
                 <img src="/assets/img/logo.png" alt="Logo" class="rounded-circle" width="30" height="30">
@@ -8,15 +8,23 @@
         </div>
 
         <nav>
-            <ul class="nav flex-column" style="font-size: 0.8rem;">
+            <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="/home" class="nav-link text-secondary"> Produtos</a>
+                    <a class="nav-link text-secondary" (click)="toggleSubmenu($event)">Produtos</a>
+                    <ul class="nav flex-column ms-3" *ngIf="isSubmenuVisible">
+                        <li class="nav-item">
+                            <a href="/home/produto/" class="nav-link text-secondary">Produtos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/home/refeicao" class="nav-link text-secondary">Refeição</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="/home/cliente" class="nav-link text-secondary">Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a href="home/user" class="nav-link text-secondary">
+                    <a href="home/funcionario" class="nav-link text-secondary">
                         Funcionários
                     </a>
                 </li>
@@ -65,16 +73,16 @@
                         DRE Diário
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="/cliente" class="nav-link text-secondary">
-                        Cliente - Login
-                    </a>
-                </li>
             </ul>
         </nav>
 
-        <div class="mt-auto">
-            <button class="btn btn-danger w-100" (click)="logout()">
+        <div class="mt-auto d-flex gap-2">
+            <a href="/cliente" class="flex-grow-1">
+                <button class="btn btn-info w-100 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-bounding-box"></i>
+                </button>
+            </a>
+            <button class="btn btn-danger flex-grow-1" (click)="logout()">
                 <i class="bi bi-box-arrow-right"></i>
             </button>
         </div>

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
@@ -6,12 +7,14 @@ import { RouterOutlet } from '@angular/router';
     standalone: true,
     imports: [
         RouterOutlet,
-        // CommonModule
+        CommonModule
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+
+    isSubmenuVisible: boolean = false;
 
     logout(): void {
         console.log('User logged out');
@@ -19,4 +22,15 @@ export class HomeComponent {
         // Navigate to the login page or root route
         window.location.href = '';
     }
+
+
+    toggleSubmenu($event: Event): void {
+        $event.preventDefault(); // Prevent default link behavior
+        this.isSubmenuVisible = !this.isSubmenuVisible;
+    }
+
+    closeSubmenu(): void {
+        this.isSubmenuVisible = false;
+    }
+
 }
