@@ -30,7 +30,7 @@ export class ClienteFormComponent implements OnInit {
             _id: [0],
             nomeCliente: [''],
             email: [''],
-            senha: [''],
+            saldo: [0],
             codigoRFID: [''],
             aniversario: ['yyyy-mm-dd'],
         });
@@ -42,7 +42,7 @@ export class ClienteFormComponent implements OnInit {
             _id: cliente._id,
             nomeCliente: cliente.nomeCliente,
             email: cliente.email,
-            senha: cliente.senha || '',
+            senha: cliente.saldo,
             codigoRFID: cliente.codigoRFID,
             aniversario: cliente.aniversario || 'yyyy-mm-dd'
         });

@@ -23,7 +23,7 @@ export class ClienteResolver implements Resolve<Cliente> {
             _id: 0,
             nomeCliente: '',
             email: '',
-            senha: '',
+            saldo: 0,
             codigoRFID: '',
             aniversario: ''
         });

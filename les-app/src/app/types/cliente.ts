@@ -2,7 +2,7 @@ export interface Cliente {
     _id: number;
     nomeCliente: string;
     email: string;
-    senha: string;
+    saldo: number;
     codigoRFID: string;
     aniversario: string;
 }
