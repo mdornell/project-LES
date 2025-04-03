@@ -25,5 +25,4 @@ public class Funcionario {
     private String cargo;
     private String email;
     private String senha;
-
 }
