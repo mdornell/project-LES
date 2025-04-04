@@ -1,14 +1,20 @@
 package com.example.les_api.dto;
 
 import com.example.les_api.domain.produto.Produto;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoDTO {
 
+    @JsonProperty("_id")
     private Integer id;
+
     private String nome;
     private String descricao;
     private Double preco;

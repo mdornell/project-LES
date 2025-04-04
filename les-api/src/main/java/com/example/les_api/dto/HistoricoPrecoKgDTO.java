@@ -1,16 +1,22 @@
 package com.example.les_api.dto;
 
-import com.example.les_api.domain.historico.HistoricoPrecoKg;
-import lombok.*;
-
 import java.util.Date;
+
+import com.example.les_api.domain.historico.HistoricoPrecoKg;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class HistoricoPrecoKgDTO {
 
+    @JsonProperty("_id")
     private Integer id;
+
     private Integer produtoId;
     private Double precoKg;
     private Date dataRegistro;
@@ -22,4 +28,3 @@ public class HistoricoPrecoKgDTO {
         this.dataRegistro = historico.getDataRegistro();
     }
 }
-
