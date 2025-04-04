@@ -1,12 +1,21 @@
 package com.example.les_api.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.les_api.domain.historico.HistoricoPrecoKg;
 import com.example.les_api.dto.HistoricoPrecoKgDTO;
 import com.example.les_api.service.HistoricoPrecoKgService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/historico-preco")
@@ -20,14 +29,14 @@ public class HistoricoPrecoKgController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
-    @GetMapping("/produto/{produtoId}")
-    public ResponseEntity<List<HistoricoPrecoKgDTO>> listarPorProduto(@PathVariable Integer produtoId) {
-        return ResponseEntity.ok(service.listarPorProduto(produtoId));
+    @GetMapping("/{id}")
+    public ResponseEntity<HistoricoPrecoKgDTO> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @PostMapping("/{produtoId}")
-    public ResponseEntity<HistoricoPrecoKgDTO> salvar(@PathVariable Integer produtoId, @RequestParam Double precoKg) {
-        return ResponseEntity.ok(service.salvar(produtoId, precoKg));
+    @PostMapping
+    public ResponseEntity<HistoricoPrecoKgDTO> salvar(@RequestBody HistoricoPrecoKg precoKg) {
+        return ResponseEntity.ok(service.salvar(precoKg));
     }
 
     @DeleteMapping("/{id}")
