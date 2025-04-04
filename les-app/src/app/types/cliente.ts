@@ -1,8 +1,9 @@
 export interface Cliente {
     _id: number;
-    nomeCliente: string;
+    nome: string;
     email: string;
     saldo: number;
     codigoRFID: string;
-    aniversario: string;
+    dataAniversario: string;
+    ativo: boolean;
 }

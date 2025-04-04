@@ -28,11 +28,12 @@ export class ClienteFormComponent implements OnInit {
     ) {
         this.form = this.fb.group({
             _id: [0],
-            nomeCliente: [''],
+            nome: [''],
             email: [''],
             saldo: [0],
             codigoRFID: [''],
-            aniversario: ['yyyy-mm-dd'],
+            dataAniversario: ['yyyy-mm-dd'],
+            ativo: [true]
         });
     }
 
@@ -40,16 +41,18 @@ export class ClienteFormComponent implements OnInit {
         const cliente: Cliente = this.route.snapshot.data['cliente']; // Ensure cliente is initialized
         this.form.setValue({
             _id: cliente._id,
-            nomeCliente: cliente.nomeCliente,
+            nome: cliente.nome,
             email: cliente.email,
-            senha: cliente.saldo,
+            saldo: cliente.saldo,
             codigoRFID: cliente.codigoRFID,
-            aniversario: cliente.aniversario || 'yyyy-mm-dd'
+            dataAniversario: cliente.dataAniversario || 'yyyy-mm-dd',
+            ativo: cliente.ativo || true
         });
     }
 
     onSubmit() {
         if (this.form.valid) {
+            console.log(this.form.value);
             this.clienteService.save(this.form.value)
                 .subscribe({
                     next: () => this.onSuccess(),

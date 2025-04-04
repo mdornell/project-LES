@@ -24,7 +24,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String nomeCliente;
+    private String nome;
     private String email;
     private Double saldo;
     private String codigoRFID;

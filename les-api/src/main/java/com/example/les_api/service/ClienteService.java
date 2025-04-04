@@ -33,6 +33,12 @@ public class ClienteService {
     }
 
     public ClienteDTO salvar(Cliente cliente) {
+
+        System.out.println(
+                "ClienteService.salvar: " + cliente.getNome() + ", " + cliente.getEmail() + ", " + cliente.getSaldo()
+                        + ", " + cliente.getCodigoRFID() + ", " + cliente.getAtivo() + ", "
+                        + cliente.getDataAniversario());
+
         return new ClienteDTO(clienteRepository.save(cliente));
     }
 
@@ -40,7 +46,7 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        cliente.setNomeCliente(atualizado.getNomeCliente());
+        cliente.setNome(atualizado.getNome());
         cliente.setEmail(atualizado.getEmail());
         cliente.setSaldo(atualizado.getSaldo());
         cliente.setCodigoRFID(atualizado.getCodigoRFID());

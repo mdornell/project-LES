@@ -21,11 +21,12 @@ export class ClienteResolver implements Resolve<Cliente> {
         }
         return of({
             _id: 0,
-            nomeCliente: '',
+            nome: '',
             email: '',
             saldo: 0,
             codigoRFID: '',
-            aniversario: ''
+            dataAniversario: '',
+            ativo: true
         });
     }
 }
