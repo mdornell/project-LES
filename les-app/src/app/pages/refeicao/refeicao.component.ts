@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RefeicaoService } from '../../services/refeicao.service';
 import { Refeicao } from '../../types/refeição';
 import { RefeicaoListComponent } from './refeicao-list/refeicao-list.component';
@@ -34,7 +34,9 @@ export class RefeicaoComponent {
         private snackBar: MatSnackBar,
         private location: Location
     ) {
-        this.refeicoes$ = this.refeicaoService.list();
+        this.refeicoes$ = this.refeicaoService.list().pipe(
+            map(refeicoes => refeicoes.sort((a, b) => (Number(b._id) ?? 0) - (Number(a._id) ?? 0)))
+        );
 
         this.form = this.fb.group({
             _id: [0],
@@ -44,12 +46,6 @@ export class RefeicaoComponent {
     }
 
     ngOnInit() {
-        // const refeicao: Refeicao = this.route.snapshot.data['refeicao'];
-        // this.form.setValue({
-        //     _id: refeicao._id,
-        //     precoKg: refeicao.precoKg,
-        //     data: refeicao.data,
-        // });
     }
 
     onRefeicaoSelected(Refeicao: Refeicao) {
@@ -92,7 +88,9 @@ export class RefeicaoComponent {
         this.snackBar.open('Registro salvo com sucesso', '', { duration: 5000 });
         this.form.reset();
         this.refeicaoSelected = null;
-        this.refeicoes$ = this.refeicaoService.list();
+        this.refeicoes$ = this.refeicaoService.list().pipe(
+            map(refeicoes => refeicoes.sort((a, b) => (Number(b._id) ?? 0) - (Number(a._id) ?? 0)))
+        );
         // this.location.back();
     }
 
