@@ -1,40 +1,66 @@
-<div class="container-fluid bg-white p-4 rounded shadow-sm">
-    <h2 class="mb-3">Refeição</h2>
+<div class="container bg-white p-4 rounded shadow-sm">
+    <section class="container mb-2">
+        <div class="card container">
+            <div class="card-body">
+                <h5 class="card-title">Refeição</h5>
+                <form [formGroup]="form">
 
-    <div class="d-flex align-items-center mb-3">
-        <label for="valorKg" class="me-2">Valor (Kg)</label>
-        <input id="valorKg" type="text" class="form-control w-25 me-2" />
-        <button class="btn btn-dark rounded-circle">
-            <i class="bi bi-pencil"></i>
-        </button>
-    </div>
+                    <!-- Valor -->
+                    <div class="mb-3">
+                        <label for="valor" class="form-label">Valor (R$):</label>
+                        <input type="number" class="form-control" id="valor" formControlName="precoKg" min="0"
+                            step="0.01" title="Insira um valor válido em reais." required />
+                    </div>
 
-    <table class="table table-bordered text-center">
-        <thead class="table-dark">
-            <tr>
-                <th>Data</th>
-                <th>Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of refeicoes">
-                <td>{{ item.data }}</td>
-                <td>{{ item.valor }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    <div class="d-flex justify-content-center">
+                        <button (click)="onSubmit()" class="btn btn-primary mx-2"
+                            [disabled]="form.invalid">Inserir</button>
+                        <!-- <button (click)="onCancel()" class="btn btn-secondary mx-2">Cancelar</button> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
 
-    <!-- <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item" [class.disabled]="paginaAtual === 1">
-                <button class="page-link" (click)="mudarPagina(paginaAtual - 1)">Prev</button>
-            </li>
-            <li class="page-item" *ngFor="let pagina of paginas" [class.active]="pagina === paginaAtual">
-                <button class="page-link" (click)="mudarPagina(pagina)">{{ pagina }}</button>
-            </li>
-            <li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
-                <button class="page-link" (click)="mudarPagina(paginaAtual + 1)">Next</button>
-            </li>
-        </ul>
-    </nav> -->
+    <section class="container-fluid">
+        <div class="table-responsive shadow-sm">
+            <div class="card card-body bg-light text-center shadow-sm mb-2">
+                <h3 class="text-black fw-bold">Gestão de Refeicao</h3>
+            </div>
+            <div class="card">
+                <app-refeicao-list *ngIf="refeicoes$ | async as refeicoes; else loading" [refeicoes]="refeicoes"
+                    (refeicaoSelected)="onRefeicaoSelected($event)">
+                </app-refeicao-list>
+                <ng-template #loading>
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                    </div>
+                    <div class="modal-body">
+                        Tem certeza que deseja excluir este usuario?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                            (click)="onDelete()">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
 </div>

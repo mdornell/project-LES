@@ -1,40 +1,103 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { RefeicaoService } from '../../services/refeicao.service';
+import { Refeicao } from '../../types/refeição';
+import { RefeicaoListComponent } from './refeicao-list/refeicao-list.component';
 
 @Component({
     selector: 'app-refeicao',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        ReactiveFormsModule,
+        RefeicaoListComponent
     ],
     templateUrl: './refeicao.component.html',
     styleUrl: './refeicao.component.scss'
 })
 export class RefeicaoComponent {
-    valorKg: string = '';
 
-    refeicoes = [
-        { data: '10/01/2025', valor: 18.00 },
-        { data: '10/01/2025', valor: 16.00 },
-        { data: '10/01/2025', valor: 20.00 },
-        { data: '10/01/2025', valor: 22.00 },
-        { data: '10/01/2025', valor: 4.00 },
-    ];
+    refeicoes$: Observable<Refeicao[]>;
+    refeicaoSelected: Refeicao | null = null;
 
-    paginaAtual = 1;
-    itensPorPagina = 5;
-    totalItens = 15;
+    form: FormGroup;
 
-    get totalPaginas(): number {
-        return Math.ceil(this.totalItens / this.itensPorPagina);
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private refeicaoService: RefeicaoService,
+        private fb: FormBuilder,
+        private snackBar: MatSnackBar,
+        private location: Location
+    ) {
+        this.refeicoes$ = this.refeicaoService.list();
+
+        this.form = this.fb.group({
+            _id: [0],
+            precoKg: [''],
+            dataRegistro: [''],
+        });
     }
 
-    get paginas(): number[] {
-        return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+    ngOnInit() {
+        // const refeicao: Refeicao = this.route.snapshot.data['refeicao'];
+        // this.form.setValue({
+        //     _id: refeicao._id,
+        //     precoKg: refeicao.precoKg,
+        //     data: refeicao.data,
+        // });
     }
 
-    mudarPagina(pagina: number) {
-        this.paginaAtual = pagina;
-        // Aqui pode-se adicionar lógica para carregar novos dados conforme necessário.
+    onRefeicaoSelected(Refeicao: Refeicao) {
+        this.refeicaoSelected = Refeicao;
     }
+
+    onDelete() {
+        if (this.refeicaoSelected?._id) {
+            this.refeicaoService.remove(this.refeicaoSelected).
+                subscribe(() => {
+                    this.refeicoes$ = this.refeicaoService.list();
+                });
+        }
+        this.refeicaoSelected = null;
+    }
+
+
+
+
+    onSubmit() {
+        if (this.form.valid) {
+            this.form.patchValue({ dataRegistro: new Date().toISOString() });
+            this.refeicaoService.save(this.form.value)
+                .subscribe(
+                    result => this.onSuccess(),
+                    error => this.onErro()
+                );
+        } else {
+            this.snackBar.open('Formulario Invalido', 'X', { duration: 5000 });
+        }
+
+    }
+
+    onCancel() {
+        this.form.reset();
+        this.location.back();
+    }
+
+    onSuccess() {
+        this.snackBar.open('Registro salvo com sucesso', '', { duration: 5000 });
+        this.form.reset();
+        this.refeicaoSelected = null;
+        this.refeicoes$ = this.refeicaoService.list();
+        // this.location.back();
+    }
+
+    onErro() {
+        this.snackBar.open('Erro ao salvar o registro', '', { duration: 5000 });
+    }
+
 }
