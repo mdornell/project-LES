@@ -53,7 +53,8 @@ export const routes: Routes = [
     {
         path: 'cliente',
         component: LoginClienteComponent
-    }
+    },
+
 
 
 

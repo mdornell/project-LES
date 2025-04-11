@@ -1,6 +1,6 @@
 <div class="d-flex vh-100">
     <!-- Sidebar -->
-    <aside class="d-flex flex-column p-3 bg-white shadow h-100">
+    <aside class="d-flex flex-column p-3 bg-white shadow h-100 position-fixed" style="width: 250px;">
         <div class="d-flex justify-content-center mb-2">
             <a href="/home">
                 <img src="/assets/img/logo.png" alt="Logo" class="rounded-circle" width="30" height="30">
@@ -89,7 +89,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="justify-content-center flex-grow-1 mg-3 p-3 bg-light">
+    <main class="justify-content-center flex-grow-1 mg-3 p-3" style="margin-left: 250px;">
         <router-outlet></router-outlet>
     </main>
 </div>
