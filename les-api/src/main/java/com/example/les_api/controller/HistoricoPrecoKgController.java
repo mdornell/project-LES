@@ -18,7 +18,7 @@ import com.example.les_api.service.HistoricoPrecoKgService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/historico-preco")
+@RequestMapping("/refeicao")
 @AllArgsConstructor
 public class HistoricoPrecoKgController {
 
