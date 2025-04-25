@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { DefaultLoginLayoutComponent } from '../../components/default-login-layout/default-login-layout.component';
@@ -31,7 +32,8 @@ export class LoginComponent {
     constructor(
         private router: Router,
         private loginService: LoginService,
-        private toastService: ToastrService
+        private toastService: ToastrService,
+        private snackBar: MatSnackBar,
     ) {
         this.loginForm = new FormGroup({
             email: new FormControl('', [Validators.required, Validators.email]),
@@ -44,14 +46,23 @@ export class LoginComponent {
             next: (response) => {
                 const token = response.token; // Supondo que o token está na propriedade 'token' da resposta
                 localStorage.setItem('auth-token', token); // Armazena o token no localStorage
-                this.toastService.success("Login feito com sucesso!");
+                this.toastService.success("Login feito com sucesso!", "Sucesso"); // Snackbar de sucesso
                 this.router.navigate(["/home"]); // Redirecionamento após login
             },
-            error: () => this.toastService.error("Erro inesperado! Tente novamente mais tarde")
+            error: () => {
+                this.onErro();
+            }
         });
     }
 
     navigate() {
         this.router.navigate(["/signup"]);
+    }
+
+    onErro() {
+        this.snackBar.open('Erro ao execultar o login', '', {
+            duration: 5000,
+            panelClass: ['snackbar-error'] // Adiciona uma classe CSS para destaque
+        });
     }
 }

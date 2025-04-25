@@ -1,13 +1,13 @@
 <!-- Tabela -->
-<section class="container">
+<section class="container-fluid">
     <div class="table-responsive shadow-sm">
         <div class="card card-body bg-light text-center shadow-sm mb-4">
-            <h3 class="text-black fw-bold">Gestão de Funcionários</h3>
+            <h3 class="text-black fw-bold">Gestão de Clientes</h3>
         </div>
         <div class="card">
-            <app-usuarios-list *ngIf="usuarios$ | async as usuarios; else loading" [usuarios]="usuarios"
-                (usuarioSelected)="onUsuarioSelected($event)">
-            </app-usuarios-list>
+            <app-cliente-list *ngIf="clientes$ | async as clientes; else loading" [clientes]="clientes"
+                (clienteSelected)="onClienteSelected($event)">
+            </app-cliente-list>
             <ng-template #loading>
                 <div class="d-flex justify-content-center mt-3 mb-3">
                     <div class="spinner-border text-primary" role="status">
@@ -26,7 +26,7 @@
                     <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
                 </div>
                 <div class="modal-body">
-                    Tem certeza que deseja excluir este usuario?
+                    Tem certeza que deseja excluir este cliente?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

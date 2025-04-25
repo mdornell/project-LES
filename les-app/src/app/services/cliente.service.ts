@@ -9,6 +9,7 @@ import { Cliente } from '../types/cliente';
 export class ClienteService {
 
     apiUrl: string = 'http://localhost:8080/cliente';
+
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
     constructor(private httpCliente: HttpClient) { }
@@ -21,12 +22,15 @@ export class ClienteService {
         return this.httpCliente.get<Cliente>(this.apiUrl + "/" + id, this.apiAuth).pipe(take(1));
     }
 
+    getClienteByVenda(id: number) {
+        return this.httpCliente.get<Cliente>(this.apiUrl + "/venda/" + id, this.apiAuth).pipe(take(1));
+    }
+
     listByRfid(rfid: string) {
         return this.httpCliente.get<Cliente>(this.apiUrl + "/rfid/" + rfid, this.apiAuth).pipe(take(1));
     }
 
     save(record: Partial<Cliente>) {
-        console.log("ID USER: " + record._id);
         if (record._id) {
             return this.update(record);
         }

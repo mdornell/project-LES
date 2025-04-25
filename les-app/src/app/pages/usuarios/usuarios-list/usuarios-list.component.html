@@ -3,11 +3,10 @@
         <!-- Table Header -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-3">Nome</th>
-                <th scope="col" class="col-3">Email</th>
-                <th scope="col" class="col-2">Cargo</th>
-                <th scope="col" class="col-2">Código RFID</th>
+                <th scope="col" class="col">ID</th>
+                <th scope="col" class="col-4">Nome</th>
+                <th scope="col" class="col-4">Email</th>
+                <th scope="col" class="col-4">Cargo</th>
                 <th scope="col" class="text-center">
                     <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um usuario">
                         <i class="bi bi-person-plus"></i>
@@ -23,21 +22,23 @@
                 <td class="col-3 text-truncate">{{element.nome}}</td>
                 <td class="col-3">{{element.email}}</td>
                 <td class="col-2">{{element.cargo}}</td>
-                <td class="col-3 text-center">{{element.codigoRFID}}</td>
 
                 <!-- Ações Column -->
                 <td class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-sm btn-primary px-4" (click)="onEdit(element)"
+                    <button class="btn btn-sm btn-primary px-2" (click)="onEdit(element)"
                         aria-label="Editar um usuario">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-danger px-4" aria-label="Remover um Ator"
+                    <button type="button" class="btn btn-sm btn-secondary px-2" aria-label="Editar Permissões"
+                        data-bs-toggle="modal" data-bs-target="#permissionModal" (click)="onSelected(element)">
+                        <i class="bi bi-gear"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger px-2" aria-label="Remover um Ator"
                         data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(element)">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>
         </tbody>
-
     </table>
 </div>

@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.les_api.domain.funcionario.Funcionario;
-import com.example.les_api.domain.usuario.Usuario;
 import com.example.les_api.repository.FuncionarioRepository;
-import com.example.les_api.repository.UsuarioRepository;
 import com.example.les_api.service.TokenService;
 
 import jakarta.servlet.FilterChain;
@@ -29,12 +27,14 @@ public class FiltroSeguranca extends OncePerRequestFilter {
     FuncionarioRepository funcionarioRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         var token = this.recoverToken(request);
         var login = tokenService.validateToken(token);
 
-        if(login != null){
-            Funcionario usuario = funcionarioRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
+        if (login != null) {
+            Funcionario usuario = funcionarioRepository.findByEmail(login)
+                    .orElseThrow(() -> new RuntimeException("User Not Found"));
             var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -42,9 +42,10 @@ public class FiltroSeguranca extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recoverToken(HttpServletRequest request){
+    private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
-        if(authHeader == null) return null;
+        if (authHeader == null)
+            return null;
         return authHeader.replace("Bearer ", "");
     }
 }

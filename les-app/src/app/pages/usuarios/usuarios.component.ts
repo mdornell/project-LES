@@ -45,4 +45,5 @@ export class UsuariosComponent {
         }
         this.usuarioSelected = null;
     }
+
 }

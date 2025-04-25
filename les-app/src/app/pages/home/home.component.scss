@@ -1,6 +1,15 @@
 @import "../../styles/variables.scss";
 
 aside {
+    width: 200px;
+
+    nav {
+
+        ul {
+            font-size: 0.8rem;
+        }
+    }
+
     .nav-link.active {
         color: $black !important;
     }

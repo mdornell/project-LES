@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UsuarioService } from '../../../services/usuario.service';
-import { Usuario } from '../../../types/usuario';
+import { ActivatedRoute } from '@angular/router';
+import { ClienteService } from '../../../services/cliente.service';
+import { Cliente } from '../../../types/cliente';
 
 @Component({
     selector: 'app-cliente-form',
@@ -20,8 +20,8 @@ export class ClienteFormComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private usuarioService: UsuarioService,
-        private router: Router,
+        private clienteService: ClienteService,
+        // private router: Router, // Removed as it is unused
         private route: ActivatedRoute,
         private snackBar: MatSnackBar,
         private location: Location
@@ -30,32 +30,34 @@ export class ClienteFormComponent implements OnInit {
             _id: [0],
             nome: [''],
             email: [''],
-            senha: [''],
-            cargo: [''],
+            saldo: [0],
             codigoRFID: [''],
+            dataAniversario: ['yyyy-mm-dd'],
+            ativo: [true]
         });
     }
 
     ngOnInit(): void {
-        const usuario: Usuario = this.route.snapshot.data['usuario'];
+        const cliente: Cliente = this.route.snapshot.data['cliente']; // Ensure cliente is initialized
         this.form.setValue({
-            _id: usuario._id,
-            nome: usuario.nome,
-            email: usuario.email,
-            senha: '',
-            cargo: usuario.cargo,
-            codigoRFID: usuario.codigoRFID,
+            _id: cliente._id,
+            nome: cliente.nome,
+            email: cliente.email,
+            saldo: cliente.saldo,
+            codigoRFID: cliente.codigoRFID,
+            dataAniversario: cliente.dataAniversario || 'yyyy-mm-dd',
+            ativo: cliente.ativo || true
         });
     }
 
-
     onSubmit() {
         if (this.form.valid) {
-            this.usuarioService.save(this.form.value)
-                .subscribe(
-                    result => this.onSuccess(),
-                    error => this.onErro()
-                );
+            console.log(this.form.value);
+            this.clienteService.save(this.form.value)
+                .subscribe({
+                    next: () => this.onSuccess(),
+                    error: () => this.onErro()
+                }); // Updated to use observer object
         } else {
             this.snackBar.open('Formulario Invalido', 'X', { duration: 5000 });
         }

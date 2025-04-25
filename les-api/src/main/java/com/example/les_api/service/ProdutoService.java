@@ -1,13 +1,14 @@
 package com.example.les_api.service;
 
-import com.example.les_api.domain.produto.Produto;
-import com.example.les_api.dto.ProdutoDTO;
-import com.example.les_api.repository.ProdutoRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.les_api.domain.produto.Produto;
+import com.example.les_api.dto.ProdutoDTO;
+import com.example.les_api.repository.ProdutoRepository;
 
 @Service
 public class ProdutoService {
@@ -34,6 +35,7 @@ public class ProdutoService {
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
         produto.setNome(atualizado.getNome());
+        produto.setCodigoBarras(atualizado.getCodigoBarras());
         produto.setDescricao(atualizado.getDescricao());
         produto.setPreco(atualizado.getPreco());
         produto.setQuantidade(atualizado.getQuantidade());

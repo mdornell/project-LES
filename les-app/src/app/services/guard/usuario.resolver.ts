@@ -27,5 +27,7 @@ export class UsuarioResolver implements Resolve<Usuario> {
             codigoRFID: ''
         } as Usuario);
     }
+
+
 }
 

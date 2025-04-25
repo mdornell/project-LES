@@ -24,7 +24,6 @@ public class FuncionarioDTO {
     public FuncionarioDTO(Funcionario funcionario) {
         this.id = funcionario.getId();
         this.nome = funcionario.getNome();
-        this.codigoRFID = funcionario.getCodigoRFID();
         this.cargo = funcionario.getCargo();
         this.email = funcionario.getEmail();
         this.senha = funcionario.getSenha();

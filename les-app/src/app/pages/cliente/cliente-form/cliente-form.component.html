@@ -2,7 +2,7 @@
 <section class="container mb-4 mt-5">
     <div class="card container">
         <div class="card-body">
-            <h5 class="card-title">Adicionar usuarios</h5>
+            <h5 class="card-title">Adicionar clientes</h5>
             <form [formGroup]="form">
 
                 <!-- Codigo RFID -->
@@ -10,14 +10,6 @@
                     <label for="codigoRFID" class="form-label">Código RFID:</label>
                     <input type="text" class="form-control" id="codigoRFID" formControlName="codigoRFID" minlength="5"
                         maxlength="10" required />
-                </div>
-
-                <!-- Cargo -->
-                <div class="mb-3">
-                    <label for="cargo" class="form-label">Cargo:</label>
-                    <input type="text" class="form-control" id="cargo" formControlName="cargo"
-                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Apenas letras são permitidas." minlength="3" maxlength="150"
-                        required />
                 </div>
 
                 <!-- Nome -->
@@ -36,9 +28,16 @@
 
                 <!-- Senha -->
                 <div class="mb-3">
-                    <label for="senha" class="form-label">Senha:</label>
-                    <input type="password" class="form-control" id="senha" formControlName="senha" minlength="5"
-                        maxlength="150" required />
+                    <label for="saldo" class="form-label">Saldo:</label>
+                    <input type="number" class="form-control" id="saldo" formControlName="saldo" min="0" step="0.01"
+                        required />
+                </div>
+
+                <!-- Aniversário -->
+                <div class="mb-3">
+                    <label for="aniversario" class="form-label">Aniversário:</label>
+                    <input type="date" class="form-control" id="aniversario" formControlName="dataAniversario"
+                        required />
                 </div>
 
 

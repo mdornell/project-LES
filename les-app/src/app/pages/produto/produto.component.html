@@ -1,0 +1,40 @@
+<!-- Tabela -->
+<section class="container-fluid">
+    <div class="table-responsive shadow-sm">
+        <div class="card card-body bg-light text-center shadow-sm mb-4">
+            <h3 class="text-black fw-bold">Gestão de Produtos</h3>
+        </div>
+        <div class="card">
+            <app-produto-list *ngIf="produtos$ | async as produtos; else loading" [produtos]="produtos"
+                (produtoSelected)="onProdutoSelected($event)">
+            </app-produto-list>
+            <ng-template #loading>
+                <div class="d-flex justify-content-center mt-3 mb-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir este produto?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                        (click)="onDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

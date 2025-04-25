@@ -21,7 +21,7 @@ public class Funcionario {
     private Integer id;
 
     private String nome;
-    private String codigoRFID;
+    // private String codigoRFID;
     private String cargo;
     private String email;
     private String senha;

@@ -1,5 +1,5 @@
 <!-- Tabela -->
-<section class="container">
+<section class="container-fluid">
     <div class="table-responsive shadow-sm">
         <div class="card card-body bg-light text-center shadow-sm mb-4">
             <h3 class="text-black fw-bold">Gestão de Funcionários</h3>
@@ -32,6 +32,72 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                         (click)="onDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Permissões -->
+    <div class="modal fade" id="permissionModal" tabindex="-1" aria-labelledby="permissionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-s">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmPermissionModalLabel">Permissões</h5>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Tela</th>
+                                <th scope="col" class="text-center">Ver</th>
+                                <th scope="col" class="text-center">Add</th>
+                                <th scope="col" class="text-center">Edit</th>
+                                <th scope="col" class="text-center">Del</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dashboard</td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard</td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard</td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard</td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                            </tr>
+                            <tr>
+                                <td>Dashboard</td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                                <td class="text-center"><input type="checkbox" disabled></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Salvar</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

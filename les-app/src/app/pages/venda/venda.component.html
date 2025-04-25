@@ -1,0 +1,50 @@
+<div class="container mt-5 p-4 rounded shadow bg-light">
+    <div class="text-center mb-4">
+        <h4 class="fw-bold">{{ cliente.nome }}</h4>
+        <h5 class="text-success">Saldo Atual: R$ {{ cliente.saldo.toFixed(2) }}</h5>
+        <p class="mb-0">Entrada : {{ dataHora | date: 'HH:mm' }}</p>
+    </div>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-6">
+            <label for="codigoProduto" class="form-label fw-semibold">Cod. Produto</label>
+            <input type="text" class="form-control" id="codigoProduto" [(ngModel)]="codigoBarras"
+                placeholder="Digite o código do produto" />
+        </div>
+        <div class="col-md-3 mt-4 mt-md-0">
+            <button class="btn btn-maroon w-100" (click)="inserirProduto()">Inserir</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+            <thead class="table-maroon text-white">
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Código</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let produto of produtos">
+                    <td>{{ produto.descricao }}</td>
+                    <td>R$ {{ produto.preco.toFixed(2) }}</td>
+                    <td>{{ produto.codigoBarras }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-4 fw-bold">
+        <div class="col-md-6">
+            Valor Gasto: R$ {{ valorGasto.toFixed(2) }}
+        </div>
+        <div class="col-md-6 text-md-end">
+            Saldo Anterior: R$ {{ saldoAnterior.toFixed(2) }}
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button class="btn btn-maroon px-4 py-2" (click)="finalizarCompra()">Finalizar Compra</button>
+    </div>
+</div>

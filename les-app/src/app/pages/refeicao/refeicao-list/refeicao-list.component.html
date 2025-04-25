@@ -1,0 +1,33 @@
+<div *ngIf="refeicoes as refeicoes">
+    <table class="table table-bordered">
+        <!-- Table Header -->
+        <thead class="table-dark text-center">
+            <tr>
+                <th scope="col" class="col">ID</th>
+                <th scope="col" class="col-5">Valor</th>
+                <th scope="col" class="col-5">Data</th>
+                <th scope="col" class="col ">
+                    <!-- <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um usuario">
+                        <i class="bi bi-person-plus"></i>
+                    </button> -->
+                </th>
+            </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody class="text-center">
+            <tr *ngFor="let element of refeicoes">
+
+                <td class="col-1 text-center">{{element._id}}</td>
+                <td class="col-2">R$ {{element.precoKg}}</td>
+                <td class="col-2">{{element.dataRegistro | date:'dd/MM/yyyy'}}</td>
+                <!-- Ações Column -->
+                <td class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-sm btn-danger px-2" aria-label="Remover um Ator"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(element)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
