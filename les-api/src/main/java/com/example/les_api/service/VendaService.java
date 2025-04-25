@@ -1,21 +1,22 @@
 package com.example.les_api.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.produto.Produto;
 import com.example.les_api.domain.venda.ItemVenda;
 import com.example.les_api.domain.venda.Venda;
-import com.example.les_api.dto.ItemVendaDTO;
 import com.example.les_api.dto.VendaDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.ProdutoRepository;
 import com.example.les_api.repository.VendaRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class VendaService {
 
     @Transactional
     public Venda salvar(VendaDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getClienteId())
+        Cliente cliente = clienteRepository.findById(dto.getCliente().getId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
         Venda venda = new Venda();

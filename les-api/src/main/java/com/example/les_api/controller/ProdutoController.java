@@ -1,13 +1,22 @@
 package com.example.les_api.controller;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.les_api.domain.produto.Produto;
 import com.example.les_api.dto.ProdutoDTO;
 import com.example.les_api.service.ProdutoService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/produto")
@@ -26,6 +35,11 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorId(id));
     }
 
+    @GetMapping("/cod/{codigoBarras}")
+    public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable String codigoBarras) {
+        return ResponseEntity.ok(produtoService.buscarPorCodigoBarras(codigoBarras));
+    }
+
     @PostMapping
     public ResponseEntity<ProdutoDTO> salvar(@RequestBody Produto produto) {
         return ResponseEntity.ok(produtoService.salvar(produto));
@@ -42,4 +56,3 @@ public class ProdutoController {
         return ResponseEntity.noContent().build();
     }
 }
-

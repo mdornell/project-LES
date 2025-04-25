@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from '../../services/cliente.service';
 import { ProdutoService } from '../../services/produto.service';
+import { VendaService } from '../../services/venda.service';
 import { Cliente } from '../../types/cliente';
 import { Produto } from '../../types/produto';
 import { Venda } from '../../types/venda';
@@ -33,6 +34,7 @@ export class VendaComponent implements OnInit {
         private route: ActivatedRoute,
         private clienteService: ClienteService,
         private produtoService: ProdutoService,
+        private vendaService: VendaService
     ) { }
 
     ngOnInit(): void {
@@ -56,7 +58,7 @@ export class VendaComponent implements OnInit {
     }
 
     inserirProduto(): void {
-        this.produtoService.listById(this.codigoBarras).subscribe({
+        this.produtoService.listByCodigo(this.codigoBarras).subscribe({
             next: (produto) => {
                 if (produto) {
                     this.produtos.push(produto); // Add the product to the list of products
@@ -89,12 +91,12 @@ export class VendaComponent implements OnInit {
             cliente: this.cliente,
             dataHora: this.dataHora,
             itens: itensVenda,
-            total: this.valorGasto,
-            _id: 0,
+            valorTotal: this.valorGasto,
             descricaoVenda: ''
         };
 
-        this.clienteService.save(novaVenda).subscribe({
+        console.log(novaVenda)
+        this.vendaService.save(novaVenda).subscribe({
             next: () => {
                 console.log('Compra finalizada com sucesso');
                 this.produtos = [];
