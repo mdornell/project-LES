@@ -29,6 +29,10 @@
                         aria-label="Editar um usuario">
                         <i class="bi bi-pencil-square"></i>
                     </button>
+                    <button type="button" class="btn btn-sm btn-secondary px-2" aria-label="Editar Permissões"
+                        data-bs-toggle="modal" data-bs-target="#permissionModal" (click)="onSelected(element)">
+                        <i class="bi bi-gear"></i>
+                    </button>
                     <button type="button" class="btn btn-sm btn-danger px-2" aria-label="Remover um Ator"
                         data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(element)">
                         <i class="bi bi-trash"></i>
@@ -36,6 +40,5 @@
                 </td>
             </tr>
         </tbody>
-
     </table>
 </div>
