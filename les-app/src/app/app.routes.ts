@@ -32,56 +32,29 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             // Home
-            { path: '', component: WelcomeComponent },
-
-            // Funcionarios
-            {
-                path: 'funcionario',
-                component: UsuariosComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
-                    { path: 'edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
-                ]
-            },
+            { path: 'funcionario', component: UsuariosComponent },
+            { path: 'funcionario/new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
+            { path: 'funcionario/edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
 
             // Clientes
-            {
-                path: 'cliente',
-                component: ClienteComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
-                    { path: 'edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
-                ]
-            },
+            { path: 'cliente', component: ClienteComponent },
+            { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
+            { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
 
             // Produtos
-            {
-                path: 'produto',
-                component: ProdutoComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
-                    { path: 'edit/:id', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
-                ]
-            },
+            { path: 'produto', component: ProdutoComponent },
+            { path: 'produto/new', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
+            { path: 'produto/edit/:id', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
 
             // Refeições
             { path: 'refeicao', component: RefeicaoComponent },
 
             // Fornecedores
-            {
-                path: 'fornecedor',
-                component: FornecedorComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
-                    { path: 'edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
-                ]
-            },
+            { path: 'fornecedor', component: FornecedorComponent },
+            { path: 'fornecedor/new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
+            { path: 'fornecedor/edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
 
-            // Vendas
+            //Vendas
             { path: 'venda/:id', component: VendaComponent },
 
         ]
