@@ -18,6 +18,10 @@ public class LesApiApplication {
     @Bean
     public CommandLineRunner initAdmin(FuncionarioRepository funcionarioRepository) {
         return args -> {
+            // deleta todos os funcionarios
+            funcionarioRepository.deleteAll();
+
+            // cria um novo funcionario admin
             Funcionario funcionario = new Funcionario();
             funcionario.setNome("admin");
             funcionario.setCargo("Admin");

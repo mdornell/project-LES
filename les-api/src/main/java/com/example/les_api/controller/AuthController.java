@@ -55,14 +55,16 @@ public class AuthController {
     }
 
     // @PostMapping("/cadastroFuncionario")
-    // public ResponseEntity cadastrarFuncionario(@RequestBody Funcionario funcionario) {
-    //     Optional<Funcionario> funcionarioExistente = this.funcionarioRepository.findByEmail(funcionario.getEmail());
+    // public ResponseEntity cadastrarFuncionario(@RequestBody Funcionario
+    // funcionario) {
+    // Optional<Funcionario> funcionarioExistente =
+    // this.funcionarioRepository.findByEmail(funcionario.getEmail());
 
-    //     if (funcionarioExistente.isEmpty()) {
-    //         funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
-    //         this.funcionarioRepository.save(funcionario);
-    //         return ResponseEntity.ok().build();
-    //     }
-    //     return ResponseEntity.badRequest().build();
+    // if (funcionarioExistente.isEmpty()) {
+    // funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
+    // this.funcionarioRepository.save(funcionario);
+    // return ResponseEntity.ok().build();
+    // }
+    // return ResponseEntity.badRequest().build();
     // }
 }
