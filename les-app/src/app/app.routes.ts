@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ClienteFormComponent } from './pages/cliente/cliente-form/cliente-form.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
+import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
+import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginClienteComponent } from './pages/login-cliente/login-cliente.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -11,6 +13,7 @@ import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
 import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { VendaComponent } from './pages/venda/venda.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { UsuarioResolver } from './services/guard/usuario.resolver';
@@ -29,7 +32,7 @@ export const routes: Routes = [
             // Home
             { path: '', component: WelcomeComponent },
 
-            // Funcinarios
+            // Funcionarios
             { path: 'funcionario', component: UsuariosComponent },
             { path: 'funcionario/new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
             { path: 'funcionario/edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
@@ -45,7 +48,15 @@ export const routes: Routes = [
             { path: 'produto/edit/:id', component: ProdutoFormComponent },
 
             // Refeições
-            { path: 'refeicao', component: RefeicaoComponent }
+            { path: 'refeicao', component: RefeicaoComponent },
+
+            // Fornecedores
+            { path: 'fornecedor', component: FornecedorComponent },
+            { path: 'fornecedor/new', component: FornecedorFormComponent },
+            { path: 'fornecedor/edit/:id', component: FornecedorFormComponent },
+
+            //Vendas
+            { path: 'venda/:id', component: VendaComponent },
 
         ]
     },
@@ -54,8 +65,5 @@ export const routes: Routes = [
         path: 'cliente',
         component: LoginClienteComponent
     },
-
-
-
 
 ];

@@ -22,6 +22,10 @@ export class ClienteService {
         return this.httpCliente.get<Cliente>(this.apiUrl + "/" + id, this.apiAuth).pipe(take(1));
     }
 
+    getClienteByVenda(id: number) {
+        return this.httpCliente.get<Cliente>(this.apiUrl + "/venda/" + id, this.apiAuth).pipe(take(1));
+    }
+
     listByRfid(rfid: string) {
         return this.httpCliente.get<Cliente>(this.apiUrl + "/rfid/" + rfid, this.apiAuth).pipe(take(1));
     }
