@@ -55,4 +55,9 @@ public class ClienteController {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+
+    // @GetMapping("/consumoCliente/{id}")
+    // public ResponseEntity<List<ClienteDTO>> consumoCliente(@PathVariable Integer id) {
+    //     return ResponseEntity.ok(clienteService.consumoCliente(id));
+    // }
 }

@@ -43,11 +43,17 @@ public class VendaService {
             item.setProduto(produto);
             item.setQuantidade(itemDto.getQuantidade());
             item.setCusto(itemDto.getCusto());
-            item.setVenda(venda); // RELACIONAMENTO CORRETO
+            item.setVenda(venda);
             return item;
         }).collect(Collectors.toList());
 
         venda.setItens(itens);
+
+        // 🧠 Calcula o valor total da venda
+        Double valorTotal = itens.stream()
+                .mapToDouble(ItemVenda::getCusto)
+                .sum();
+        venda.setValorTotal(valorTotal);
 
         return vendaRepository.save(venda);
     }

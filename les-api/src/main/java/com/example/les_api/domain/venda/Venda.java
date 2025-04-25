@@ -25,6 +25,8 @@ public class Venda {
 
     private String descricaoVenda;
 
+    private Double valorTotal; // << NOVO CAMPO AQUI
+
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
@@ -33,3 +35,4 @@ public class Venda {
     @JsonManagedReference
     private List<ItemVenda> itens;
 }
+

@@ -61,4 +61,11 @@ public class ClienteService {
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         clienteRepository.delete(cliente);
     }
+
+    // public List<ClienteDTO> consumoCliente(Integer id) {
+    //     Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+    //     return clienteRepository.consumoClientes().stream()
+    //             .map(ClienteDTO::new)
+    //             .collect(Collectors.toList());
+    // }
 }
