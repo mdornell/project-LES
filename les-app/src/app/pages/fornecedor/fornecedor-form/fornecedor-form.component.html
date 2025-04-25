@@ -1,0 +1,50 @@
+<!-- Formulário Fornecedor -->
+<section class="container mb-4 mt-5">
+    <div class="card container">
+        <div class="card-body">
+            <h5 class="card-title">Adicionar Fornecedor</h5>
+            <form [formGroup]="form">
+
+                <!-- Nome do Fornecedor -->
+                <div class="mb-3">
+                    <label for="nomeFornecedor" class="form-label">Nome do Fornecedor:</label>
+                    <input type="text" class="form-control" id="nomeFornecedor" formControlName="nome"
+                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Apenas letras são permitidas." minlength="3" maxlength="150"
+                        required />
+                </div>
+
+                <!-- CNPJ -->
+                <div class="mb-3">
+                    <label for="cnpj" class="form-label">CNPJ:</label>
+                    <input type="text" class="form-control" id="cnpj" formControlName="cnpj" pattern="\d{14}"
+                        title="O CNPJ deve conter 14 dígitos numéricos." required />
+                </div>
+
+                <!-- Endereço -->
+                <div class="mb-3">
+                    <label for="endereco" class="form-label">Endereço:</label>
+                    <input type="text" class="form-control" id="endereco" formControlName="endereco" minlength="5"
+                        maxlength="200" required />
+                </div>
+
+                <!-- Telefone -->
+                <div class="mb-3">
+                    <label for="telefone" class="form-label">Telefone:</label>
+                    <input type="tel" class="form-control" id="telefone" formControlName="telefone"
+                        pattern="\(\d{2}\)\s\d{4,5}-\d{4}" title="Formato esperado: (XX) XXXXX-XXXX" required />
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-control" id="email" formControlName="email" required />
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button (click)="onSubmit()" class="btn btn-primary mx-2" [disabled]="form.invalid">Inserir</button>
+                    <button (click)="onCancel()" class="btn btn-secondary mx-2">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

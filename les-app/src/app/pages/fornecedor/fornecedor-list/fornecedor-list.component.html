@@ -1,0 +1,43 @@
+<div *ngIf="fornecedores as fornecedores">
+    <table class="table table-bordered">
+        <!-- Table Header -->
+        <thead class="table-dark">
+            <tr>
+                <th scope="col" class="col text-center">Código</th>
+                <th scope="col" class="col-3">Nome</th>
+                <th scope="col" class="col-2">CNPJ</th>
+                <th scope="col" class="col-2">Endereço</th>
+                <th scope="col" class="col-3">Email</th>
+                <th scope="col" class="col-2">Telefone</th>
+                <th scope="col" class="text-center">
+                    <button class="btn btn-sm btn-success px-5" (click)="onAdd()" aria-label="Adicionar um fornecedor">
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <!-- Table Body -->
+        <tbody>
+            <tr *ngFor="let fornecedor of fornecedores">
+                <td class="col">{{fornecedor._id}}</td>
+                <td class="col-3 text-truncate">{{fornecedor.nome}}</td>
+                <td class="col-2">{{fornecedor.cnpj}}</td>
+                <td class="col-2">{{fornecedor.endereco}}</td>
+                <td class="col-3">{{fornecedor.email}}</td>
+                <td class="col-2">{{fornecedor.telefone}}</td>
+
+                <!-- Ações Column -->
+                <td class="d-flex justify-content-center gap-1">
+                    <button class="btn btn-sm btn-primary px-3" (click)="onEdit(fornecedor)"
+                        aria-label="Editar um fornecedor">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger px-3" aria-label="Remover um fornecedor"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(fornecedor)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
