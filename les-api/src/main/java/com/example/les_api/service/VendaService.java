@@ -1,6 +1,5 @@
 package com.example.les_api.service;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +10,6 @@ import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.produto.Produto;
 import com.example.les_api.domain.venda.ItemVenda;
 import com.example.les_api.domain.venda.Venda;
-import com.example.les_api.dto.DREDiarioDTO;
 import com.example.les_api.dto.RelatorioClientesPorDiaDTO;
 import com.example.les_api.dto.VendaDTO;
 import com.example.les_api.repository.ClienteRepository;
@@ -78,24 +76,10 @@ public class VendaService {
     public List<RelatorioClientesPorDiaDTO> clientesPorDia() {
         return vendaRepository.clientesPorDia().stream().map(obj -> {
             Date data = obj[0] instanceof java.sql.Date
-                ? new Date(((java.sql.Date) obj[0]).getTime())
-                : (Date) obj[0];
-    
-                return new RelatorioClientesPorDiaDTO((java.sql.Date) data, ((Long) obj[1]).intValue());
-        }).collect(Collectors.toList());
-    }
+                    ? new Date(((java.sql.Date) obj[0]).getTime())
+                    : (Date) obj[0];
 
-    public List<DREDiarioDTO> gerarDREDiario() {
-        return vendaRepository.dreDiario().stream().map(obj -> {
-            Date data = obj[0] instanceof java.sql.Date
-                ? new Date(((java.sql.Date) obj[0]).getTime())
-                : (Date) obj[0];
-
-            Double receita = (Double) obj[1];
-            Double despesa = (Double) obj[2];
-            Double lucro = receita - despesa;
-
-            return new DREDiarioDTO((java.sql.Date) data, receita, despesa, lucro);
+            return new RelatorioClientesPorDiaDTO((java.sql.Date) data, ((Long) obj[1]).intValue());
         }).collect(Collectors.toList());
     }
 }
