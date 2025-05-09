@@ -79,6 +79,13 @@ export class VendaComponent implements OnInit {
     }
 
     finalizarCompra(): void {
+        if (this.saldoAnterior < 0) {
+            this.snackBar.open('Compra não realizada, saldo insuficiente', '', {
+                duration: 5000,
+            });
+            return;
+        }
+
         const itensVenda = this.produtos.map(produto => ({
             _id: 0, // Assign a default or generated ID as needed
             produtoId: produto._id,
@@ -87,7 +94,7 @@ export class VendaComponent implements OnInit {
             custo: produto.preco // Assuming 'custo' is the same as 'preco', adjust as needed
         }));
 
-        console.log(itensVenda)
+        console.log(itensVenda);
 
         const novaVenda: Venda = {
             cliente: this.cliente,
@@ -97,7 +104,7 @@ export class VendaComponent implements OnInit {
             descricaoVenda: ''
         };
 
-        console.log(novaVenda)
+        console.log(novaVenda);
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
                 this.snackBar.open('Compra finalizada com sucesso', '', {
@@ -108,7 +115,9 @@ export class VendaComponent implements OnInit {
                 this.saldoAnterior = this.cliente.saldo;
             },
             error: () => {
-                this.erro = 'Erro ao finalizar a compra.';
+                this.snackBar.open('Compra não realizada, erro ao salvar venda', '', {
+                    duration: 5000,
+                });
             }
         });
     }
