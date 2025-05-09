@@ -2,7 +2,6 @@ import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { VendaService } from '../../services/venda.service';
-import { Cliente } from '../../types/cliente';
 import { Venda } from '../../types/venda';
 
 @Component({
@@ -19,46 +18,49 @@ export class ClientesDiariosComponent {
 
     dataSelecionada: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
     vendasFiltradas: {
-        cliente: Cliente;
+        cliente: String;
         valorTotal: number;
-        dataHora: string;
+        hora: string;
     }[] = [];
-    isLoading: boolean = false; // Added isLoading property
 
-    constructor(private vendaService: VendaService) {
-    }
+    isLoading: boolean = false;
+
+    constructor(private vendaService: VendaService) { }
 
     ngOnInit(): void {
         this.carregarVendas();
     }
 
     carregarVendas(): void {
-        this.isLoading = true; // Set isLoading to true when loading starts
+        this.isLoading = true;
+
+        const filtroInicio = new Date(this.dataSelecionada + 'T00:00:00');
+        const filtroFim = new Date(this.dataSelecionada + 'T23:59:59');
+
         this.vendaService.list().subscribe({
             next: (vendas: Venda[]) => {
-                const dataFiltro = new Date(this.dataSelecionada);
                 this.vendasFiltradas = vendas
                     .filter(v => {
                         const dataVenda = new Date(v.dataHora);
-                        return (
-                            dataVenda.getFullYear() === dataFiltro.getFullYear() &&
-                            dataVenda.getMonth() === dataFiltro.getMonth() &&
-                            dataVenda.getDate() === dataFiltro.getDate()
-                        );
+                        return dataVenda >= filtroInicio && dataVenda <= filtroFim;
                     })
                     .map(v => ({
-                        cliente: v.cliente,
+                        cliente: v.cliente.nome,
                         valorTotal: v.valorTotal,
-                        dataHora: new Date(v.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+                        hora: new Date(v.dataHora).toLocaleTimeString('pt-BR', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
                     }))
-                    .sort((a, b) => a.dataHora.localeCompare(b.dataHora)); // ordena por horário
+                    .sort((a, b) => a.hora.localeCompare(b.hora));
+
+                this.isLoading = false;
             },
             error: () => {
-                // Handle error if needed
-            },
-            complete: () => {
-                this.isLoading = false; // Set isLoading to false when loading is complete
+                console.error('Erro ao buscar vendas');
+                this.isLoading = false;
             }
         });
     }
+
 }

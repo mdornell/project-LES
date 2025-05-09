@@ -6,16 +6,12 @@
             <label for="data">Selecionar data:</label>
             <input id="data" type="date" class="form-control" [(ngModel)]="dataSelecionada" (change)="carregarVendas()">
         </div>
-
-        <!-- <button class="btn btn-outline-dark">
-            <i class="bi bi-printer-fill"></i> Relatório
-        </button> -->
     </div>
 
     <div *ngIf="isLoading; else content">
         <div class="d-flex justify-content-center mt-3 mb-3">
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
+                <span class="visually-hidden">Carregando...</span>
             </div>
         </div>
     </div>
@@ -31,20 +27,11 @@
             </thead>
             <tbody>
                 <tr *ngFor="let venda of vendasFiltradas">
-                    <td>{{ venda.cliente.nome }}</td>
+                    <td>{{ venda.cliente }}</td>
                     <td>{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
-                    <td>{{ venda.dataHora | date:'shortTime' }}</td>
+                    <td>{{ venda.hora }}</td>
                 </tr>
             </tbody>
         </table>
     </ng-template>
-
-    <!-- <nav class="d-flex justify-content-center mt-3">
-        <ul class="pagination">
-            <li class="page-item active"><span class="page-link">1</span></li>
-            <li class="page-item"><a class="page-link">2</a></li>
-            <li class="page-item"><a class="page-link">3</a></li>
-            <li class="page-item"><a class="page-link">Next</a></li>
-        </ul>
-    </nav> -->
 </div>
