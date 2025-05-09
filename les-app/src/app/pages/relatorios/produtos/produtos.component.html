@@ -1,0 +1,49 @@
+<div class="container bg-white p-4 rounded shadow-sm">
+    <h5>Produtos</h5>
+
+    <div class="d-flex flex-wrap gap-3 mb-3 align-items-end">
+        <div>
+            <label>Início</label>
+            <input type="date" [(ngModel)]="inicio" class="form-control">
+        </div>
+        <div>
+            <label>Fim</label>
+            <input type="date" [(ngModel)]="fim" class="form-control">
+        </div>
+        <div>
+            <button class="btn btn-outline-dark" (click)="gerarRelatorio()">
+                <i class="bi bi-printer-fill"></i> Gerar Relatório
+            </button>
+        </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead class="bg-danger text-white">
+            <tr>
+                <th>Descrição</th>
+                <th>Custo</th>
+                <th>Venda</th>
+                <th>Lucro</th>
+                <th>Código</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let linha of linhas">
+                <td>{{ linha.descricao }}</td>
+                <td>{{ linha.custo | currency:'BRL' }}</td>
+                <td>{{ linha.venda | currency:'BRL' }}</td>
+                <td>{{ linha.lucro | currency:'BRL' }}</td>
+                <td>{{ linha.codigo }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- <nav class="d-flex justify-content-center mt-3">
+        <ul class="pagination">
+            <li class="page-item active"><span class="page-link">1</span></li>
+            <li class="page-item"><a class="page-link">2</a></li>
+            <li class="page-item"><a class="page-link">3</a></li>
+            <li class="page-item"><a class="page-link">Next</a></li>
+        </ul>
+    </nav> -->
+</div>

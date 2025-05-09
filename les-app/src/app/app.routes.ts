@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { ProdutoFormComponent } from './pages/produto/produto-form/produto-form.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
+import { ProdutosComponent } from './pages/relatorios/produtos/produtos.component';
 import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
@@ -75,6 +76,9 @@ export const routes: Routes = [
                 path: 'clientes-diarios',
                 component: ClientesDiariosComponent
             },
+
+            // Relatórios
+            { path: 'relatorio-produto', component: ProdutosComponent },
         ]
     },
 
