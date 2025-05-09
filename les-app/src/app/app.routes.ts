@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ClienteFormComponent } from './pages/cliente/cliente-form/cliente-form.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
@@ -14,7 +13,6 @@ import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { VendaComponent } from './pages/venda/venda.component';
-import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
 import { ProdutoResolver } from './services/guard/produto.resolver';
@@ -29,7 +27,7 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         children: [
             // Home
             { path: 'funcionario', component: UsuariosComponent },
@@ -50,7 +48,7 @@ export const routes: Routes = [
             { path: 'refeicao', component: RefeicaoComponent },
 
             // Fornecedores
-            { path: 'fornecedor', component: FornecedorComponent },
+            { path: 'fornecedor', component: FornecedorComponent, },
             { path: 'fornecedor/new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
             { path: 'fornecedor/edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
 
