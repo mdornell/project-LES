@@ -68,4 +68,10 @@ public class ClienteService {
     //             .map(ClienteDTO::new)
     //             .collect(Collectors.toList());
     // }
+
+    public List<ClienteDTO> buscarAniversariantes() {
+        return clienteRepository.aniversariantesHoje().stream()
+            .map(ClienteDTO::new)
+            .collect(Collectors.toList());
+    }
 }
