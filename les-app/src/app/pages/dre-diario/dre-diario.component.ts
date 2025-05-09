@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { VendaService } from '../../services/venda.service';
 import { Venda } from '../../types/venda';
 
@@ -7,22 +8,27 @@ import { Venda } from '../../types/venda';
     selector: 'app-dre-diario',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        FormsModule
     ],
     templateUrl: './dre-diario.component.html',
     styleUrl: './dre-diario.component.scss'
 })
 export class DreDiarioComponent {
+
+    dataInicio: string = '';
+    dataFim: string = '';
+
     resumoDiario: {
         data: string;
-        entrada: number;
-        saida: number;
-        clientes: number;
+        entrada: string;
+        saida: string;
+        clientes: String;
     }[] = [];
 
     saldoInicial = 0;
     saldoFinal = 0;
-    isLoading = false; // Adicionado
+    isLoading = false;
 
     constructor(private vendaService: VendaService) { }
 
@@ -31,37 +37,59 @@ export class DreDiarioComponent {
     }
 
     carregarVendas(): void {
-        this.isLoading = true; // Inicia o carregamento
-        this.vendaService.list().subscribe((vendas: Venda[]) => {
-            this.processarResumo(vendas);
-            this.isLoading = false; // Finaliza o carregamento
-        }, () => {
-            this.isLoading = false; // Finaliza o carregamento em caso de erro
+        this.isLoading = true;
+        this.vendaService.list().subscribe({
+            next: (vendas: Venda[]) => {
+                this.processarResumo(vendas);
+                this.isLoading = false;
+            },
+            error: () => {
+                this.isLoading = false;
+            }
         });
     }
 
     processarResumo(vendas: Venda[]): void {
-        const agrupado = vendas.reduce((acc, venda) => {
+        const detalhes = vendas.map(venda => {
             const data = new Date(venda.dataHora).toLocaleDateString('pt-BR');
-            if (!acc[data]) {
-                acc[data] = [];
-            }
-            acc[data].push(venda);
-            return acc;
-        }, {} as Record<string, Venda[]>);
-
-        this.resumoDiario = Object.entries(agrupado).map(([data, vendasDoDia]) => {
-            const entrada = vendasDoDia.reduce((soma, v) => soma + v.valorTotal, 0);
-            const clientesUnicos = new Set(vendasDoDia.map(v => v.cliente._id)).size;
+            const hora = new Date(venda.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             return {
                 data,
-                entrada,
-                saida: 0, // você pode substituir por valor real se desejar
-                clientes: clientesUnicos
+                entrada: hora,
+                saida: hora,
+                clientes: venda.cliente.nome
             };
         });
 
+        this.resumoDiario = detalhes;
+
         this.saldoInicial = 0;
-        this.saldoFinal = this.resumoDiario.reduce((soma, r) => soma + r.entrada - r.saida, 0);
+        this.saldoFinal = 0; // Adjusted as entrada and saida are now times
+    }
+
+    filtrarVendasPorIntervalo(): void {
+        if (!this.dataInicio || !this.dataFim) {
+            console.error('Data de início e fim devem ser preenchidas');
+            return;
+        }
+
+        const inicio = new Date(this.dataInicio);
+        const fim = new Date(this.dataFim);
+        fim.setHours(23, 59, 59, 999);
+
+        this.isLoading = true;
+        this.vendaService.list().subscribe({
+            next: (vendas: Venda[]) => {
+                const vendasFiltradas = vendas.filter(v => {
+                    const dataVenda = new Date(v.dataHora);
+                    return dataVenda >= inicio && dataVenda <= fim;
+                });
+                this.processarResumo(vendasFiltradas);
+                this.isLoading = false;
+            },
+            error: () => {
+                this.isLoading = false;
+            }
+        });
     }
 }

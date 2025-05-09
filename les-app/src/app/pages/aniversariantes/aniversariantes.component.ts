@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ClienteService } from '../../services/cliente.service';
 import { Cliente } from '../../types/cliente';
 import { AniversariantesListComponent } from './aniversariantes-list/aniversariantes-list.component';
@@ -26,11 +26,19 @@ export class AniversariantesComponent {
         const todayMonth = today.getMonth() + 1; // Months are zero-based
         const todayDate = today.getDate();
 
-        this.aniversariantes$ = this.clienteService.list().pipe(
-            map(clientes => clientes.filter(cliente => {
-                const clienteDate = new Date(cliente.dataAniversario);
-                return clienteDate.getDate() === todayDate && (clienteDate.getMonth() + 1) === todayMonth;
-            }))
-        );
+        this.aniversariantes$ = this.clienteService.list();
+        // .pipe(
+        //     map(clientes => clientes.filter(cliente => {
+        //         const clienteDate = new Date(cliente.dataAniversario);
+        //         return clienteDate.getDate() === todayDate && clienteDate.getMonth() + 1 === todayMonth;
+        //     }))
+        // );
+
+        this.aniversariantes$.subscribe(clientes => {
+            console.log('Lista de aniversariantes:', clientes);
+        });
+
+
     }
+
 }

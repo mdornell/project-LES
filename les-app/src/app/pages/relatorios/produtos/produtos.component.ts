@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProdutoService } from '../../../services/produto.service';
 import { VendaService } from '../../../services/venda.service';
-import { Produto } from '../../../types/produto';
+import { Venda } from '../../../types/venda';
 
 @Component({
     selector: 'app-produtos',
@@ -13,9 +13,10 @@ import { Produto } from '../../../types/produto';
         FormsModule
     ],
     templateUrl: './produtos.component.html',
-    styleUrl: './produtos.component.scss'
+    styleUrls: ['./produtos.component.scss'] // Fixed property name
 })
 export class ProdutosComponent {
+
     inicio: string = new Date().toISOString().split('T')[0];
     fim: string = new Date().toISOString().split('T')[0];
 
@@ -27,7 +28,7 @@ export class ProdutosComponent {
         codigo: string;
     }[] = [];
 
-    produtos: Produto[] = [];
+    isLoading = false;
 
     constructor(
         private vendaService: VendaService,
@@ -35,12 +36,19 @@ export class ProdutosComponent {
     ) { }
 
     gerarRelatorio(): void {
-        this.produtoService.list().subscribe(produtos => {
-            this.produtos = produtos;
-            this.vendaService.list().subscribe(vendas => {
-                const inicioDate = new Date(this.inicio);
-                const fimDate = new Date(this.fim);
+        if (!this.inicio || !this.fim) {
+            console.error('Informe as datas de início e fim.');
+            return;
+        }
 
+        const inicioDate = new Date(this.inicio);
+        const fimDate = new Date(this.fim);
+        fimDate.setHours(23, 59, 59, 999);
+
+        this.isLoading = true;
+
+        this.vendaService.list().subscribe({
+            next: (vendas: Venda[]) => {
                 const vendasFiltradas = vendas.filter(v => {
                     const dataVenda = new Date(v.dataHora);
                     return dataVenda >= inicioDate && dataVenda <= fimDate;
@@ -50,19 +58,32 @@ export class ProdutosComponent {
 
                 vendasFiltradas.forEach(venda => {
                     venda.itens.forEach(item => {
-                        const produto = this.produtos.find(p => p._id === item.produtoId);
-                        if (produto) {
-                            this.linhas.push({
-                                descricao: produto.nome,
-                                custo: item.custo,
-                                venda: produto.preco,
-                                lucro: produto.preco - item.custo,
-                                codigo: produto.codigoBarras
-                            });
-                        }
+                        // Buscando o produto pelo id no service
+                        this.produtoService.listById(item.produtoId).subscribe({
+                            next: (produto) => {
+                                if (produto) {
+                                    this.linhas.push({
+                                        descricao: produto.nome,
+                                        custo: item.custo,
+                                        venda: produto.preco,
+                                        lucro: produto.preco - item.custo,
+                                        codigo: produto.codigoBarras
+                                    });
+                                }
+                            },
+                            error: () => {
+                                console.error(`Erro ao buscar produto com ID ${item.produtoId}`);
+                            }
+                        });
                     });
                 });
-            });
+
+                this.isLoading = false;
+            },
+            error: () => {
+                console.error('Erro ao buscar vendas');
+                this.isLoading = false;
+            }
         });
     }
 }

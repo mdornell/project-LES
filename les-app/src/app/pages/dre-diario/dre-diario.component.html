@@ -1,38 +1,39 @@
 <div class="container bg-white p-4 rounded shadow-sm">
-    <div class="d-flex flex-wrap gap-3 mb-4">
+    <div class="d-flex flex-wrap gap-3 mb-4 align-items-end">
         <div>
-            <label>Início</label>
-            <input type="date" class="form-control">
+            <label for="inicio">Início</label>
+            <input id="inicio" type="date" class="form-control" [(ngModel)]="dataInicio">
         </div>
         <div>
-            <label>Fim</label>
-            <input type="date" class="form-control">
+            <label for="fim">Fim</label>
+            <input id="fim" type="date" class="form-control" [(ngModel)]="dataFim">
         </div>
         <div>
             <label>Saldo Inicial</label>
-            <input type="text" class="form-control" [value]="saldoInicial | currency:'BRL':'symbol':'1.2-2'" disabled>
+            <input type="text" class="form-control" [value]="saldoInicial | currency:'BRL'" disabled>
         </div>
         <div>
             <label>Saldo Final</label>
-            <input type="text" class="form-control" [value]="saldoFinal | currency:'BRL':'symbol':'1.2-2'" disabled>
+            <input type="text" class="form-control" [value]="saldoFinal | currency:'BRL'" disabled>
         </div>
-        <div class="align-self-end">
-            <button class="btn btn-outline-dark">
-                <i class="bi bi-printer-fill"></i>
+        <div>
+            <button class="btn btn-outline-dark" (click)="filtrarVendasPorIntervalo()">
+                <i class="bi bi-search"></i> Filtrar
             </button>
         </div>
     </div>
 
-    <div *ngIf="isLoading; else content">
+    <div *ngIf="isLoading; else conteudo">
         <div class="d-flex justify-content-center mt-3 mb-3">
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only"></span>
+                <span class="visually-hidden">Carregando...</span>
             </div>
         </div>
     </div>
-    <ng-template #content>
+
+    <ng-template #conteudo>
         <table class="table table-bordered text-center">
-            <thead class="text-white bg-danger">
+            <thead class="bg-danger text-white">
                 <tr>
                     <th>Data</th>
                     <th>Entrada</th>
@@ -43,13 +44,11 @@
             <tbody>
                 <tr *ngFor="let linha of resumoDiario">
                     <td>{{ linha.data }}</td>
-                    <td>{{ linha.entrada | currency:'BRL':'symbol':'1.2-2' }}</td>
-                    <td>{{ linha.saida | currency:'BRL':'symbol':'1.2-2' }}</td>
+                    <td>{{ linha.entrada}}</td>
+                    <td>{{ linha.saida }}</td>
                     <td>{{ linha.clientes }}</td>
                 </tr>
             </tbody>
         </table>
     </ng-template>
-
-
 </div>

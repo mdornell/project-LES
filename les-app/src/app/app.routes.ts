@@ -17,6 +17,7 @@ import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { VendaComponent } from './pages/venda/venda.component';
+import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
 import { ProdutoResolver } from './services/guard/produto.resolver';
@@ -31,7 +32,7 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
         children: [
             // Home
             { path: 'funcionario', component: UsuariosComponent },

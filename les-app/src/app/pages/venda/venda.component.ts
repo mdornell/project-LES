@@ -36,7 +36,7 @@ export class VendaComponent implements OnInit {
         private produtoService: ProdutoService,
         private vendaService: VendaService,
         private snackBar: MatSnackBar,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
