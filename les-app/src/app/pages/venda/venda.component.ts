@@ -23,12 +23,11 @@ import { Venda } from '../../types/venda';
 export class VendaComponent implements OnInit {
     venda!: Venda;
     cliente!: Cliente;
-    codigoBarras: number = 0;
+    codigoBarras: string = ''; // Starts as an empty string
     valorGasto: number = 0;
     saldoAnterior: number = 0;
     erro: string = '';
     produtos: Produto[] = [];
-
     dataHora: Date = new Date();
 
     constructor(
@@ -37,12 +36,11 @@ export class VendaComponent implements OnInit {
         private produtoService: ProdutoService,
         private vendaService: VendaService,
         private snackBar: MatSnackBar,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.route.paramMap.subscribe(params => {
             const clienteId = params.get('id');
-            console.log(clienteId);
             if (clienteId) {
                 this.clienteService.listById(Number(clienteId)).subscribe({
                     next: (cliente: Cliente) => {
@@ -60,41 +58,50 @@ export class VendaComponent implements OnInit {
     }
 
     inserirProduto(): void {
-        this.produtoService.listByCodigo(this.codigoBarras).subscribe({
+        if (!this.codigoBarras.trim()) {
+            this.snackBar.open('Código de barras não pode estar vazio.', '', {
+                duration: 3000,
+            });
+            return;
+        }
+
+        this.produtoService.listByCodigo(Number(this.codigoBarras)).subscribe({
             next: (produto) => {
                 if (produto) {
-                    this.produtos.push(produto); // Add the product to the list of products
-                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.preco, 0); // Calculate total cost
-                    this.saldoAnterior = this.cliente.saldo - this.valorGasto; // Update remaining balance
+                    this.produtos.push(produto);
+                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.preco, 0);
+                    this.saldoAnterior = this.cliente.saldo - this.valorGasto;
                 } else {
-                    this.erro = 'Produto não encontrado.';
+                    this.snackBar.open('Produto não encontrado.', '', {
+                        duration: 3000,
+                    });
                 }
             },
             error: () => {
-                this.erro = 'Erro ao buscar produto.';
+                this.snackBar.open('Erro ao buscar produto.', '', {
+                    duration: 3000,
+                });
             }
         });
 
-        this.codigoBarras = 0;
+        this.codigoBarras = ''; // Clear the input field
     }
 
     finalizarCompra(): void {
         if (this.saldoAnterior < 0) {
-            this.snackBar.open('Compra não realizada, saldo insuficiente', '', {
+            this.snackBar.open('Compra não realizada, saldo insuficiente.', '', {
                 duration: 5000,
             });
             return;
         }
 
         const itensVenda = this.produtos.map(produto => ({
-            _id: 0, // Assign a default or generated ID as needed
+            _id: 0,
             produtoId: produto._id,
-            quantidade: 1, // Assuming quantity is 1 for each product, adjust as needed
+            quantidade: 1,
             preco: produto.preco,
-            custo: produto.preco // Assuming 'custo' is the same as 'preco', adjust as needed
+            custo: produto.preco
         }));
-
-        console.log(itensVenda);
 
         const novaVenda: Venda = {
             cliente: this.cliente,
@@ -104,21 +111,26 @@ export class VendaComponent implements OnInit {
             descricaoVenda: ''
         };
 
-        console.log(novaVenda);
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
-                this.snackBar.open('Compra finalizada com sucesso', '', {
+                this.snackBar.open('Compra finalizada com sucesso.', '', {
                     duration: 5000,
                 });
-                this.produtos = [];
-                this.valorGasto = 0;
-                this.saldoAnterior = this.cliente.saldo;
+                this.resetForm();
             },
             error: () => {
-                this.snackBar.open('Compra não realizada, erro ao salvar venda', '', {
+                this.snackBar.open('Compra não realizada, erro ao salvar venda.', '', {
                     duration: 5000,
                 });
             }
         });
+    }
+
+    private resetForm(): void {
+        this.produtos = [];
+        this.valorGasto = 0;
+        this.saldoAnterior = this.cliente.saldo;
+        this.codigoBarras = '';
+        this.erro = '';
     }
 }
