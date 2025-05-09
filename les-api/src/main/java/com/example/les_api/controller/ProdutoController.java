@@ -40,6 +40,11 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorCodigoBarras(codigoBarras));
     }
 
+    @GetMapping("/relatorio")
+    public ResponseEntity<List<ProdutoDTO>> relatorioMaisVendidos() {
+        return ResponseEntity.ok(produtoService.produtosMaisVendidos());
+    }
+
     @PostMapping
     public ResponseEntity<ProdutoDTO> salvar(@RequestBody Produto produto) {
         return ResponseEntity.ok(produtoService.salvar(produto));
