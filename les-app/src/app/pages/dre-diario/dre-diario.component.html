@@ -1,0 +1,55 @@
+<div class="container bg-white p-4 rounded shadow-sm">
+    <div class="d-flex flex-wrap gap-3 mb-4">
+        <div>
+            <label>Início</label>
+            <input type="date" class="form-control">
+        </div>
+        <div>
+            <label>Fim</label>
+            <input type="date" class="form-control">
+        </div>
+        <div>
+            <label>Saldo Inicial</label>
+            <input type="text" class="form-control" [value]="saldoInicial | currency:'BRL':'symbol':'1.2-2'" disabled>
+        </div>
+        <div>
+            <label>Saldo Final</label>
+            <input type="text" class="form-control" [value]="saldoFinal | currency:'BRL':'symbol':'1.2-2'" disabled>
+        </div>
+        <div class="align-self-end">
+            <button class="btn btn-outline-dark">
+                <i class="bi bi-printer-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading; else content">
+        <div class="d-flex justify-content-center mt-3 mb-3">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </div>
+    <ng-template #content>
+        <table class="table table-bordered text-center">
+            <thead class="text-white bg-danger">
+                <tr>
+                    <th>Data</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Clientes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let linha of resumoDiario">
+                    <td>{{ linha.data }}</td>
+                    <td>{{ linha.entrada | currency:'BRL':'symbol':'1.2-2' }}</td>
+                    <td>{{ linha.saida | currency:'BRL':'symbol':'1.2-2' }}</td>
+                    <td>{{ linha.clientes }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-template>
+
+
+</div>
