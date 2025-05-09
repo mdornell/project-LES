@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ClienteFormComponent } from './pages/cliente/cliente-form/cliente-form.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
@@ -14,7 +13,6 @@ import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { VendaComponent } from './pages/venda/venda.component';
-import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
 import { ProdutoResolver } from './services/guard/produto.resolver';
@@ -29,59 +27,32 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         children: [
             // Home
-            { path: '', component: WelcomeComponent },
-
-            // Funcionarios
-            {
-                path: 'funcionario',
-                component: UsuariosComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
-                    { path: 'edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
-                ]
-            },
+            { path: 'funcionario', component: UsuariosComponent },
+            { path: 'funcionario/new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
+            { path: 'funcionario/edit/:id', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
 
             // Clientes
-            {
-                path: 'cliente',
-                component: ClienteComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
-                    { path: 'edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
-                ]
-            },
+            { path: 'cliente', component: ClienteComponent },
+            { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
+            { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
 
             // Produtos
-            {
-                path: 'produto',
-                component: ProdutoComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
-                    { path: 'edit/:id', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
-                ]
-            },
+            { path: 'produto', component: ProdutoComponent },
+            { path: 'produto/new', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
+            { path: 'produto/edit/:id', component: ProdutoFormComponent, resolve: { produto: ProdutoResolver } },
 
             // Refeições
             { path: 'refeicao', component: RefeicaoComponent },
 
             // Fornecedores
-            {
-                path: 'fornecedor',
-                component: FornecedorComponent,
-                // canActivate: [AuthPermissionGuard],
-                children: [
-                    { path: 'new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
-                    { path: 'edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
-                ]
-            },
+            { path: 'fornecedor', component: FornecedorComponent, },
+            { path: 'fornecedor/new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
+            { path: 'fornecedor/edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
 
-            // Vendas
+            //Vendas
             { path: 'venda/:id', component: VendaComponent },
 
         ]
