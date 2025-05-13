@@ -56,7 +56,6 @@ export class LoginClienteComponent {
     }
 
     irParaVenda(): void {
-        alert('Cliente: ' + JSON.stringify(this.cliente)); // Exibe os dados do cliente no console
         if (this.cliente && this.cliente._id) {
             // Navega diretamente para a tela de venda com o ID do cliente a partir da rota 'home'
             this.router.navigate(['/home', 'venda', this.cliente._id]).catch(err => {
@@ -66,6 +65,14 @@ export class LoginClienteComponent {
         } else {
             this.erro = 'Cliente não selecionado ou inválido.';
         }
+    }
+
+    voltarParaHome(): void {
+        // Navega para a página inicial
+        this.router.navigate(['/home']).catch(err => {
+            console.error('Erro ao navegar para a página inicial:', err);
+            this.erro = 'Erro ao voltar para a página inicial. Tente novamente.';
+        });
     }
 
 

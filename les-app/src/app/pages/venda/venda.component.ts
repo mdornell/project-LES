@@ -23,7 +23,7 @@ import { Venda } from '../../types/venda';
 export class VendaComponent implements OnInit {
     venda!: Venda;
     cliente!: Cliente;
-    codigoBarras: string = ''; // Starts as an empty string
+    codigoBarras: number | null = null; // Starts as null
     valorGasto: number = 0;
     saldoAnterior: number = 0;
     erro: string = '';
@@ -58,16 +58,19 @@ export class VendaComponent implements OnInit {
     }
 
     inserirProduto(): void {
-        if (!this.codigoBarras.trim()) {
+        if (!this.codigoBarras) {
             this.snackBar.open('Código de barras não pode estar vazio.', '', {
                 duration: 3000,
             });
             return;
         }
 
-        this.produtoService.listByCodigo(Number(this.codigoBarras)).subscribe({
+
+
+        this.produtoService.listByCodigo(this.codigoBarras).subscribe({
             next: (produto) => {
                 if (produto) {
+                    console.log
                     this.produtos.push(produto);
                     this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.preco, 0);
                     this.saldoAnterior = this.cliente.saldo - this.valorGasto;
@@ -84,7 +87,7 @@ export class VendaComponent implements OnInit {
             }
         });
 
-        this.codigoBarras = ''; // Clear the input field
+        this.codigoBarras = null; // Clear the input field
     }
 
     finalizarCompra(): void {
@@ -114,7 +117,9 @@ export class VendaComponent implements OnInit {
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
                 this.snackBar.open('Compra finalizada com sucesso.', '', {
-                    duration: 5000,
+                    duration: 2000,
+                }).afterDismissed().subscribe(() => {
+                    window.location.href = '/cliente'; // Redirect to "/cliente" after message
                 });
                 this.resetForm();
             },
@@ -130,7 +135,7 @@ export class VendaComponent implements OnInit {
         this.produtos = [];
         this.valorGasto = 0;
         this.saldoAnterior = this.cliente.saldo;
-        this.codigoBarras = '';
+        this.codigoBarras = null; // Reset the input field
         this.erro = '';
     }
 }

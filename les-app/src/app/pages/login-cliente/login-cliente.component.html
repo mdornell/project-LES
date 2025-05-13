@@ -1,37 +1,44 @@
-<div class="nfc-container d-flex justify-content-center align-items-center">
-    <div class="nfc-card text-center">
-        <div class="logo-container">
-            <div class="logo">
-                <img src="assets/img/logo.png" alt="Logo" class="logo-image" width="50" height="50">
-            </div>
+<div class="nfc-container d-flex justify-content-center align-items-center vh-100 bg-light">
+    <button class="btn btn-secondary position-absolute top-0 start-0 m-3 d-flex align-items-center btn-lg"
+        (click)="voltarParaHome()" aria-label="Voltar para a página inicial">
+        <i class="bi bi-arrow-left-circle-fill me-2"></i> Voltar
+    </button>
+    <div class="nfc-card text-center shadow-lg p-4 rounded bg-white position-relative">
+        <!-- Logo Section -->
+        <div class="logo-container mb-4">
+            <img src="assets/img/logo.png" alt="Logo" class="logo-image" width="80" height="80">
         </div>
-        <form [formGroup]="rfidForm" (ngSubmit)="onSubmit()">
+
+        <!-- Form Section -->
+        <form [formGroup]="rfidForm" (ngSubmit)="onSubmit()" class="w-100">
             <div class="mb-3 text-start">
-                <label for="rfid" class="form-label">RFID</label>
-                <input type="text" class="form-control" id="rfid" formControlName="rfid">
+                <label for="rfid" class="form-label fw-bold">RFID</label>
+                <input type="text" class="form-control" id="rfid" formControlName="rfid" placeholder="Digite seu RFID"
+                    autofocus>
             </div>
-            <button type="submit" class="btn btn-primary" [disabled]="rfidForm.invalid">Entrar</button>
+            <button type="submit" class="btn btn-primary w-100 fw-bold" [disabled]="rfidForm.invalid">Entrar</button>
         </form>
 
-        <!-- Exibir dados do usuário após a leitura -->
-        <div *ngIf="cliente" class="user-info mt-3">
-            <h4>Dados do Usuário</h4>
+
+        <!-- User Info Section -->
+        <div *ngIf="cliente" class="user-info mt-4 text-start">
+            <h4 class="fw-bold">Dados do Usuário</h4>
             <p><strong>RFID:</strong> {{ cliente.codigoRFID }}</p>
             <p><strong>Nome:</strong> {{ cliente.nome }}</p>
-            <p><strong>Saldo:</strong> {{ cliente.saldo }}</p>
+            <p><strong>Saldo:</strong> R$ {{ cliente.saldo | number:'1.2-2' }}</p>
 
-            <!-- Verificar saldo -->
+            <!-- Action Buttons -->
             <div *ngIf="cliente.saldo > 0" class="mt-3 d-flex justify-content-center">
-                <button class="btn btn-success" (click)="irParaVenda()">Ir para venda</button>
+                <button class="btn btn-success fw-bold" (click)="irParaVenda()">Ir para venda</button>
             </div>
             <div *ngIf="cliente.saldo <= 0" class="mt-3">
-                <p class="text-danger">Permissão negada: saldo insuficiente.</p>
+                <p class="text-danger fw-bold">Permissão negada: saldo insuficiente.</p>
             </div>
         </div>
 
-        <!-- Exibir mensagem de erro caso não encontre usuário -->
-        <div *ngIf="erro" class="error-message mt-3">
-            <p class="text-danger">{{ erro }}</p>
+        <!-- Error Message -->
+        <div *ngIf="erro" class="error-message mt-4">
+            <p class="text-danger fw-bold">{{ erro }}</p>
         </div>
     </div>
 </div>
