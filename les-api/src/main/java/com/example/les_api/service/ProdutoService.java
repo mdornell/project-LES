@@ -26,6 +26,18 @@ public class ProdutoService {
         return new ProdutoDTO(produto);
     }
 
+    public ProdutoDTO buscarPorCodigoBarras(String codigoBarras) {
+        Produto produto = produtoRepository.findByCodigoBarras(codigoBarras)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+        return new ProdutoDTO(produto);
+    }
+
+    public List<ProdutoDTO> produtosMaisVendidos() {
+        return produtoRepository.produtosMaisVendidos().stream()
+            .map(ProdutoDTO::new)
+            .collect(Collectors.toList());
+    }
+
     public ProdutoDTO salvar(Produto produto) {
         return new ProdutoDTO(produtoRepository.save(produto));
     }

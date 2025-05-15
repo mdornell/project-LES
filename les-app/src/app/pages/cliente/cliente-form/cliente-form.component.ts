@@ -52,8 +52,13 @@ export class ClienteFormComponent implements OnInit {
 
     onSubmit() {
         if (this.form.valid) {
-            console.log(this.form.value);
-            this.clienteService.save(this.form.value)
+            const formValue = { ...this.form.value };
+            const dataAniversario = new Date(formValue.dataAniversario);
+            dataAniversario.setDate(dataAniversario.getDate() + 1);
+            formValue.dataAniversario = dataAniversario.toISOString().split('T')[0]; // Format as yyyy-mm-dd
+
+            console.log(formValue);
+            this.clienteService.save(formValue)
                 .subscribe({
                     next: () => this.onSuccess(),
                     error: () => this.onErro()
@@ -61,7 +66,6 @@ export class ClienteFormComponent implements OnInit {
         } else {
             this.snackBar.open('Formulario Invalido', 'X', { duration: 5000 });
         }
-
     }
 
     onCancel() {

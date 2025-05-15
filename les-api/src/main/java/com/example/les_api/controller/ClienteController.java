@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.service.ClienteService;
+//import com.example.les_api.service.SaldoClienteService;
 
 import lombok.AllArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class ClienteController {
 
     private final ClienteService clienteService;
+    //private final SaldoClienteService saldoClienteService;
 
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarTodos() {
@@ -59,5 +61,10 @@ public class ClienteController {
     // @GetMapping("/consumoCliente/{id}")
     // public ResponseEntity<List<ClienteDTO>> consumoCliente(@PathVariable Integer id) {
     //     return ResponseEntity.ok(clienteService.consumoCliente(id));
+    // }
+
+    // @GetMapping("/saldo/rfid/{codRFID}")
+    // public ResponseEntity<?> buscarSaldoPorCodRFID(@PathVariable String codRFID) {
+    //     return saldoClienteService.buscarSaldoPorCodRFID(codRFID);
     // }
 }

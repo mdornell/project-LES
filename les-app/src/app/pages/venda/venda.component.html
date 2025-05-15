@@ -9,7 +9,8 @@
         <div class="col-md-6">
             <label for="codigoProduto" class="form-label fw-semibold">Cod. Produto</label>
             <input type="text" class="form-control" id="codigoProduto" [(ngModel)]="codigoBarras"
-                placeholder="Digite o código do produto" />
+                placeholder="Digite ou escaneie o código do produto" (keyup.enter)="inserirProduto()" autocomplete="off"
+                autofocus />
         </div>
         <div class="col-md-3 mt-4 mt-md-0">
             <button class="btn btn-maroon w-100" (click)="inserirProduto()">Inserir</button>

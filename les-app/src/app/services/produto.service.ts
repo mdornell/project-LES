@@ -22,7 +22,7 @@ export class ProdutoService {
     }
 
     listByCodigo(codigo: number) {
-        return this.httpCliente.get<Produto>(this.apiUrl + "/codigo/" + codigo, this.apiAuth).pipe(take(1));
+        return this.httpCliente.get<Produto>(this.apiUrl + "/cod/" + codigo, this.apiAuth).pipe(take(1));
     }
 
     save(record: Partial<Produto>) {

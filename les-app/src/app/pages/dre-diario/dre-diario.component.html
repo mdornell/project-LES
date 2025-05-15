@@ -1,0 +1,54 @@
+<div class="container bg-white p-4 rounded shadow-sm">
+    <div class="d-flex flex-wrap gap-3 mb-4 align-items-end">
+        <div>
+            <label for="inicio">Início</label>
+            <input id="inicio" type="date" class="form-control" [(ngModel)]="dataInicio">
+        </div>
+        <div>
+            <label for="fim">Fim</label>
+            <input id="fim" type="date" class="form-control" [(ngModel)]="dataFim">
+        </div>
+        <div>
+            <label>Saldo Inicial</label>
+            <input type="text" class="form-control" [value]="saldoInicial | currency:'BRL'" disabled>
+        </div>
+        <div>
+            <label>Saldo Final</label>
+            <input type="text" class="form-control" [value]="saldoFinal | currency:'BRL'" disabled>
+        </div>
+        <div>
+            <button class="btn btn-outline-dark" (click)="filtrarVendasPorIntervalo()">
+                <i class="bi bi-search"></i> Filtrar
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="isLoading; else conteudo">
+        <div class="d-flex justify-content-center mt-3 mb-3">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #conteudo>
+        <table class="table table-bordered text-center">
+            <thead class="bg-danger text-white">
+                <tr>
+                    <th>Data</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Clientes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let linha of resumoDiario">
+                    <td>{{ linha.data }}</td>
+                    <td>{{ linha.entrada}}</td>
+                    <td>{{ linha.saida }}</td>
+                    <td>{{ linha.clientes }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-template>
+</div>
