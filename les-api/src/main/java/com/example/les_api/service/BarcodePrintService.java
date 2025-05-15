@@ -10,7 +10,7 @@ import javax.print.attribute.standard.Copies;
 @Service
 public class BarcodePrintService {
 
-    public static void imprimirComandoZPL(int quantidade, String codigo) {
+    public void imprimirComandoZPL(int quantidade, String codigo) {
         try {
             PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
             if (services.length == 0) {
@@ -59,12 +59,10 @@ public class BarcodePrintService {
         }
     }
 
-    private static String gerarComandoEtiquetas(int quantidade, String codigo, int offset) {
+    private String gerarComandoEtiquetas(int quantidade, String codigo, int offset) {
         StringBuilder zplBuilder = new StringBuilder();
-
-        // Colunas levemente mais à esquerda
-        int[] posicoesX = { 40, 330, 600 };
-        int posY = 30; // altura fixa (mesma linha)
+        int[] posicoesX = {40, 330, 600}; // centralizado mais à esquerda
+        int posY = 30;
 
         for (int i = 0; i < quantidade; i++) {
             int coluna = i % 3;
@@ -79,5 +77,4 @@ public class BarcodePrintService {
 
         return zplBuilder.toString();
     }
-
 }
