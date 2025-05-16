@@ -8,7 +8,7 @@ import { Produto } from '../../../types/produto';
     selector: 'app-produto-list',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
     ],
     templateUrl: './produto-list.component.html',
     styleUrl: './produto-list.component.scss'
