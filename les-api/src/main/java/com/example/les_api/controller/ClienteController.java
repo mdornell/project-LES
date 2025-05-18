@@ -1,6 +1,7 @@
 package com.example.les_api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.dto.ClienteDTO;
+import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.service.ClienteService;
 //import com.example.les_api.service.SaldoClienteService;
 
@@ -25,7 +28,7 @@ import lombok.AllArgsConstructor;
 public class ClienteController {
 
     private final ClienteService clienteService;
-    //private final SaldoClienteService saldoClienteService;
+    // private final SaldoClienteService saldoClienteService;
 
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarTodos() {
@@ -58,13 +61,21 @@ public class ClienteController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/em-aberto")
+    public ResponseEntity<List<ClienteEmAbertoDTO>> listarEmAberto(
+            @RequestParam(required = false) Integer dias) {
+        return ResponseEntity.ok(clienteService.listarClientesEmAberto(Optional.ofNullable(dias)));
+    }
+
     // @GetMapping("/consumoCliente/{id}")
-    // public ResponseEntity<List<ClienteDTO>> consumoCliente(@PathVariable Integer id) {
-    //     return ResponseEntity.ok(clienteService.consumoCliente(id));
+    // public ResponseEntity<List<ClienteDTO>> consumoCliente(@PathVariable Integer
+    // id) {
+    // return ResponseEntity.ok(clienteService.consumoCliente(id));
     // }
 
     // @GetMapping("/saldo/rfid/{codRFID}")
-    // public ResponseEntity<?> buscarSaldoPorCodRFID(@PathVariable String codRFID) {
-    //     return saldoClienteService.buscarSaldoPorCodRFID(codRFID);
+    // public ResponseEntity<?> buscarSaldoPorCodRFID(@PathVariable String codRFID)
+    // {
+    // return saldoClienteService.buscarSaldoPorCodRFID(codRFID);
     // }
 }

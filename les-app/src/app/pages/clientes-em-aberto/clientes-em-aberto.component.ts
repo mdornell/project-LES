@@ -47,18 +47,31 @@ export class ClientesEmAbertoComponent {
     // }
 
     // Esta função preenche a lista de clientes em aberto de forma estática.
+    // carregarClientes(): void {
+    //     this.clientesEmAberto = [
+    //         // Metade abaixo de 30 dias
+    //         { nome: 'João Silva', saldo: 150.75, dias: 10 },
+    //         { nome: 'Maria Souza', saldo: 200.00, dias: 25 },
+    //         { nome: 'Ana Paula', saldo: 120.00, dias: 5 },
+    //         { nome: 'Bruno Rocha', saldo: 80.25, dias: 15 },
+    //         // Metade acima de 30 dias
+    //         { nome: 'Carlos Lima', saldo: 50.50, dias: 35 },
+    //         { nome: 'Fernanda Alves', saldo: 300.00, dias: 32 },
+    //         { nome: 'Ricardo Gomes', saldo: 60.00, dias: 40 },
+    //         { nome: 'Patrícia Mendes', saldo: 175.50, dias: 38 }
+    //     ].filter(c => !this.mostrarApenas30Dias || c.dias <= 30);
+    // }
+
     carregarClientes(): void {
-        this.clientesEmAberto = [
-            // Metade abaixo de 30 dias
-            { nome: 'João Silva', saldo: 150.75, dias: 10 },
-            { nome: 'Maria Souza', saldo: 200.00, dias: 25 },
-            { nome: 'Ana Paula', saldo: 120.00, dias: 5 },
-            { nome: 'Bruno Rocha', saldo: 80.25, dias: 15 },
-            // Metade acima de 30 dias
-            { nome: 'Carlos Lima', saldo: 50.50, dias: 35 },
-            { nome: 'Fernanda Alves', saldo: 300.00, dias: 32 },
-            { nome: 'Ricardo Gomes', saldo: 60.00, dias: 40 },
-            { nome: 'Patrícia Mendes', saldo: 175.50, dias: 38 }
-        ].filter(c => !this.mostrarApenas30Dias || c.dias <= 30);
+        const dias = this.mostrarApenas30Dias ? 30 : undefined;
+
+        this.clienteService.listClientesEmAberto(dias).subscribe(clientes => {
+            this.clientesEmAberto = clientes.map(c => ({
+                nome: c.nome,
+                saldo: c.valor,
+                dias: c.dias
+            }));
+        });
     }
+
 }
