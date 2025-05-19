@@ -38,6 +38,16 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.buscarPorId(id));
     }
 
+    @GetMapping("/cod/{codigoBarras}")
+    public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable String codigoBarras) {
+        return ResponseEntity.ok(produtoService.buscarPorCodigoBarras(codigoBarras));
+    }
+
+    @GetMapping("/relatorio")
+    public ResponseEntity<List<ProdutoDTO>> relatorioMaisVendidos() {
+        return ResponseEntity.ok(produtoService.produtosMaisVendidos());
+    }
+
     @VerificaPermissao(tela = "Produto", acao = "adicionar")
     @PostMapping
     public ResponseEntity<ProdutoDTO> salvar(@RequestBody Produto produto) {
@@ -57,4 +67,3 @@ public class ProdutoController {
         return ResponseEntity.noContent().build();
     }
 }
-

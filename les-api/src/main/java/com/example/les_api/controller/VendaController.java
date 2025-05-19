@@ -1,7 +1,6 @@
 package com.example.les_api.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,10 +41,8 @@ public class VendaController {
 
     @VerificaPermissao(tela = "Venda", acao = "adicionar")
     @PostMapping
-    public ResponseEntity<VendaDTO> salvar(@RequestBody VendaDTO vendaDTO) {
-        Venda venda = vendaService.salvar(vendaDTO);
-        VendaDTO savedVendaDTO = new VendaDTO(venda);
-        return ResponseEntity.ok(savedVendaDTO);
+    public ResponseEntity<Venda> salvar(@RequestBody VendaDTO vendaDTO) {
+        return ResponseEntity.ok(vendaService.salvar(vendaDTO));
     }
 
     @VerificaPermissao(tela = "Venda", acao = "excluir")
