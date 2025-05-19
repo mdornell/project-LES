@@ -17,6 +17,7 @@ import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.VendaRepository;
+
 @Service
 public class ClienteService {
 
@@ -82,28 +83,33 @@ public class ClienteService {
 
     public List<ClienteDTO> buscarAniversariantes() {
         return clienteRepository.aniversariantesHoje().stream()
-            .map(ClienteDTO::new)
-            .collect(Collectors.toList());
+                .map(ClienteDTO::new)
+                .collect(Collectors.toList());
     }
 
     public List<ClienteEmAbertoDTO> listarClientesEmAberto(Optional<Integer> diasMinimos) {
-    List<Venda> vendas = vendaRepository.findAll();
-    Date hoje = new Date();
+        // Busca todas as vendas no banco de dados
+        List<Venda> vendas = vendaRepository.findAll();
+        // Obtém a data atual
+        Date hoje = new Date();
 
-    return vendas.stream()
-        .filter(v -> v.getValorTotal() != null && v.getCliente() != null)
-        .map(v -> {
-            long dias = ChronoUnit.DAYS.between(
-                v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                hoje.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            );
-            return new ClienteEmAbertoDTO(
-                v.getCliente().getNome(),
-                v.getValorTotal(),
-                dias
-            );
-        })
-        .filter(c -> diasMinimos.isEmpty() || c.getDias() >= diasMinimos.get())
-        .collect(Collectors.toList());
-}
+        // Processa as vendas para encontrar clientes em aberto
+        return vendas.stream()
+                // Filtra vendas que possuem valor total e cliente associado
+                .filter(v -> v.getValorTotal() != null && v.getCliente() != null)
+                // Mapeia cada venda para um DTO contendo nome do cliente, valor e dias em aberto
+                .map(v -> {
+                    long dias = ChronoUnit.DAYS.between(
+                            v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                            hoje.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    return new ClienteEmAbertoDTO(
+                            v.getCliente().getNome(),
+                            v.getValorTotal(),
+                            dias);
+                })
+                // Filtra pelo número mínimo de dias, se informado
+                .filter(c -> diasMinimos.isEmpty() || c.getDias() >= diasMinimos.get())
+                // Coleta o resultado em uma lista
+                .collect(Collectors.toList());
+    }
 }

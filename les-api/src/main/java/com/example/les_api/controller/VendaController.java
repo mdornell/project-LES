@@ -1,6 +1,7 @@
 package com.example.les_api.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.VendaDTO;
+import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/venda")
@@ -24,22 +27,33 @@ public class VendaController {
 
     private final VendaService vendaService;
 
-    @PostMapping
-    public ResponseEntity<Venda> salvar(@RequestBody VendaDTO vendaDTO) {
-        System.out.println("VendaController.salvar: " + vendaDTO);
-        return ResponseEntity.ok(vendaService.salvar(vendaDTO));
-    }
-
+    @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping
-    public ResponseEntity<List<Venda>> listarTodas() {
-        return ResponseEntity.ok(vendaService.listarTodas());
+    public ResponseEntity<List<VendaDTO>> listarTodos() {
+        List<VendaDTO> dtos = vendaService.listarTodas()
+                .stream()
+                .map(VendaDTO::new) // Supondo que VendaDTO tenha um construtor que recebe Venda
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
+    @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping("/{id}")
-    public ResponseEntity<Venda> buscarPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(vendaService.buscarPorId(id));
+    public ResponseEntity<VendaDTO> buscarPorId(@PathVariable Integer id) {
+        Venda venda = vendaService.buscarPorId(id);
+        VendaDTO vendaDTO = new VendaDTO(venda);
+        return ResponseEntity.ok(vendaDTO);
     }
 
+    @VerificaPermissao(tela = "Venda", acao = "adicionar")
+    @PostMapping
+    public ResponseEntity<VendaDTO> salvar(@RequestBody VendaDTO vendaDTO) {
+        Venda venda = vendaService.salvar(vendaDTO);
+        VendaDTO savedVendaDTO = new VendaDTO(venda);
+        return ResponseEntity.ok(savedVendaDTO);
+    }
+
+    @VerificaPermissao(tela = "Venda", acao = "excluir")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         vendaService.deletar(id);
