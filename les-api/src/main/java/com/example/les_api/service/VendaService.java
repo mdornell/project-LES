@@ -42,7 +42,7 @@ public class VendaService {
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
             ItemVenda item = new ItemVenda();
-            item.setProduto(produto);
+            item.setProdutoId(produto);
             item.setQuantidade(itemDto.getQuantidade());
             item.setCusto(itemDto.getCusto());
             item.setVenda(venda);

@@ -1,9 +1,8 @@
 package com.example.les_api.service;
 
-import java.util.Date;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +16,7 @@ import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.VendaRepository;
+
 @Service
 public class ClienteService {
 
@@ -45,9 +45,14 @@ public class ClienteService {
     public ClienteDTO salvar(Cliente cliente) {
 
         System.out.println(
-                "ClienteService.salvar: " + cliente.getNome() + ", " + cliente.getEmail() + ", " + cliente.getSaldo()
-                        + ", " + cliente.getCodigoRFID() + ", " + cliente.getAtivo() + ", "
-                        + cliente.getDataAniversario());
+                String.format(
+                        "{\"nome\":\"%s\",\"email\":\"%s\",\"saldo\":%s,\"codigoRFID\":\"%s\",\"ativo\":%s,\"dataAniversario\":\"%s\"}",
+                        cliente.getNome(),
+                        cliente.getEmail(),
+                        cliente.getSaldo(),
+                        cliente.getCodigoRFID(),
+                        cliente.getAtivo(),
+                        cliente.getDataAniversario()));
 
         return new ClienteDTO(clienteRepository.save(cliente));
     }
@@ -82,28 +87,26 @@ public class ClienteService {
 
     public List<ClienteDTO> buscarAniversariantes() {
         return clienteRepository.aniversariantesHoje().stream()
-            .map(ClienteDTO::new)
-            .collect(Collectors.toList());
+                .map(ClienteDTO::new)
+                .collect(Collectors.toList());
     }
 
     public List<ClienteEmAbertoDTO> listarClientesEmAberto(Optional<Integer> diasMinimos) {
-    List<Venda> vendas = vendaRepository.findAll();
-    Date hoje = new Date();
+        List<Venda> vendas = vendaRepository.findAll();
+        Date hoje = new Date();
 
-    return vendas.stream()
-        .filter(v -> v.getValorTotal() != null && v.getCliente() != null)
-        .map(v -> {
-            long dias = ChronoUnit.DAYS.between(
-                v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                hoje.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-            );
-            return new ClienteEmAbertoDTO(
-                v.getCliente().getNome(),
-                v.getValorTotal(),
-                dias
-            );
-        })
-        .filter(c -> diasMinimos.isEmpty() || c.getDias() >= diasMinimos.get())
-        .collect(Collectors.toList());
-}
+        return vendas.stream()
+                .filter(v -> v.getValorTotal() != null && v.getCliente() != null)
+                .map(v -> {
+                    long dias = ChronoUnit.DAYS.between(
+                            v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                            hoje.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                    return new ClienteEmAbertoDTO(
+                            v.getCliente().getNome(),
+                            v.getValorTotal(),
+                            dias);
+                })
+                .filter(c -> diasMinimos.isEmpty() || c.getDias() >= diasMinimos.get())
+                .collect(Collectors.toList());
+    }
 }
