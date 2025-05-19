@@ -18,7 +18,6 @@ import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/venda")
@@ -30,11 +29,7 @@ public class VendaController {
     @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping
     public ResponseEntity<List<VendaDTO>> listarTodos() {
-        List<VendaDTO> dtos = vendaService.listarTodas()
-                .stream()
-                .map(VendaDTO::new) // Supondo que VendaDTO tenha um construtor que recebe Venda
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(vendaService.listarTodas());
     }
 
     @VerificaPermissao(tela = "Venda", acao = "ver")

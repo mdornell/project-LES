@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin, map } from 'rxjs';
+import { ProdutoService } from '../../services/produto.service';
 import { VendaService } from '../../services/venda.service';
 import { Venda } from '../../types/venda';
 
@@ -16,78 +18,72 @@ import { Venda } from '../../types/venda';
 })
 export class DreDiarioComponent {
 
-    dataInicio: string = '';
-    dataFim: string = '';
+    inicio: string = new Date().toISOString().split('T')[0];
+    fim: string = new Date().toISOString().split('T')[0];
 
-    resumoDiario: {
-        data: string;
-        entrada: string;
-        saida: string;
-        clientes: String;
+    linhas: {
+        descricao: string;
+        custo: number;
+        venda: number;
+        lucro: number;
+        codigo: string;
     }[] = [];
 
-    saldoInicial = 0;
-    saldoFinal = 0;
     isLoading = false;
 
-    constructor(private vendaService: VendaService) { }
+    constructor(
+        private vendaService: VendaService,
+        private produtoService: ProdutoService
+    ) { }
 
-    ngOnInit(): void {
-        this.carregarVendas();
-    }
-
-    carregarVendas(): void {
-        this.isLoading = true;
-        this.vendaService.list().subscribe({
-            next: (vendas: Venda[]) => {
-                this.processarResumo(vendas);
-                this.isLoading = false;
-            },
-            error: () => {
-                this.isLoading = false;
-            }
-        });
-    }
-
-    processarResumo(vendas: Venda[]): void {
-        const detalhes = vendas.map(venda => {
-            const data = new Date(venda.dataHora).toLocaleDateString('pt-BR');
-            const hora = new Date(venda.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            return {
-                data,
-                entrada: hora,
-                saida: hora,
-                clientes: venda.cliente.nome
-            };
-        });
-
-        this.resumoDiario = detalhes;
-
-        this.saldoInicial = 0;
-        this.saldoFinal = 0; // Adjusted as entrada and saida are now times
-    }
-
-    filtrarVendasPorIntervalo(): void {
-        if (!this.dataInicio || !this.dataFim) {
-            console.error('Data de início e fim devem ser preenchidas');
+    gerarRelatorio(): void {
+        if (!this.inicio || !this.fim) {
+            console.error('Informe as datas de início e fim.');
             return;
         }
 
-        const inicio = new Date(this.dataInicio);
-        const fim = new Date(this.dataFim);
-        fim.setHours(23, 59, 59, 999);
+        const inicioDate = new Date(this.inicio);
+        const fimDate = new Date(this.fim);
+        fimDate.setHours(23, 59, 59, 999);
 
         this.isLoading = true;
+
         this.vendaService.list().subscribe({
             next: (vendas: Venda[]) => {
                 const vendasFiltradas = vendas.filter(v => {
                     const dataVenda = new Date(v.dataHora);
-                    return dataVenda >= inicio && dataVenda <= fim;
+                    return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
-                this.processarResumo(vendasFiltradas);
-                this.isLoading = false;
+
+                const requisicoes = vendasFiltradas.flatMap(venda =>
+                    venda.itens.map(item => {
+                        const produtoId = item.produtoId;
+                        return this.produtoService.listById(produtoId).pipe(
+                            map(produtoResponse => ({
+                                id: produtoId,
+                                descricao: produtoResponse.nome,
+                                custo: item.custo,
+                                venda: produtoResponse.preco,
+                                lucro: produtoResponse.preco - item.custo,
+                                codigo: produtoResponse.codigoBarras
+                            }))
+                        );
+                    })
+                );
+
+                forkJoin(requisicoes).subscribe({
+                    next: (linhasFormatadas) => {
+                        this.linhas = linhasFormatadas;
+                        this.isLoading = false;
+                    },
+                    error: (err) => {
+                        console.error('Erro ao buscar produtos', err);
+                        this.isLoading = false;
+                    }
+                });
             },
             error: () => {
+                console.error('Erro ao buscar vendas');
                 this.isLoading = false;
             }
         });

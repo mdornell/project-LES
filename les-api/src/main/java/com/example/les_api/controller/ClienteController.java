@@ -45,6 +45,15 @@ public class ClienteController {
     @VerificaPermissao(tela = "Cliente", acao = "adicionar")
     @PostMapping
     public ResponseEntity<ClienteDTO> salvar(@RequestBody Cliente cliente) {
+        System.out.println(
+                String.format(
+                        "{\n\"nome\":\"%s\",\n\"email\":\"%s\",\n\"saldo\":%s,\n\"codigoRFID\":\"%s\",\n\"ativo\":%s,\n\"dataAniversario\":\"%s\"\n}",
+                        cliente.getNome(),
+                        cliente.getEmail(),
+                        cliente.getSaldo(),
+                        cliente.getCodigoRFID(),
+                        cliente.getAtivo(),
+                        cliente.getDataAniversario()));
         return ResponseEntity.ok(clienteService.salvar(cliente));
     }
 

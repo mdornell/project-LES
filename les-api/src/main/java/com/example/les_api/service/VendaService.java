@@ -42,7 +42,7 @@ public class VendaService {
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
             ItemVenda item = new ItemVenda();
-            item.setProduto(produto);
+            item.setProdutoId(produto);
             item.setQuantidade(itemDto.getQuantidade());
             item.setCusto(itemDto.getCusto());
             item.setVenda(venda);
@@ -60,8 +60,11 @@ public class VendaService {
         return vendaRepository.save(venda);
     }
 
-    public List<Venda> listarTodas() {
-        return vendaRepository.findAll();
+    public List<VendaDTO> listarTodas() {
+        return vendaRepository.findAll()
+                .stream()
+                .map(VendaDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Venda buscarPorId(Integer id) {

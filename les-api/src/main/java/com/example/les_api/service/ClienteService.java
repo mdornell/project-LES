@@ -1,9 +1,8 @@
 package com.example.les_api.service;
 
-import java.util.Date;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,9 +45,14 @@ public class ClienteService {
     public ClienteDTO salvar(Cliente cliente) {
 
         System.out.println(
-                "ClienteService.salvar: " + cliente.getNome() + ", " + cliente.getEmail() + ", " + cliente.getSaldo()
-                        + ", " + cliente.getCodigoRFID() + ", " + cliente.getAtivo() + ", "
-                        + cliente.getDataAniversario());
+                String.format(
+                        "{\"nome\":\"%s\",\"email\":\"%s\",\"saldo\":%s,\"codigoRFID\":\"%s\",\"ativo\":%s,\"dataAniversario\":\"%s\"}",
+                        cliente.getNome(),
+                        cliente.getEmail(),
+                        cliente.getSaldo(),
+                        cliente.getCodigoRFID(),
+                        cliente.getAtivo(),
+                        cliente.getDataAniversario()));
 
         return new ClienteDTO(clienteRepository.save(cliente));
     }
@@ -89,9 +93,9 @@ public class ClienteService {
 
     public List<ClienteEmAbertoDTO> listarClientesEmAberto(Optional<Integer> diasMinimos) {
         // Busca todas as vendas no banco de dados
-        List<Venda> vendas = vendaRepository.findAll();
+            List<Venda> vendas = vendaRepository.findAll();
         // Obtém a data atual
-        Date hoje = new Date();
+            Date hoje = new Date();
 
         // Processa as vendas para encontrar clientes em aberto
         return vendas.stream()

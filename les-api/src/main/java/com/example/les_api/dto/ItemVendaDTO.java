@@ -1,6 +1,8 @@
 package com.example.les_api.dto;
 
 import com.example.les_api.domain.venda.ItemVenda;
+
+import com.example.les_api.domain.venda.ItemVenda;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ public class ItemVendaDTO {
 
     // Construtor que converte ItemVenda em ItemVendaDTO
     public ItemVendaDTO(ItemVenda item) {
-        this.produtoId = item.getProduto() != null ? item.getProduto().getId() : null;
+        this.produtoId = item.getProdutoId() != null ? item.getProdutoId().getId() : null;
         this.quantidade = item.getQuantidade();
         this.custo = item.getCusto();
     }
