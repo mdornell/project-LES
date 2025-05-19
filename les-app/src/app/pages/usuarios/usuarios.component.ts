@@ -21,6 +21,19 @@ export class UsuariosComponent {
     usuarios$: Observable<Usuario[]>;
     usuarioSelected: Usuario | null = null;
 
+    telasPermissoes: string[] = [
+        "Dashboard",
+        "Produto",
+        "Cliente",
+        "Venda",
+        "Fornecedor",
+        "Relatórios",
+        "Recarga",
+        "PagamentoFornecedor",
+        "Acesso",
+        "Funcionário"
+    ];
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
