@@ -72,7 +72,7 @@ export class VendaComponent implements OnInit {
                 if (produto) {
                     console.log
                     this.produtos.push(produto);
-                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.preco, 0);
+                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
                     this.saldoAnterior = this.cliente.saldo - this.valorGasto;
                 } else {
                     this.snackBar.open('Produto não encontrado.', '', {
@@ -102,8 +102,8 @@ export class VendaComponent implements OnInit {
             _id: 0,
             produtoId: produto._id,
             quantidade: 1,
-            preco: produto.preco,
-            custo: produto.preco
+            preco: produto.valorVenda,
+            custo: produto.valorCusto,
         }));
 
         const novaVenda: Venda = {

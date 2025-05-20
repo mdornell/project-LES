@@ -22,11 +22,12 @@ export class DreDiarioComponent {
     fim: string = new Date().toISOString().split('T')[0];
 
     linhas: {
+        codigo: string;
         descricao: string;
         custo: number;
         venda: number;
         lucro: number;
-        codigo: string;
+        qtd: number;
     }[] = [];
 
     isLoading = false;
@@ -55,20 +56,31 @@ export class DreDiarioComponent {
                     return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
 
-                const requisicoes = vendasFiltradas.flatMap(venda =>
-                    venda.itens.map(item => {
-                        const produtoId = item.produtoId;
-                        return this.produtoService.listById(produtoId).pipe(
-                            map(produtoResponse => ({
-                                id: produtoId,
-                                descricao: produtoResponse.nome,
-                                custo: item.custo,
-                                venda: produtoResponse.preco,
-                                lucro: produtoResponse.preco - item.custo,
-                                codigo: produtoResponse.codigoBarras
-                            }))
-                        );
-                    })
+                // Agrupar itens por produtoId e somar apenas a quantidade
+                const itensMap = new Map<string, { qtd: number; produtoId: string }>();
+                vendasFiltradas.forEach(venda => {
+                    venda.itens.forEach(item => {
+                        const key: string = String(item.produtoId);
+                        if (!itensMap.has(key)) {
+                            itensMap.set(key, { qtd: 0, produtoId: String(item.produtoId) });
+                        }
+                        const entry = itensMap.get(key)!;
+                        entry.qtd += item.quantidade ?? 1;
+                    });
+                });
+
+                const requisicoes = Array.from(itensMap.values()).map(itemAgrupado =>
+                    this.produtoService.listById(Number(itemAgrupado.produtoId)).pipe(
+                        map(produtoResponse => ({
+                            id: itemAgrupado.produtoId,
+                            descricao: produtoResponse.nome,
+                            custo: produtoResponse.valorCusto,
+                            venda: produtoResponse.valorVenda,
+                            lucro: (produtoResponse.valorVenda * itemAgrupado.qtd),
+                            codigo: produtoResponse.codigoBarras,
+                            qtd: itemAgrupado.qtd
+                        }))
+                    )
                 );
 
                 forkJoin(requisicoes).subscribe({

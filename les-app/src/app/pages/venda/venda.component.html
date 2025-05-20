@@ -29,7 +29,7 @@
             <tbody>
                 <tr *ngFor="let produto of produtos">
                     <td>{{ produto.descricao }}</td>
-                    <td>R$ {{ produto.preco.toFixed(2) }}</td>
+                    <td>R$ {{ produto.valorVenda.toFixed(2) }}</td>
                     <td>{{ produto.codigoBarras }}</td>
                 </tr>
             </tbody>

@@ -65,8 +65,8 @@ export class ProdutosComponent {
                                     this.linhas.push({
                                         descricao: produto.nome,
                                         custo: item.custo,
-                                        venda: produto.preco,
-                                        lucro: produto.preco - item.custo,
+                                        venda: produto.valorVenda,
+                                        lucro: produto.valorVenda - item.custo,
                                         codigo: produto.codigoBarras
                                     });
                                 }

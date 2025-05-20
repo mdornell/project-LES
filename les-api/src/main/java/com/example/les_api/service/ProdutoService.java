@@ -34,8 +34,8 @@ public class ProdutoService {
 
     public List<ProdutoDTO> produtosMaisVendidos() {
         return produtoRepository.produtosMaisVendidos().stream()
-            .map(ProdutoDTO::new)
-            .collect(Collectors.toList());
+                .map(ProdutoDTO::new)
+                .collect(Collectors.toList());
     }
 
     public ProdutoDTO salvar(Produto produto) {
@@ -49,7 +49,8 @@ public class ProdutoService {
         produto.setNome(atualizado.getNome());
         produto.setCodigoBarras(atualizado.getCodigoBarras());
         produto.setDescricao(atualizado.getDescricao());
-        produto.setPreco(atualizado.getPreco());
+        produto.setValorCusto(atualizado.getValorCusto());
+        produto.setValorVenda(atualizado.getValorVenda());
         produto.setQuantidade(atualizado.getQuantidade());
         produto.setAtivo(atualizado.getAtivo());
 

@@ -30,20 +30,22 @@
             <table class="table table-bordered text-center">
                 <thead class="text-white" style="background-color: #800020;">
                     <tr>
-                        <th class="rounded-start">Descrição</th>
+                        <th class="rounded-start">Código</th>
+                        <th>Descrição</th>
                         <th>Custo</th>
                         <th>Venda</th>
                         <th>Lucro</th>
-                        <th class="rounded-end">Código</th>
+                        <th class="rounded-end">Qtd</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let linha of linhas">
+                        <td>{{ linha.codigo }}</td>
                         <td>{{ linha.descricao }}</td>
                         <td>{{ linha.custo | currency:'BRL' }}</td>
                         <td>{{ linha.venda | currency:'BRL' }}</td>
                         <td>{{ linha.lucro | currency:'BRL' }}</td>
-                        <td>{{ linha.codigo }}</td>
+                        <td>{{ linha.qtd }}</td>
                     </tr>
                 </tbody>
             </table>
