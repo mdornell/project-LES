@@ -1,7 +1,12 @@
 package com.example.les_api;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import com.example.les_api.domain.funcionario.Funcionario;
+import com.example.les_api.repository.FuncionarioRepository;
 
 @SpringBootApplication
 public class LesApiApplication {

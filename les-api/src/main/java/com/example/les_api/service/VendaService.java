@@ -41,6 +41,14 @@ public class VendaService {
             Produto produto = produtoRepository.findById(itemDto.getProdutoId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
+            // Atualiza a quantidade do produto
+            int novaQuantidade = produto.getQuantidade() - itemDto.getQuantidade();
+            if (novaQuantidade < 0) {
+                throw new RuntimeException("Estoque insuficiente para o produto: " + produto.getNome());
+            }
+            produto.setQuantidade(novaQuantidade);
+            produtoRepository.save(produto);
+
             ItemVenda item = new ItemVenda();
             item.setProdutoId(produto);
             item.setQuantidade(itemDto.getQuantidade());
@@ -51,11 +59,15 @@ public class VendaService {
 
         venda.setItens(itens);
 
-        // 🧠 Calcula o valor total da venda
+        // Calcula o valor total da venda
         Double valorTotal = itens.stream()
                 .mapToDouble(ItemVenda::getCusto)
                 .sum();
         venda.setValorTotal(valorTotal);
+
+        // Atualiza o saldo do cliente
+        cliente.setSaldo(cliente.getSaldo() - valorTotal);
+        clienteRepository.save(cliente);
 
         return vendaRepository.save(venda);
     }
