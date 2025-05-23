@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { map, Observable } from 'rxjs';
 import { RefeicaoService } from '../../services/refeicao.service';
 import { Refeicao } from '../../types/refeição';
@@ -105,9 +107,7 @@ export class RefeicaoComponent {
             this.snackBar.open('Tabela de refeições não encontrada!', 'X', { duration: 5000 });
             return;
         }
-
-        // @ts-ignore
-        const doc = new window.jsPDF({
+        const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4"
@@ -117,8 +117,7 @@ export class RefeicaoComponent {
         doc.setFontSize(16);
         doc.text("Relatório de Refeições", 105, 15, { align: "center" });
 
-        // @ts-ignore
-        window.autoTable(doc, { html: table, startY: 25 });
+        autoTable(doc, { html: table, startY: 25 });
 
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
@@ -126,3 +125,5 @@ export class RefeicaoComponent {
     }
 
 }
+
+

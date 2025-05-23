@@ -12,7 +12,13 @@
         </div>
         <div class="ms-auto">
             <button class="btn btn-outline-dark" (click)="gerarRelatorio()">
-                <i class="bi bi-printer-fill me-1"></i> Gerar Relatório
+                <i class="bi bi-funnel-fill me-1"></i> Filtrar
+            </button>
+        </div>
+        <div class="d-flex justify-content-end gap-3">
+            <button class="btn btn-outline-secondary" (click)="onRelatorio()">
+                <i class="bi bi-printer"></i>
+                Relatório
             </button>
         </div>
     </div>
@@ -50,15 +56,5 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Paginação -->
-        <nav class="d-flex justify-content-center mt-3">
-            <ul class="pagination mb-0">
-                <li class="page-item active"><a class="page-link bg-danger border-0" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
     </ng-template>
 </div>

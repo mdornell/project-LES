@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { forkJoin, map } from 'rxjs';
 import { ProdutoService } from '../../services/produto.service';
 import { VendaService } from '../../services/venda.service';
@@ -109,8 +111,7 @@ export class DreDiarioComponent {
             return;
         }
 
-        // @ts-ignore
-        const doc = new window.jsPDF({
+        const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4"
@@ -120,8 +121,7 @@ export class DreDiarioComponent {
         doc.setFontSize(16);
         doc.text("Relatório DRE Diário", 105, 15, { align: "center" });
 
-        // @ts-ignore
-        window.autoTable(doc, { html: table, startY: 25 });
+        autoTable(doc, { html: table, startY: 25 });
 
         // Abre o PDF em nova aba
         const pdfBlob = doc.output('blob');

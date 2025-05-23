@@ -2,12 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Observable } from 'rxjs';
 import { BarcodeService } from '../../services/bar-code.service';
 import { ProdutoService } from '../../services/produto.service';
 import { BarCode } from '../../types/barCode';
 import { Produto } from '../../types/produto';
 import { ProdutoListComponent } from './produto-list/produto-list.component';
+
 
 @Component({
     selector: 'app-produto',
@@ -82,8 +85,7 @@ export class ProdutoComponent {
             return;
         }
 
-        // @ts-ignore
-        const doc = new window.jsPDF({
+        const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4"
@@ -93,8 +95,7 @@ export class ProdutoComponent {
         doc.setFontSize(16);
         doc.text("Relatório de Produtos", 105, 15, { align: "center" });
 
-        // @ts-ignore
-        window.autoTable(doc, { html: table, startY: 25 });
+        autoTable(doc, { html: table, startY: 25 });
 
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);

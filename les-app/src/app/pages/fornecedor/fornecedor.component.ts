@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Observable } from 'rxjs';
 import { FornecedorService } from '../../services/fornecedor.service';
 import { Fornecedor } from '../../types/fornecedor';
@@ -54,7 +56,7 @@ export class FornecedorComponent {
         }
 
         // Cria o documento PDF
-        const doc = new (window as any).jsPDF({
+        const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4"
@@ -65,7 +67,7 @@ export class FornecedorComponent {
         doc.text("Relatório de Fornecedores", 105, 15, { align: "center" });
 
         // Usa autoTable para converter a tabela HTML em PDF
-        (window as any).autoTable(doc, { html: table, startY: 25 });
+        autoTable(doc, { html: table, startY: 25 });
 
         // Abre o PDF em nova aba
         const pdfBlob = doc.output('blob');

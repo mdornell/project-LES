@@ -1,6 +1,8 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { VendaService } from '../../services/venda.service';
 import { Venda } from '../../types/venda';
 
@@ -72,23 +74,19 @@ export class ClientesDiariosComponent {
             return;
         }
 
-        // @ts-ignore
-        const doc = new window.jsPDF({
+        const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
             format: "a4"
         });
 
-        // @ts-ignore
         doc.setFont("helvetica");
         doc.setFontSize(16);
         doc.text("Relatório de Clientes Diários", 105, 15, { align: "center" });
 
-        // @ts-ignore
-        window.autoTable(doc, { html: table, startY: 25 });
+        autoTable(doc, { html: table, startY: 25 });
 
         // Abre o PDF em nova aba
-        // @ts-ignore
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
