@@ -98,4 +98,31 @@ export class RefeicaoComponent {
         this.snackBar.open('Erro ao salvar o registro', '', { duration: 5000 });
     }
 
+    onRelatorio(): void {
+        // Seleciona a tabela de refeições pelo id ou classe no HTML
+        const table = document.querySelector('table');
+        if (!table) {
+            this.snackBar.open('Tabela de refeições não encontrada!', 'X', { duration: 5000 });
+            return;
+        }
+
+        // @ts-ignore
+        const doc = new window.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Refeições", 105, 15, { align: "center" });
+
+        // @ts-ignore
+        window.autoTable(doc, { html: table, startY: 25 });
+
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
+
 }

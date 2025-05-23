@@ -74,5 +74,30 @@ export class ProdutoComponent {
         }
     }
 
+    onRelatorio(): void {
+        // Seleciona a tabela de produtos pelo id ou classe no HTML
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela de produtos não encontrada!');
+            return;
+        }
 
+        // @ts-ignore
+        const doc = new window.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Produtos", 105, 15, { align: "center" });
+
+        // @ts-ignore
+        window.autoTable(doc, { html: table, startY: 25 });
+
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
 }

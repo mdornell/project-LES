@@ -63,4 +63,34 @@ export class ClientesDiariosComponent {
         });
     }
 
+
+    onRelatorio(): void {
+        // Seleciona a tabela pelo id ou classe no HTML
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela não encontrada!');
+            return;
+        }
+
+        // @ts-ignore
+        const doc = new window.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        // @ts-ignore
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Clientes Diários", 105, 15, { align: "center" });
+
+        // @ts-ignore
+        window.autoTable(doc, { html: table, startY: 25 });
+
+        // Abre o PDF em nova aba
+        // @ts-ignore
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
 }

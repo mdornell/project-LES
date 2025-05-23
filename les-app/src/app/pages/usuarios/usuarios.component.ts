@@ -59,4 +59,31 @@ export class UsuariosComponent {
         this.usuarioSelected = null;
     }
 
+    onRelatorio(): void {
+        // Seleciona a tabela de funcionários pelo seletor apropriado
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela de funcionários não encontrada!');
+            return;
+        }
+
+        // @ts-ignore
+        const doc = new window.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Funcionários", 105, 15, { align: "center" });
+
+        // @ts-ignore
+        window.autoTable(doc, { html: table, startY: 25 });
+
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
+
 }

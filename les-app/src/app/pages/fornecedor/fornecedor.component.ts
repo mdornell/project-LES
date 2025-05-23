@@ -44,4 +44,32 @@ export class FornecedorComponent {
         }
         this.fornecedorSelected = null;
     }
+
+    onRelatorio(): void {
+        // Seleciona a tabela de fornecedores pelo seletor adequado
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela de fornecedores não encontrada!');
+            return;
+        }
+
+        // Cria o documento PDF
+        const doc = new (window as any).jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Fornecedores", 105, 15, { align: "center" });
+
+        // Usa autoTable para converter a tabela HTML em PDF
+        (window as any).autoTable(doc, { html: table, startY: 25 });
+
+        // Abre o PDF em nova aba
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
 }

@@ -22,8 +22,8 @@
                 <td class="col-2 text-center">{{element.codigoRFID}}</td>
                 <td class="col-3 text-truncate">{{element.nome}}</td>
                 <td class="col-3">{{element.email}}</td>
-                <td class="col-2">{{element.dataAniversario}}</td>
-                <td class="col-2">{{element.saldo}}</td>
+                <td class="col-2">{{ element.dataAniversario | date:'dd/MM/yyyy' }}</td>
+                <td class="col-2">R$ {{ element.saldo | number:'1.2-2' }}</td>
 
 
                 <!-- Ações Column -->

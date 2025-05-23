@@ -40,4 +40,6 @@ export class ClienteListComponent {
     onSelected(cliente: Cliente) {
         this.clienteSelected.emit(cliente);
     }
+
+
 }
