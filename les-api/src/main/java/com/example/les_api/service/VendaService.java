@@ -52,17 +52,21 @@ public class VendaService {
             ItemVenda item = new ItemVenda();
             item.setProdutoId(produto);
             item.setQuantidade(itemDto.getQuantidade());
+
+            // Aqui permanece se quiser salvar o custo — mas não será usado no valorTotal.
             item.setCusto(itemDto.getCusto());
+
             item.setVenda(venda);
             return item;
         }).collect(Collectors.toList());
 
         venda.setItens(itens);
 
-        // Calcula o valor total da venda
+        // ✅ Calcula o valor total da venda com base no valorVenda do produto
         Double valorTotal = itens.stream()
-                .mapToDouble(ItemVenda::getCusto)
+                .mapToDouble(item -> item.getProdutoId().getValorVenda() * item.getQuantidade())
                 .sum();
+
         venda.setValorTotal(valorTotal);
 
         // Atualiza o saldo do cliente

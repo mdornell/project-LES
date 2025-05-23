@@ -113,22 +113,23 @@ export class VendaComponent implements OnInit {
             valorTotal: this.valorGasto,
             descricaoVenda: ''
         };
-
-        this.vendaService.save(novaVenda).subscribe({
-            next: () => {
-                this.snackBar.open('Compra finalizada com sucesso.', '', {
-                    duration: 2000,
-                }).afterDismissed().subscribe(() => {
-                    window.location.href = '/cliente'; // Redirect to "/cliente" after message
-                });
-                this.resetForm();
-            },
-            error: () => {
-                this.snackBar.open('Compra não realizada, erro ao salvar venda.', '', {
-                    duration: 5000,
-                });
-            }
-        });
+        
+        console.log('Venda:', novaVenda);
+        // this.vendaService.save(novaVenda).subscribe({
+        //     next: () => {
+        //         this.snackBar.open('Compra finalizada com sucesso.', '', {
+        //             duration: 2000,
+        //         }).afterDismissed().subscribe(() => {
+        //             window.location.href = '/cliente'; // Redirect to "/cliente" after message
+        //         });
+        //         this.resetForm();
+        //     },
+        //     error: () => {
+        //         this.snackBar.open('Compra não realizada, erro ao salvar venda.', '', {
+        //             duration: 5000,
+        //         });
+        //     }
+        // });
     }
 
     private resetForm(): void {
