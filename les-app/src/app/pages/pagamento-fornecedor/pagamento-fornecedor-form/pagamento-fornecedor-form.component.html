@@ -1,0 +1,50 @@
+<section class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Pagamento de Fornecedor</h5>
+            <form [formGroup]="form">
+                <div class="mb-3">
+                    <label class="form-label">Descrição</label>
+                    <input formControlName="descricao" class="form-control" type="text" required />
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label">Data de Vencimento</label>
+                        <input formControlName="dataVencimento" class="form-control" type="date" />
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Data de Pagamento</label>
+                        <input formControlName="dataPagamento" class="form-control" type="date" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label">Método</label>
+                        <input formControlName="metodo" class="form-control" type="text" />
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Valor Pago</label>
+                        <input formControlName="valorPago" class="form-control" type="number" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Fornecedor</label>
+                    <select formControlName="fornecedor" class="form-select" required
+                        (change)="fornecedorSelecionado = fornecedores.find(f => f.id == $event.target.value)">
+                        <option *ngFor="let fornecedor of fornecedores" [value]="fornecedor.id">
+                            {{ fornecedor._id }}. {{ fornecedor.nome }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button (click)="onSubmit()" class="btn btn-primary mx-2" [disabled]="form.invalid">Salvar</button>
+                    <button (click)="onCancel()" class="btn btn-secondary mx-2">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

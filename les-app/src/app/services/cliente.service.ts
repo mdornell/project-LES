@@ -50,7 +50,6 @@ export class ClienteService {
     }
 
     listClientesEmAberto(dias?: number) {
-        const url = dias ? `${this.apiUrl}/em-aberto?dias=${dias}` : `${this.apiUrl}/em-aberto`;
-        return this.httpCliente.get<any[]>(url, this.apiAuth).pipe(take(1));
+        return this.httpCliente.get<any[]>(this.apiUrl + "/em-aberto", this.apiAuth).pipe(take(1));
     }
 }
