@@ -27,11 +27,19 @@
                         maxlength="500" required></textarea>
                 </div>
 
-                <!-- Preço -->
-                <div class="mb-3">
-                    <label for="preco" class="form-label">Preço:</label>
-                    <input type="number" class="form-control" id="preco" formControlName="preco" min="0.01" step="0.01"
-                        required />
+                <div class="row mb-3">
+                    <!-- Valor de Custo -->
+                    <div class="col-md-6">
+                        <label for="valorCusto" class="form-label">Valor de Custo:</label>
+                        <input type="number" class="form-control" id="valorCusto" formControlName="valorCusto"
+                            min="0.01" step="0.01" required />
+                    </div>
+                    <!-- Valor de Venda -->
+                    <div class="col-md-6">
+                        <label for="valorVenda" class="form-label">Valor de Venda:</label>
+                        <input type="number" class="form-control" id="valorVenda" formControlName="valorVenda"
+                            min="0.01" step="0.01" required />
+                    </div>
                 </div>
 
                 <!-- Quantidade -->

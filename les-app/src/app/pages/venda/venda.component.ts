@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { jsPDF } from 'jspdf';
 import { ClienteService } from '../../services/cliente.service';
 import { ProdutoService } from '../../services/produto.service';
 import { VendaService } from '../../services/venda.service';
@@ -72,7 +73,7 @@ export class VendaComponent implements OnInit {
                 if (produto) {
                     console.log
                     this.produtos.push(produto);
-                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.preco, 0);
+                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
                     this.saldoAnterior = this.cliente.saldo - this.valorGasto;
                 } else {
                     this.snackBar.open('Produto não encontrado.', '', {
@@ -102,8 +103,8 @@ export class VendaComponent implements OnInit {
             _id: 0,
             produtoId: produto._id,
             quantidade: 1,
-            preco: produto.preco,
-            custo: produto.preco
+            preco: produto.valorVenda,
+            custo: produto.valorCusto,
         }));
 
         const novaVenda: Venda = {
@@ -116,11 +117,13 @@ export class VendaComponent implements OnInit {
 
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
+
                 this.snackBar.open('Compra finalizada com sucesso.', '', {
                     duration: 2000,
                 }).afterDismissed().subscribe(() => {
                     window.location.href = '/cliente'; // Redirect to "/cliente" after message
                 });
+                this.onRelatorio(); // Call the report generation method
                 this.resetForm();
             },
             error: () => {
@@ -138,4 +141,52 @@ export class VendaComponent implements OnInit {
         this.codigoBarras = null; // Reset the input field
         this.erro = '';
     }
+
+    onRelatorio(): void {
+        if (!this.cliente || this.produtos.length === 0) {
+            this.snackBar.open('Nenhuma venda para gerar cupom.', '', { duration: 3000 });
+            return;
+        }
+
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        let y = 15;
+        doc.setFont("courier", "normal");
+        doc.setFontSize(14);
+        doc.text("CUPOM FISCAL", 105, y, { align: "center" });
+
+        y += 10;
+        doc.setFontSize(10);
+        doc.text(`Cliente: ${this.cliente.nome}`, 10, y);
+        y += 6;
+        doc.text(`Data: ${this.dataHora.toLocaleString()}`, 10, y);
+        y += 10;
+
+        doc.text("Produtos:", 10, y);
+        y += 6;
+
+        this.produtos.forEach((produto, idx) => {
+            doc.text(
+                `${idx + 1}. ${produto.nome} - R$ ${produto.valorVenda.toFixed(2)}`,
+                12,
+                y
+            );
+            y += 6;
+        });
+
+        y += 4;
+        doc.text(`Total: R$ ${this.valorGasto.toFixed(2)}`, 10, y);
+        y += 6;
+        doc.text(`Saldo após compra: R$ ${(this.saldoAnterior).toFixed(2)}`, 10, y);
+
+        // Abre o PDF em nova aba
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+    }
+
 }

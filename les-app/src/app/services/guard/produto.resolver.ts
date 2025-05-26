@@ -19,11 +19,13 @@ export class ProdutoResolver implements Resolve<Produto> {
             _id: 0,
             nome: '',
             descricao: '',
-            preco: 0,
+            valorCusto: 0,
+            valorVenda: 0,
             estoque: 0,
             codigoBarras: '',
             quantidade: 0,
-            ativo: false
+            ativo: false,
+
         });
     }
 }

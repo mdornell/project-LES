@@ -18,7 +18,8 @@ public class ProdutoDTO {
     private String nome;
     private String codigoBarras;
     private String descricao;
-    private Double preco;
+    private Double valorCusto;
+    private Double valorVenda;
     private Integer quantidade;
     private Boolean ativo;
 
@@ -27,7 +28,8 @@ public class ProdutoDTO {
         this.nome = produto.getNome();
         this.codigoBarras = produto.getCodigoBarras();
         this.descricao = produto.getDescricao();
-        this.preco = produto.getPreco();
+        this.valorCusto = produto.getValorCusto();
+        this.valorVenda = produto.getValorVenda();
         this.quantidade = produto.getQuantidade();
         this.ativo = produto.getAtivo();
     }

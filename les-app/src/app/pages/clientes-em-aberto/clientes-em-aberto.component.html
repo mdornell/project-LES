@@ -1,0 +1,53 @@
+<div class="container bg-white p-4 rounded shadow-sm">
+    <h5>Clientes em Aberto</h5>
+
+    <div class="mb-3">
+        <button class="btn btn-outline-primary me-2" [class.active]="filtroDias === 'todos'"
+            (click)="filtroDias = 'todos'; carregarClientes()">
+            Todos
+        </button>
+        <button class="btn btn-outline-primary me-2" [class.active]="filtroDias === '-30'"
+            (click)="filtroDias = '-30'; carregarClientes()">
+            -30 dias
+        </button>
+        <button class="btn btn-outline-primary" [class.active]="filtroDias === '+30'"
+            (click)="filtroDias = '+30'; carregarClientes()">
+            +30 dias
+        </button>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead class="bg-danger text-white">
+            <tr>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Dias</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let cliente of clientesEmAberto">
+                <td>{{ cliente.nome }}</td>
+                <td>{{ cliente.saldo | currency:'BRL' }}</td>
+                <td>{{ cliente.dias }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+
+        <button class="btn btn-outline-secondary" (click)="onRelatorio()">
+            <i class="bi bi-printer"></i>
+            Relatório
+        </button>
+
+
+        <!-- <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item active"><span class="page-link">1</span></li>
+                <li class="page-item"><a class="page-link">2</a></li>
+                <li class="page-item"><a class="page-link">3</a></li>
+                <li class="page-item"><a class="page-link">Next</a></li>
+            </ul>
+        </nav> -->
+    </div>
+</div>

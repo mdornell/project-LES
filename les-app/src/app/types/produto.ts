@@ -3,7 +3,8 @@ export interface Produto {
     codigoBarras: string;
     nome: string;
     descricao: string;
-    preco: number;
+    valorCusto: number;
+    valorVenda: number;
     quantidade: number;
     ativo: boolean;
 }

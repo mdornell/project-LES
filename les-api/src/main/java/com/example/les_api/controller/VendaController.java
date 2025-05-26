@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.VendaDTO;
+import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
 
 import lombok.AllArgsConstructor;
@@ -24,22 +25,27 @@ public class VendaController {
 
     private final VendaService vendaService;
 
-    @PostMapping
-    public ResponseEntity<Venda> salvar(@RequestBody VendaDTO vendaDTO) {
-        System.out.println("VendaController.salvar: " + vendaDTO);
-        return ResponseEntity.ok(vendaService.salvar(vendaDTO));
-    }
-
+    @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping
-    public ResponseEntity<List<Venda>> listarTodas() {
+    public ResponseEntity<List<VendaDTO>> listarTodos() {
         return ResponseEntity.ok(vendaService.listarTodas());
     }
 
+    @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping("/{id}")
-    public ResponseEntity<Venda> buscarPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(vendaService.buscarPorId(id));
+    public ResponseEntity<VendaDTO> buscarPorId(@PathVariable Integer id) {
+        Venda venda = vendaService.buscarPorId(id);
+        VendaDTO vendaDTO = new VendaDTO(venda);
+        return ResponseEntity.ok(vendaDTO);
     }
 
+    @VerificaPermissao(tela = "Venda", acao = "adicionar")
+    @PostMapping
+    public ResponseEntity<Venda> salvar(@RequestBody VendaDTO vendaDTO) {
+        return ResponseEntity.ok(vendaService.salvar(vendaDTO));
+    }
+
+    @VerificaPermissao(tela = "Venda", acao = "excluir")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         vendaService.deletar(id);

@@ -32,7 +32,8 @@ export class ProdutoFormComponent implements OnInit {
             _id: [0],
             nome: [''],
             descricao: [''],
-            preco: [0],
+            valorCusto: [0],
+            valorVenda: [0],
             quantidade: [0],
             codigoBarras: [''],
             ativo: [false]
@@ -45,7 +46,8 @@ export class ProdutoFormComponent implements OnInit {
             _id: produto._id,
             nome: produto.nome,
             descricao: produto.descricao,
-            preco: produto.preco,
+            valorCusto: produto.valorCusto,
+            valorVenda: produto.valorVenda,
             quantidade: produto.quantidade,
             codigoBarras: produto.codigoBarras,
             ativo: produto.ativo || false

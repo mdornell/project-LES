@@ -1,7 +1,7 @@
 <div class="container mt-5 p-4 rounded shadow bg-light">
     <div class="text-center mb-4">
         <h4 class="fw-bold">{{ cliente.nome }}</h4>
-        <h5 class="text-success">Saldo Atual: R$ {{ cliente.saldo.toFixed(2) }}</h5>
+        <h5 class="text-success">Saldo Anterior: R$ {{ cliente.saldo.toFixed(2) }}</h5>
         <p class="mb-0">Entrada : {{ dataHora | date: 'HH:mm' }}</p>
     </div>
 
@@ -29,7 +29,7 @@
             <tbody>
                 <tr *ngFor="let produto of produtos">
                     <td>{{ produto.descricao }}</td>
-                    <td>R$ {{ produto.preco.toFixed(2) }}</td>
+                    <td>R$ {{ produto.valorVenda.toFixed(2) }}</td>
                     <td>{{ produto.codigoBarras }}</td>
                 </tr>
             </tbody>
@@ -41,7 +41,7 @@
             Valor Gasto: R$ {{ valorGasto.toFixed(2) }}
         </div>
         <div class="col-md-6 text-md-end">
-            Saldo Anterior: R$ {{ saldoAnterior.toFixed(2) }}
+            Saldo Atual: R$ {{ saldoAnterior.toFixed(2) }}
         </div>
     </div>
 

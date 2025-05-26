@@ -1,5 +1,11 @@
 package com.example.les_api.domain.fornecedor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.les_api.domain.pagamento.PagamentoFornecedor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,4 +25,8 @@ public class Fornecedor {
     private String telefone;
     private String email;
     private String endereco;
+
+    @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // ou @JsonManagedReference
+    private List<PagamentoFornecedor> pagamentos = new ArrayList<>();
 }

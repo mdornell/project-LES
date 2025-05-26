@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { forkJoin, map } from 'rxjs';
+import { ProdutoService } from '../../services/produto.service';
 import { VendaService } from '../../services/venda.service';
 import { Venda } from '../../types/venda';
 
@@ -16,80 +20,112 @@ import { Venda } from '../../types/venda';
 })
 export class DreDiarioComponent {
 
-    dataInicio: string = '';
-    dataFim: string = '';
+    inicio: string = new Date().toISOString().split('T')[0];
+    fim: string = new Date().toISOString().split('T')[0];
 
-    resumoDiario: {
-        data: string;
-        entrada: string;
-        saida: string;
-        clientes: String;
+    linhas: {
+        codigo: string;
+        descricao: string;
+        custo: number;
+        venda: number;
+        lucro: number;
+        qtd: number;
     }[] = [];
 
-    saldoInicial = 0;
-    saldoFinal = 0;
     isLoading = false;
 
-    constructor(private vendaService: VendaService) { }
+    constructor(
+        private vendaService: VendaService,
+        private produtoService: ProdutoService
+    ) { }
 
-    ngOnInit(): void {
-        this.carregarVendas();
-    }
-
-    carregarVendas(): void {
-        this.isLoading = true;
-        this.vendaService.list().subscribe({
-            next: (vendas: Venda[]) => {
-                this.processarResumo(vendas);
-                this.isLoading = false;
-            },
-            error: () => {
-                this.isLoading = false;
-            }
-        });
-    }
-
-    processarResumo(vendas: Venda[]): void {
-        const detalhes = vendas.map(venda => {
-            const data = new Date(venda.dataHora).toLocaleDateString('pt-BR');
-            const hora = new Date(venda.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-            return {
-                data,
-                entrada: hora,
-                saida: hora,
-                clientes: venda.cliente.nome
-            };
-        });
-
-        this.resumoDiario = detalhes;
-
-        this.saldoInicial = 0;
-        this.saldoFinal = 0; // Adjusted as entrada and saida are now times
-    }
-
-    filtrarVendasPorIntervalo(): void {
-        if (!this.dataInicio || !this.dataFim) {
-            console.error('Data de início e fim devem ser preenchidas');
+    gerarRelatorio(): void {
+        if (!this.inicio || !this.fim) {
+            console.error('Informe as datas de início e fim.');
             return;
         }
 
-        const inicio = new Date(this.dataInicio);
-        const fim = new Date(this.dataFim);
-        fim.setHours(23, 59, 59, 999);
+        const inicioDate = new Date(this.inicio);
+        const fimDate = new Date(this.fim);
+        fimDate.setHours(23, 59, 59, 999);
 
         this.isLoading = true;
+
         this.vendaService.list().subscribe({
             next: (vendas: Venda[]) => {
                 const vendasFiltradas = vendas.filter(v => {
                     const dataVenda = new Date(v.dataHora);
-                    return dataVenda >= inicio && dataVenda <= fim;
+                    return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
-                this.processarResumo(vendasFiltradas);
-                this.isLoading = false;
+
+                // Agrupar itens por produtoId e somar apenas a quantidade
+                const itensMap = new Map<string, { qtd: number; produtoId: string }>();
+                vendasFiltradas.forEach(venda => {
+                    venda.itens.forEach(item => {
+                        const key: string = String(item.produtoId);
+                        if (!itensMap.has(key)) {
+                            itensMap.set(key, { qtd: 0, produtoId: String(item.produtoId) });
+                        }
+                        const entry = itensMap.get(key)!;
+                        entry.qtd += item.quantidade ?? 1;
+                    });
+                });
+
+                const requisicoes = Array.from(itensMap.values()).map(itemAgrupado =>
+                    this.produtoService.listById(Number(itemAgrupado.produtoId)).pipe(
+                        map(produtoResponse => ({
+                            id: itemAgrupado.produtoId,
+                            descricao: produtoResponse.nome,
+                            custo: produtoResponse.valorCusto,
+                            venda: produtoResponse.valorVenda,
+                            lucro: (produtoResponse.valorVenda * itemAgrupado.qtd),
+                            codigo: produtoResponse.codigoBarras,
+                            qtd: itemAgrupado.qtd
+                        }))
+                    )
+                );
+
+                forkJoin(requisicoes).subscribe({
+                    next: (linhasFormatadas) => {
+                        this.linhas = linhasFormatadas;
+                        this.isLoading = false;
+                    },
+                    error: (err) => {
+                        console.error('Erro ao buscar produtos', err);
+                        this.isLoading = false;
+                    }
+                });
             },
             error: () => {
+                console.error('Erro ao buscar vendas');
                 this.isLoading = false;
             }
         });
+    }
+
+    onRelatorio(): void {
+        // Seleciona a tabela pelo id ou classe no HTML
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela não encontrada!');
+            return;
+        }
+
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório DRE Diário", 105, 15, { align: "center" });
+
+        autoTable(doc, { html: table, startY: 25 });
+
+        // Abre o PDF em nova aba
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
     }
 }

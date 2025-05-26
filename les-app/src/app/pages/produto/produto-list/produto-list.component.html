@@ -21,7 +21,7 @@
                 <td class="col-1">{{produto.codigoBarras}}</td>
                 <td class="col-2 text-truncate">{{produto.nome}}</td>
                 <td class="col-3">{{produto.descricao}}</td>
-                <td class="col-1">{{produto.preco | currency}}</td>
+                <td class="col-1">{{produto.valorVenda | currency}}</td>
                 <td class="col-1">{{produto.quantidade}}</td>
 
                 <!-- Ações Column -->
@@ -30,6 +30,11 @@
                         aria-label="Editar um produto">
                         <i class="bi bi-pencil-square"></i>
                     </button>
+                    <button type="button" class="btn btn-sm btn-secondary px-3" data-bs-toggle="modal"
+                        data-bs-target="#imprimirModal" aria-label="Imprimir um produto" (click)="onSelected(produto)">
+                        <i class="bi bi-printer"></i>
+                    </button>
+
                     <button type="button" class="btn btn-sm btn-danger px-3" aria-label="Remover um produto"
                         data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(produto)">
                         <i class="bi bi-trash"></i>

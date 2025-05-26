@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import jsPDF from 'jspdf';
 import { ProdutoService } from '../../../services/produto.service';
 import { VendaService } from '../../../services/venda.service';
 import { Venda } from '../../../types/venda';
@@ -65,8 +66,8 @@ export class ProdutosComponent {
                                     this.linhas.push({
                                         descricao: produto.nome,
                                         custo: item.custo,
-                                        venda: produto.preco,
-                                        lucro: produto.preco - item.custo,
+                                        venda: produto.valorVenda,
+                                        lucro: produto.valorVenda - item.custo,
                                         codigo: produto.codigoBarras
                                     });
                                 }
@@ -85,5 +86,30 @@ export class ProdutosComponent {
                 this.isLoading = false;
             }
         });
+    }
+
+    onRelatorio(): void {
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela não encontrada!');
+            return;
+        }
+
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório de Produtos", 105, 15, { align: "center" });
+
+        // @ts-ignore
+        autoTable(doc, { html: table, startY: 25 });
+
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
     }
 }

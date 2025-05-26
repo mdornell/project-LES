@@ -55,4 +55,21 @@ public class PermissaoService {
 
         permissaoRepository.saveAll(entidades);
     }
+
+    public boolean temPermissao(Funcionario funcionario, String nomeTela, String acao) {
+        // TODO: acesso total para administradores
+        if ("Admin".equalsIgnoreCase(funcionario.getCargo())) {
+            return true;
+        }
+
+        return permissaoRepository.findByFuncionarioIdAndTelaNome(funcionario.getId(), nomeTela)
+                .map(permissao -> switch (acao.toLowerCase()) {
+                    case "ver" -> Boolean.TRUE.equals(permissao.getPodeVer());
+                    case "adicionar" -> Boolean.TRUE.equals(permissao.getPodeAdicionar());
+                    case "editar" -> Boolean.TRUE.equals(permissao.getPodeEditar());
+                    case "excluir" -> Boolean.TRUE.equals(permissao.getPodeExcluir());
+                    default -> false;
+                })
+                .orElse(false);
+    }
 }

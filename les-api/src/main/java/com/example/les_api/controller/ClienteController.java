@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.dto.ClienteDTO;
+import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.ClienteService;
 //import com.example.les_api.service.SaldoClienteService;
 
@@ -25,46 +26,50 @@ import lombok.AllArgsConstructor;
 public class ClienteController {
 
     private final ClienteService clienteService;
-    //private final SaldoClienteService saldoClienteService;
 
+    @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarTodos() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
 
+    @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping("/{id}")
     public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
+    @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping("/rfid/{rfid}")
     public ResponseEntity<ClienteDTO> buscarPorRFID(@PathVariable String rfid) {
         return ResponseEntity.ok(clienteService.buscarPorRFID(rfid));
     }
 
+    @VerificaPermissao(tela = "Cliente", acao = "adicionar")
     @PostMapping
     public ResponseEntity<ClienteDTO> salvar(@RequestBody Cliente cliente) {
+        System.out.println(
+                String.format(
+                        "{\n\"nome\":\"%s\",\n\"email\":\"%s\",\n\"saldo\":%s,\n\"codigoRFID\":\"%s\",\n\"ativo\":%s,\n\"dataAniversario\":\"%s\"\n}",
+                        cliente.getNome(),
+                        cliente.getEmail(),
+                        cliente.getSaldo(),
+                        cliente.getCodigoRFID(),
+                        cliente.getAtivo(),
+                        cliente.getDataAniversario()));
         return ResponseEntity.ok(clienteService.salvar(cliente));
     }
 
+    @VerificaPermissao(tela = "Cliente", acao = "editar")
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> atualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.atualizar(id, cliente));
     }
 
+    @VerificaPermissao(tela = "Cliente", acao = "excluir")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
-    // @GetMapping("/consumoCliente/{id}")
-    // public ResponseEntity<List<ClienteDTO>> consumoCliente(@PathVariable Integer id) {
-    //     return ResponseEntity.ok(clienteService.consumoCliente(id));
-    // }
-
-    // @GetMapping("/saldo/rfid/{codRFID}")
-    // public ResponseEntity<?> buscarSaldoPorCodRFID(@PathVariable String codRFID) {
-    //     return saldoClienteService.buscarSaldoPorCodRFID(codRFID);
-    // }
 }

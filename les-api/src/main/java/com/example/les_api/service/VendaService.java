@@ -41,27 +41,46 @@ public class VendaService {
             Produto produto = produtoRepository.findById(itemDto.getProdutoId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
+            // Atualiza a quantidade do produto
+            int novaQuantidade = produto.getQuantidade() - itemDto.getQuantidade();
+            if (novaQuantidade < 0) {
+                throw new RuntimeException("Estoque insuficiente para o produto: " + produto.getNome());
+            }
+            produto.setQuantidade(novaQuantidade);
+            produtoRepository.save(produto);
+
             ItemVenda item = new ItemVenda();
-            item.setProduto(produto);
+            item.setProdutoId(produto);
             item.setQuantidade(itemDto.getQuantidade());
+
+            // Aqui permanece se quiser salvar o custo — mas não será usado no valorTotal.
             item.setCusto(itemDto.getCusto());
+
             item.setVenda(venda);
             return item;
         }).collect(Collectors.toList());
 
         venda.setItens(itens);
 
-        // 🧠 Calcula o valor total da venda
+        // ✅ Calcula o valor total da venda com base no valorVenda do produto
         Double valorTotal = itens.stream()
-                .mapToDouble(ItemVenda::getCusto)
+                .mapToDouble(item -> item.getProdutoId().getValorVenda() * item.getQuantidade())
                 .sum();
+
         venda.setValorTotal(valorTotal);
+
+        // Atualiza o saldo do cliente
+        cliente.setSaldo(cliente.getSaldo() - valorTotal);
+        clienteRepository.save(cliente);
 
         return vendaRepository.save(venda);
     }
 
-    public List<Venda> listarTodas() {
-        return vendaRepository.findAll();
+    public List<VendaDTO> listarTodas() {
+        return vendaRepository.findAll()
+                .stream()
+                .map(VendaDTO::new)
+                .collect(Collectors.toList());
     }
 
     public Venda buscarPorId(Integer id) {

@@ -3,6 +3,7 @@ import { AniversariantesComponent } from './pages/aniversariantes/aniversariante
 import { ClienteFormComponent } from './pages/cliente/cliente-form/cliente-form.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
 import { ClientesDiariosComponent } from './pages/clientes-diarios/clientes-diarios.component';
+import { ClientesEmAbertoComponent } from './pages/clientes-em-aberto/clientes-em-aberto.component';
 import { DreDiarioComponent } from './pages/dre-diario/dre-diario.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
 import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
@@ -80,6 +81,9 @@ export const routes: Routes = [
 
             // Relatórios
             { path: 'relatorio-produto', component: ProdutosComponent },
+
+            // Clientes em aberto
+            { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
         ]
     },
 

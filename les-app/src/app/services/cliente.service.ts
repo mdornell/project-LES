@@ -48,4 +48,9 @@ export class ClienteService {
     remove(record: Cliente) {
         return this.httpCliente.delete(this.apiUrl + "/" + record._id, this.apiAuth).pipe(take(1));
     }
+
+    listClientesEmAberto(dias?: number) {
+        const url = dias ? `${this.apiUrl}/em-aberto?dias=${dias}` : `${this.apiUrl}/em-aberto`;
+        return this.httpCliente.get<any[]>(url, this.apiAuth).pipe(take(1));
+    }
 }
