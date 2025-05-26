@@ -26,7 +26,8 @@ public class ItemVenda {
     private Integer id;
 
     private Integer quantidade;
-    private Double custo;
+    private Double valorCusto;
+    private Double valorVenda;
 
     @ManyToOne
     @JoinColumn(name = "venda_id")
