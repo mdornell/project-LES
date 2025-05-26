@@ -54,7 +54,8 @@ public class VendaService {
             item.setQuantidade(itemDto.getQuantidade());
 
             // Aqui permanece se quiser salvar o custo — mas não será usado no valorTotal.
-            item.setCusto(itemDto.getCusto());
+            item.setValorCusto(itemDto.getValorCusto());
+
 
             item.setVenda(venda);
             return item;
@@ -69,7 +70,7 @@ public class VendaService {
 
         venda.setValorTotal(valorTotal);
 
-        // Atualiza o saldo do cliente
+        // Atualiza o saldo do cliente subtraindo o valor total da venda (calculado pelo valorVenda dos produtos)
         cliente.setSaldo(cliente.getSaldo() - valorTotal);
         clienteRepository.save(cliente);
 

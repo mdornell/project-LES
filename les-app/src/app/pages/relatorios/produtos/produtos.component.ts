@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { forkJoin, map } from 'rxjs';
 import { ProdutoService } from '../../../services/produto.service';
 import { VendaService } from '../../../services/venda.service';
 import { Venda } from '../../../types/venda';
@@ -59,7 +57,6 @@ export class ProdutosComponent {
                     const dataVenda = new Date(v.dataHora);
                     return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
-
                 // Agrupar itens por produtoId e somar apenas a quantidade
                 const itensMap = new Map<string, { qtd: number; produtoId: string }>();
                 vendasFiltradas.forEach(venda => {
@@ -106,7 +103,6 @@ export class ProdutosComponent {
     }
 
     onRelatorio(): void {
-        // Seleciona a tabela pelo id ou classe no HTML
         const table = document.querySelector('table');
         if (!table) {
             alert('Tabela não encontrada!');
@@ -125,7 +121,7 @@ export class ProdutosComponent {
 
         autoTable(doc, { html: table, startY: 25 });
 
-        // Abre o PDF em nova aba
+        // Abre o PDF em nova abre
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');

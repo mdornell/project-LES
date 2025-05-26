@@ -33,8 +33,7 @@ public class PagamentoFornecedorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PagamentoFornecedorDTO> atualizar(@PathVariable Integer id,
-                                                            @RequestBody PagamentoFornecedor pagamento) {
+    public ResponseEntity<PagamentoFornecedorDTO> atualizar(@PathVariable Integer id, @RequestBody PagamentoFornecedor pagamento) {
         return ResponseEntity.ok(service.atualizar(id, pagamento));
     }
 
