@@ -53,9 +53,9 @@ export class ProdutosComponent {
                     const dataVenda = new Date(v.dataHora);
                     return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
-
+                console.log(this.linhas)
                 this.linhas = [];
-
+                console.log(vendas)
                 vendasFiltradas.forEach(venda => {
                     venda.itens.forEach(item => {
                         // Buscando o produto pelo id no service
