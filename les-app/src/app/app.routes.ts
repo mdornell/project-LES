@@ -10,6 +10,8 @@ import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginClienteComponent } from './pages/login-cliente/login-cliente.component';
 import { LoginComponent } from './pages/login/login.component';
+import { PagamentoFornecedorFormComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor-form/pagamento-fornecedor-form.component';
+import { PagamentoFornecedorComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor.component';
 import { ProdutoFormComponent } from './pages/produto/produto-form/produto-form.component';
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
@@ -21,6 +23,7 @@ import { VendaComponent } from './pages/venda/venda.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
+import { PagamentoFornecedorResolver } from './services/guard/pagamento-fornecedor.resolver';
 import { ProdutoResolver } from './services/guard/produto.resolver';
 import { UsuarioResolver } from './services/guard/usuario.resolver';
 
@@ -54,9 +57,13 @@ export const routes: Routes = [
             { path: 'refeicao', component: RefeicaoComponent },
 
             // Fornecedores
-            { path: 'fornecedor', component: FornecedorComponent, },
+            { path: 'fornecedor', component: FornecedorComponent },
             { path: 'fornecedor/new', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
             { path: 'fornecedor/edit/:id', component: FornecedorFormComponent, resolve: { fornecedor: FornecedorResolver } },
+
+            { path: 'pagamento-fornecedor', component: PagamentoFornecedorComponent, },
+            { path: 'pagamento-fornecedor/new', component: PagamentoFornecedorFormComponent, resolve: { fornecedor: PagamentoFornecedorResolver } },
+            { path: 'pagamento-fornecedor/edit/:id', component: PagamentoFornecedorFormComponent, resolve: { fornecedor: PagamentoFornecedorResolver } },
 
             //Vendas
             { path: 'venda/:id', component: VendaComponent },
@@ -91,7 +98,5 @@ export const routes: Routes = [
         path: 'cliente',
         component: LoginClienteComponent
     },
-
-
 
 ];

@@ -1,0 +1,31 @@
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Data Vencimento</th>
+                <th>Data Pagamento</th>
+                <th>Método</th>
+                <th>Valor Pago</th>
+                <th>Fornecedor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of pagamentos">
+                <td>{{ p._id }}</td>
+                <td>{{ p.descricao }}</td>
+                <td>{{ p.dataVencimento }}</td>
+                <td>{{ p.dataPagamento }}</td>
+                <td>{{ p.metodo }}</td>
+                <td>{{ p.valorPago | currency:'BRL' }}</td>
+                <td>{{ p.fornecedor?.nome }}</td>
+                <td>
+                    <button class="btn btn-primary btn-sm" (click)="onEdit(p)">Editar</button>
+                    <button class="btn btn-danger btn-sm" (click)="onSelect(p)">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
