@@ -19,88 +19,59 @@ import { Venda } from '../../types/venda';
     styleUrl: './dre-diario.component.scss'
 })
 export class DreDiarioComponent {
+  
+    dataInicio: string = '2025-02-01';
+    dataFim: string = '2025-02-20';
 
-    inicio: string = new Date().toISOString().split('T')[0];
-    fim: string = new Date().toISOString().split('T')[0];
+    dados = [
+        { data: '20/02/2025', entrada: 2140.52, saida: 0, clientes: 48 },
+        { data: '19/02/2025', entrada: 1957.41, saida: 2000, clientes: 49 },
+        { data: '18/02/2025', entrada: 1548.79, saida: 9600, clientes: 35 },
+        { data: '17/02/2025', entrada: 2789.86, saida: 456.40, clientes: 51 },
+        { data: '14/02/2025', entrada: 0, saida: 200, clientes: 52 },
+        { data: '14/02/2025', entrada: 2456.87, saida: 0, clientes: 52 },
+        { data: '13/02/2025', entrada: 1893.45, saida: 1400, clientes: 46 },
+        { data: '12/02/2025', entrada: 3704.82, saida: 120, clientes: 59 },
+    ];
 
-    linhas: {
-        codigo: string;
-        descricao: string;
-        custo: number;
-        venda: number;
-        lucro: number;
-        qtd: number;
-    }[] = [];
+    saldoInicial = 0;
+    saldoFinal = 0;
 
-    isLoading = false;
+    ngOnInit() {
+        this.calcularSaldos();
+    }
 
-    constructor(
-        private vendaService: VendaService,
-        private produtoService: ProdutoService
-    ) { }
+    calcularSaldos() {
+        const entradas = this.dados.reduce((soma, d) => soma + d.entrada, 0);
+        const saidas = this.dados.reduce((soma, d) => soma + d.saida, 0);
+        this.saldoInicial = 9564.78; // Pode vir de outro lugar ou ser inicializado
+        this.saldoFinal = this.saldoInicial + entradas - saidas;
+    }
 
-    gerarRelatorio(): void {
-        if (!this.inicio || !this.fim) {
-            console.error('Informe as datas de início e fim.');
+    onRelatorio(): void {
+        // Seleciona a tabela pelo id ou classe no HTML
+        const table = document.querySelector('table');
+        if (!table) {
+            alert('Tabela não encontrada!');
             return;
         }
 
-        const inicioDate = new Date(this.inicio);
-        const fimDate = new Date(this.fim);
-        fimDate.setHours(23, 59, 59, 999);
-
-        this.isLoading = true;
-
-        this.vendaService.list().subscribe({
-            next: (vendas: Venda[]) => {
-                const vendasFiltradas = vendas.filter(v => {
-                    const dataVenda = new Date(v.dataHora);
-                    return dataVenda >= inicioDate && dataVenda <= fimDate;
-                });
-
-                // Agrupar itens por produtoId e somar apenas a quantidade
-                const itensMap = new Map<string, { qtd: number; produtoId: string }>();
-                vendasFiltradas.forEach(venda => {
-                    venda.itens.forEach(item => {
-                        const key: string = String(item.produtoId);
-                        if (!itensMap.has(key)) {
-                            itensMap.set(key, { qtd: 0, produtoId: String(item.produtoId) });
-                        }
-                        const entry = itensMap.get(key)!;
-                        entry.qtd += item.quantidade ?? 1;
-                    });
-                });
-
-                const requisicoes = Array.from(itensMap.values()).map(itemAgrupado =>
-                    this.produtoService.listById(Number(itemAgrupado.produtoId)).pipe(
-                        map(produtoResponse => ({
-                            id: itemAgrupado.produtoId,
-                            descricao: produtoResponse.nome,
-                            custo: produtoResponse.valorCusto,
-                            venda: produtoResponse.valorVenda,
-                            lucro: (produtoResponse.valorVenda * itemAgrupado.qtd),
-                            codigo: produtoResponse.codigoBarras,
-                            qtd: itemAgrupado.qtd
-                        }))
-                    )
-                );
-
-                forkJoin(requisicoes).subscribe({
-                    next: (linhasFormatadas) => {
-                        this.linhas = linhasFormatadas;
-                        this.isLoading = false;
-                    },
-                    error: (err) => {
-                        console.error('Erro ao buscar produtos', err);
-                        this.isLoading = false;
-                    }
-                });
-            },
-            error: () => {
-                console.error('Erro ao buscar vendas');
-                this.isLoading = false;
-            }
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
         });
+
+        doc.setFont("helvetica");
+        doc.setFontSize(16);
+        doc.text("Relatório DRE Diário", 105, 15, { align: "center" });
+
+        autoTable(doc, { html: table, startY: 25 });
+
+        // Abre o PDF em nova aba
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
     }
 
     onRelatorio(): void {

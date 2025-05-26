@@ -26,15 +26,14 @@ public class PagamentoFornecedorController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @PostMapping("/{fornecedorId}")
+    @PostMapping
     public ResponseEntity<PagamentoFornecedorDTO> salvar(@RequestBody PagamentoFornecedor pagamento,
-            @PathVariable Integer fornecedorId) {
+                                                         @RequestParam Integer fornecedorId) {
         return ResponseEntity.ok(service.salvar(pagamento, fornecedorId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PagamentoFornecedorDTO> atualizar(@PathVariable Integer id,
-            @RequestBody PagamentoFornecedor pagamento) {
+    public ResponseEntity<PagamentoFornecedorDTO> atualizar(@PathVariable Integer id, @RequestBody PagamentoFornecedor pagamento) {
         return ResponseEntity.ok(service.atualizar(id, pagamento));
     }
 

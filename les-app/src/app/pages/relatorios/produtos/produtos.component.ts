@@ -6,6 +6,8 @@ import { ProdutoService } from '../../../services/produto.service';
 import { VendaService } from '../../../services/venda.service';
 import { Venda } from '../../../types/venda';
 
+
+
 @Component({
     selector: 'app-produtos',
     standalone: true,
@@ -22,11 +24,12 @@ export class ProdutosComponent {
     fim: string = new Date().toISOString().split('T')[0];
 
     linhas: {
+        codigo: string;
         descricao: string;
         custo: number;
         venda: number;
         lucro: number;
-        codigo: string;
+        qtd: number;
     }[] = [];
 
     isLoading = false;
@@ -54,32 +57,43 @@ export class ProdutosComponent {
                     const dataVenda = new Date(v.dataHora);
                     return dataVenda >= inicioDate && dataVenda <= fimDate;
                 });
-                console.log(this.linhas)
-                this.linhas = [];
-                console.log(vendas)
+                // Agrupar itens por produtoId e somar apenas a quantidade
+                const itensMap = new Map<string, { qtd: number; produtoId: string }>();
                 vendasFiltradas.forEach(venda => {
                     venda.itens.forEach(item => {
-                        // Buscando o produto pelo id no service
-                        this.produtoService.listById(item.produtoId).subscribe({
-                            next: (produto) => {
-                                if (produto) {
-                                    this.linhas.push({
-                                        descricao: produto.nome,
-                                        custo: item.custo,
-                                        venda: produto.valorVenda,
-                                        lucro: produto.valorVenda - item.custo,
-                                        codigo: produto.codigoBarras
-                                    });
-                                }
-                            },
-                            error: () => {
-                                console.error(`Erro ao buscar produto com ID ${item.produtoId}`);
-                            }
-                        });
+                        const key: string = String(item.produtoId);
+                        if (!itensMap.has(key)) {
+                            itensMap.set(key, { qtd: 0, produtoId: String(item.produtoId) });
+                        }
+                        const entry = itensMap.get(key)!;
+                        entry.qtd += item.quantidade ?? 1;
                     });
                 });
 
-                this.isLoading = false;
+                const requisicoes = Array.from(itensMap.values()).map(itemAgrupado =>
+                    this.produtoService.listById(Number(itemAgrupado.produtoId)).pipe(
+                        map(produtoResponse => ({
+                            id: itemAgrupado.produtoId,
+                            descricao: produtoResponse.nome,
+                            custo: produtoResponse.valorCusto,
+                            venda: produtoResponse.valorVenda,
+                            lucro: (produtoResponse.valorVenda * itemAgrupado.qtd),
+                            codigo: produtoResponse.codigoBarras,
+                            qtd: itemAgrupado.qtd
+                        }))
+                    )
+                );
+
+                forkJoin(requisicoes).subscribe({
+                    next: (linhasFormatadas) => {
+                        this.linhas = linhasFormatadas;
+                        this.isLoading = false;
+                    },
+                    error: (err) => {
+                        console.error('Erro ao buscar produtos', err);
+                        this.isLoading = false;
+                    }
+                });
             },
             error: () => {
                 console.error('Erro ao buscar vendas');
@@ -103,11 +117,11 @@ export class ProdutosComponent {
 
         doc.setFont("helvetica");
         doc.setFontSize(16);
-        doc.text("Relatório de Produtos", 105, 15, { align: "center" });
+        doc.text("Relatório DRE Diário", 105, 15, { align: "center" });
 
-        // @ts-ignore
         autoTable(doc, { html: table, startY: 25 });
 
+        // Abre o PDF em nova abre
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
