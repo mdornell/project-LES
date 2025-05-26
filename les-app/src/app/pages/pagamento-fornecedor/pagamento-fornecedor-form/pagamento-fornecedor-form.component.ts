@@ -2,7 +2,7 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FornecedorService } from '../../../services/fornecedor.service';
 import { PagamentoFornecedorService } from '../../../services/pagamento-fornecedor.service';
 import { PagamentoFornecedor } from '../../../types/pagamento-Fornecedor';
@@ -22,7 +22,6 @@ export class PagamentoFornecedorFormComponent implements OnInit {
         private fb: FormBuilder,
         private pagamentoService: PagamentoFornecedorService,
         private route: ActivatedRoute,
-        private router: Router,
         private snackBar: MatSnackBar,
         private fornecedorService: FornecedorService,
         private location: Location

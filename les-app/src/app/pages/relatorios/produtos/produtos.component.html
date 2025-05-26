@@ -1,51 +1,60 @@
-<div class="container bg-white p-4 rounded shadow-sm">
-    <h5>Produtos</h5>
+<div class="container bg-white p-4 rounded shadow-sm border">
+    <h5 class="fw-bold">Relatoria de Venda de Produtos</h5>
 
     <div class="d-flex flex-wrap gap-3 mb-3 align-items-end">
         <div>
-            <label>Início</label>
+            <label class="form-label text-capitalize">início</label>
             <input type="date" [(ngModel)]="inicio" class="form-control">
         </div>
         <div>
-            <label>Fim</label>
+            <label class="form-label text-capitalize">fim</label>
             <input type="date" [(ngModel)]="fim" class="form-control">
         </div>
-        <div>
+        <div class="ms-auto">
             <button class="btn btn-outline-dark" (click)="gerarRelatorio()">
-                <i class="bi bi-printer-fill"></i> Gerar Relatório
+                <i class="bi bi-funnel-fill me-1"></i> Filtrar
+            </button>
+        </div>
+        <div class="d-flex justify-content-end gap-3">
+            <button class="btn btn-outline-secondary" (click)="onRelatorio()">
+                <i class="bi bi-printer"></i>
+                Relatório
             </button>
         </div>
     </div>
 
     <div *ngIf="isLoading; else tabela">
-        <div class="d-flex justify-content-center mt-3 mb-3">
+        <div class="d-flex justify-content-center my-3">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Carregando...</span>
             </div>
         </div>
     </div>
 
-    <!-- ...código omitido para brevidade... -->
     <ng-template #tabela>
-        <table class="table table-bordered text-center">
-            <thead class="bg-danger text-white">
-                <tr>
-                    <th>Descrição</th>
-                    <th>Custo</th>
-                    <th>Venda</th>
-                    <th>Lucro</th>
-                    <th>Código</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let linha of linhas">
-                    <td>{{ linha.descricao }}</td>
-                    <td>{{ linha.custo | currency:'BRL' }}</td>
-                    <td>{{ linha.venda | currency:'BRL' }}</td>
-                    <td>{{ linha.lucro | currency:'BRL' }}</td>
-                    <td>{{ linha.codigo }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="text-white" style="background-color: #800020;">
+                    <tr>
+                        <th class="rounded-start">Código</th>
+                        <th>Descrição</th>
+                        <th>Custo</th>
+                        <th>Venda</th>
+                        <th>Lucro</th>
+                        <th class="rounded-end">Qtd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let linha of linhas">
+                        <td>{{ linha.codigo }}</td>
+                        <td>{{ linha.descricao }}</td>
+                        <td>{{ linha.custo | currency:'BRL' }}</td>
+                        <td>{{ linha.venda | currency:'BRL' }}</td>
+                        <td>{{ linha.lucro | currency:'BRL' }}</td>
+                        <td>{{ linha.qtd }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </ng-template>
 </div>

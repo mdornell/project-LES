@@ -33,7 +33,7 @@
                 <div class="mb-3">
                     <label class="form-label">Fornecedor</label>
                     <select formControlName="fornecedor" class="form-select" required
-                        (change)="fornecedorSelecionado = fornecedores.find(f => f.id == $event.target.value)">
+                        (change)="onFornecedorChange($event)">
                         <option *ngFor="let fornecedor of fornecedores" [value]="fornecedor.id">
                             {{ fornecedor._id }}. {{ fornecedor.nome }}
                         </option>
