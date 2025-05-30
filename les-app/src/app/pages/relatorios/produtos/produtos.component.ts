@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
+
+import autoTable from 'jspdf-autotable';
+import { forkJoin, map } from 'rxjs';
 import { ProdutoService } from '../../../services/produto.service';
 import { VendaService } from '../../../services/venda.service';
 import { Venda } from '../../../types/venda';

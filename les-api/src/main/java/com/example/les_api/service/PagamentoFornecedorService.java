@@ -1,15 +1,17 @@
 package com.example.les_api.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.example.les_api.domain.fornecedor.Fornecedor;
 import com.example.les_api.domain.pagamento.PagamentoFornecedor;
 import com.example.les_api.dto.PagamentoFornecedorDTO;
 import com.example.les_api.repository.FornecedorRepository;
 import com.example.les_api.repository.PagamentoFornecedorRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor

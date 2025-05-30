@@ -30,14 +30,40 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Fornecedor</label>
-                    <select formControlName="fornecedor" class="form-select" required
-                        (change)="onFornecedorChange($event)">
-                        <option *ngFor="let fornecedor of fornecedores" [value]="fornecedor.id">
-                            {{ fornecedor._id }}. {{ fornecedor.nome }}
-                        </option>
-                    </select>
+                <div class="mb-3 d-flex align-items-end">
+                    <div class="flex-grow-1 me-2">
+                        <label class="form-label">Fornecedor (ID)</label>
+                        <input formControlName="fornecedor" class="form-control" type="number" required />
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary mb-1" (click)="abrirModalFornecedores()">
+                        Selecionar Fornecedor
+                    </button>
+                </div>
+
+                <!-- Modal de Fornecedores -->
+                <div class="modal fade" id="modalFornecedores" tabindex="-1" aria-labelledby="modalFornecedoresLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalFornecedoresLabel">Selecionar Fornecedor</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li *ngFor="let fornecedor of fornecedores"
+                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ fornecedor.id }}. {{ fornecedor.nome }}</span>
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                            (click)="selecionarFornecedor(fornecedor)">
+                                            Selecionar
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-center">

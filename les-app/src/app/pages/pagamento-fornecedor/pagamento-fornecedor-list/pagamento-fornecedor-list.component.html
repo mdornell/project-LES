@@ -8,7 +8,7 @@
                 <th>Data Pagamento</th>
                 <th>Método</th>
                 <th>Valor Pago</th>
-                <th>Fornecedor</th>
+                <!-- <th>Fornecedor</th> -->
                 <th>Ações</th>
             </tr>
         </thead>
@@ -20,10 +20,17 @@
                 <td>{{ p.dataPagamento }}</td>
                 <td>{{ p.metodo }}</td>
                 <td>{{ p.valorPago | currency:'BRL' }}</td>
-                <td>{{ p.fornecedor?.nome }}</td>
-                <td>
-                    <button class="btn btn-primary btn-sm" (click)="onEdit(p)">Editar</button>
-                    <button class="btn btn-danger btn-sm" (click)="onSelect(p)">Excluir</button>
+                <!-- <td>{{ p.fornecedor?.nome }}</td> -->
+                <!-- Ações Column -->
+                <td class="d-flex justify-content-center gap-1">
+                    <button class="btn btn-sm btn-primary px-3" (click)="onEdit(p)" aria-label="Editar um produto">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-sm btn-danger px-3" aria-label="Remover um produto"
+                        (click)="onSelect(p)">
+                        <i class="bi bi-trash"></i>
+                    </button>
                 </td>
             </tr>
         </tbody>
