@@ -56,9 +56,22 @@ export class DreDiarioComponent {
     }
 
     gerarDados() {
+        // Agrupa vendas e pagamentos por data
+        const entradasPorData: { [data: string]: number } = {};
+        const saidasPorData: { [data: string]: number } = {};
+
+        this.vendas.forEach(v => {
+            entradasPorData[v.dataHora] = (entradasPorData[v.dataHora] || 0) + v.valorTotal;
+        });
+
+        this.pagamentosFornecedor.forEach(p => {
+            saidasPorData[p.dataVencimento] = (saidasPorData[p.dataVencimento] || 0) + p.valorPago;
+        });
+
+        // Junta todas as datas únicas
         const datasSet = new Set([
-            ...this.vendas.map(v => v.dataHora),
-            ...this.pagamentosFornecedor.map(p => p.dataVencimento)
+            ...Object.keys(entradasPorData),
+            ...Object.keys(saidasPorData)
         ]);
         const datas = Array.from(datasSet).sort((a, b) => {
             const [da, ma, ya] = a.split('/').map(Number);
@@ -66,15 +79,11 @@ export class DreDiarioComponent {
             return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
         });
 
-        this.dados = datas.map(data => {
-            const vendasDia = this.vendas.filter(v => v.dataHora === data);
-            const pagamentosDia = this.pagamentosFornecedor.filter(p => p.dataVencimento === data);
-            return {
-                data,
-                entrada: vendasDia.reduce((s, v) => s + v.valorTotal, 0),
-                saida: pagamentosDia.reduce((s, p) => s + p.valorPago, 0),
-            };
-        });
+        this.dados = datas.map(data => ({
+            data,
+            entrada: entradasPorData[data] || 0,
+            saida: saidasPorData[data] || 0,
+        }));
     }
 
     calcularSaldos() {
