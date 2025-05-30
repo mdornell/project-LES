@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Observable } from 'rxjs';
@@ -12,7 +13,8 @@ import { UsuariosListComponent } from './usuarios-list/usuarios-list.component';
     standalone: true,
     imports: [
         UsuariosListComponent,
-        CommonModule
+        CommonModule,
+        RouterModule
     ],
     templateUrl: './usuarios.component.html',
     styleUrl: './usuarios.component.scss'
@@ -22,23 +24,31 @@ export class UsuariosComponent {
     usuarios$: Observable<Usuario[]>;
     usuarioSelected: Usuario | null = null;
 
-    telasPermissoes: string[] = [
-        "Dashboard",
-        "Produto",
-        "Cliente",
-        "Venda",
-        "Fornecedor",
-        "Relatórios",
-        "Recarga",
-        "PagamentoFornecedor",
-        "Acesso",
-        "Funcionário"
-    ];
+    telasPermissoes: {
+        nomeTela: string;
+        podeVer: boolean;
+        podeAdicionar: boolean;
+        podeEditar: boolean;
+        podeExcluir: boolean;
+    }[] = [
+            { nomeTela: "Dashboard", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Produto", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Cliente", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Venda", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Fornecedor", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Relatórios", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Recarga", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "PagamentoFornecedor", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Acesso", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
+            { nomeTela: "Funcionário", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false }
+        ];
+
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private usuarioService: UsuarioService
+        private usuarioService: UsuarioService,
+        private snackBar: MatSnackBar
     ) {
         this.usuarios$ = this.usuarioService.list();
     }
@@ -85,6 +95,36 @@ export class UsuariosComponent {
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
+    }
+
+    salvarPermissoes(): void {
+        if (!this.usuarioSelected?._id) {
+            this.snackBar.open('Selecione um funcionário para salvar permissões.', 'X', { duration: 5000 });
+            return;
+        }
+
+        const permissoesJSON = this.telasPermissoes.map((tela, index) => ({
+            telaId: index + 1,
+            nomeTela: tela.nomeTela,
+            podeVer: tela.podeVer,
+            podeAdicionar: tela.podeAdicionar,
+            podeEditar: tela.podeEditar,
+            podeExcluir: tela.podeExcluir
+        }));
+
+        this.usuarioService.savePermisions(permissoesJSON, this.usuarioSelected._id)
+            .subscribe(
+                () => this.onPermissoesSuccess(),
+                () => this.onPermissoesErro()
+            );
+    }
+
+    onPermissoesSuccess() {
+        this.snackBar.open('Permissões salvas com sucesso', '', { duration: 5000 });
+    }
+
+    onPermissoesErro() {
+        this.snackBar.open('Erro ao salvar permissões', '', { duration: 5000 });
     }
 
 }

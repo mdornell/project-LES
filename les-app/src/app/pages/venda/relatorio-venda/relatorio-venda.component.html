@@ -5,7 +5,19 @@
         </div>
     </div>
 
-
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="dataInicio" class="form-label">Data Início</label>
+            <input type="date" id="dataInicio" class="form-control" [(ngModel)]="dataInicio">
+        </div>
+        <div class="col-md-4">
+            <label for="dataFim" class="form-label">Data Fim</label>
+            <input type="date" id="dataFim" class="form-control" [(ngModel)]="dataFim">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-primary w-100" (click)="buscarVendas()">Buscar</button>
+        </div>
+    </div>
 
     <div *ngIf="carregando" class="d-flex justify-content-center align-items-center" style="min-height: 150px;">
         <div class="spinner-border text-primary me-2" role="status"></div>
@@ -29,7 +41,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let venda of vendas">
-                    <td>{{ venda.dataHora | date: 'short' }}</td>
+                    <td>{{ venda.dataHora | date: 'dd/MM/yyyy HH:mm' }}</td>
                     <!-- <td>{{ venda.descricaoVenda }}</td> -->
                     <td>{{ venda.cliente.nome }}</td>
                     <td>
