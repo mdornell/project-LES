@@ -1,0 +1,49 @@
+<div class="container my-2">
+    <div class="row mb-2">
+        <div class="col">
+            <h2 class="fw-bold">Relatório de Vendas</h2>
+        </div>
+    </div>
+
+
+
+    <div *ngIf="carregando" class="d-flex justify-content-center align-items-center" style="min-height: 150px;">
+        <div class="spinner-border text-primary me-2" role="status"></div>
+        <span>Carregando...</span>
+    </div>
+
+    <div *ngIf="!carregando && vendas.length === 0" class="alert alert-warning text-center">
+        Nenhuma venda encontrada.
+    </div>
+
+    <div class="table-responsive" *ngIf="!carregando && vendas.length > 0">
+        <table class="table table-striped table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Data</th>
+                    <!-- <th>Descrição</th> -->
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Itens</th>
+                    <th scope="col">Total (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let venda of vendas">
+                    <td>{{ venda.dataHora | date: 'short' }}</td>
+                    <!-- <td>{{ venda.descricaoVenda }}</td> -->
+                    <td>{{ venda.cliente.nome }}</td>
+                    <td>
+                        <ul class="mb-0 ps-3">
+                            <li *ngFor="let item of venda.itens" class="small">
+                                {{ getNomeProduto(item.produtoId) }} -
+                                <span class="badge bg-secondary">{{ item.quantidade }}</span> x
+                                <span class="text-success">{{ item.custo | currency:'BRL' }}</span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="fw-bold text-end text-success">{{ venda.valorTotal | currency:'BRL' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

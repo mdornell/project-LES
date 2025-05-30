@@ -19,6 +19,7 @@ import { ProdutosComponent } from './pages/relatorios/produtos/produtos.componen
 import { SignUpComponent } from './pages/signup/signup.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { RelatorioVendaComponent } from './pages/venda/relatorio-venda/relatorio-venda.component';
 import { VendaComponent } from './pages/venda/venda.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
@@ -67,6 +68,7 @@ export const routes: Routes = [
 
             //Vendas
             { path: 'venda/:id', component: VendaComponent },
+            { path: 'relatorio-venda', component: RelatorioVendaComponent },
 
             // Aniversariantes
             {
