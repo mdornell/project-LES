@@ -6,9 +6,12 @@ import { ActivatedRoute } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import { ClienteService } from '../../services/cliente.service';
 import { ProdutoService } from '../../services/produto.service';
+import { RefeicaoService } from '../../services/refeicao.service';
 import { VendaService } from '../../services/venda.service';
 import { Cliente } from '../../types/cliente';
+import { ItemVenda } from '../../types/itemVenda';
 import { Produto } from '../../types/produto';
+import { Refeicao } from '../../types/refeição';
 import { Venda } from '../../types/venda';
 
 @Component({
@@ -36,6 +39,7 @@ export class VendaComponent implements OnInit {
         private clienteService: ClienteService,
         private produtoService: ProdutoService,
         private vendaService: VendaService,
+        private refeicaoService: RefeicaoService,
         private snackBar: MatSnackBar,
     ) { }
 
@@ -140,6 +144,66 @@ export class VendaComponent implements OnInit {
         this.saldoAnterior = this.cliente.saldo;
         this.codigoBarras = null; // Reset the input field
         this.erro = '';
+    }
+
+    listarRefeicaoMaisRecente(): void {
+        this.refeicaoService.list().subscribe({
+            next: (refeicoes: Refeicao[]) => {
+                if (refeicoes && refeicoes.length > 0) {
+                    // Ordena por dataRegistro decrescente e pega a mais recente
+                    const refeicaoMaisRecente = refeicoes.sort(
+                        (a, b) => new Date(b.dataRegistro).getTime() - new Date(a.dataRegistro).getTime()
+                    )[0];
+
+                    // Exemplo de uso: pegar peso e valor
+                    const peso = 1.5;
+                    const valor = refeicaoMaisRecente.precoKg * peso;
+
+                    this.snackBar.open(
+                        `Peso: ${peso} kg, Valor: R$ ${valor.toFixed(2)}`,
+                        '', { duration: 4000 }
+                    );
+
+                    // Exemplo de criação de um ItemVenda com base na refeição mais recente
+                    // (ajuste conforme necessário para seu fluxo)
+                    const itemVenda: ItemVenda = {
+                        _id: 0,
+                        quantidade: 1,
+                        custo: valor,
+                        produtoId: 0
+                    };
+
+                    // Adiciona a refeição como um "produto" especial na lista de produtos para exibição na tabela
+                    const produtoRefeicao: Produto = {
+                        _id: 0,
+                        nome: `Refeição (${peso}kg)`,
+                        valorVenda: valor,
+                        valorCusto: valor,
+                        codigoBarras: '0',
+                        descricao: 'Refeição',
+                        quantidade: 1,
+                        ativo: true
+                    };
+                    this.produtos.push(produtoRefeicao);
+                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+                    this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+                    // Aqui você pode adicionar o itemVenda à lista de produtos ou processar conforme necessário
+                } else {
+                    this.snackBar.open('Nenhuma refeição encontrada.', '', { duration: 3000 });
+                }
+            },
+            error: () => {
+                this.snackBar.open('Erro ao buscar refeições.', '', { duration: 3000 });
+            }
+        });
+    }
+
+    removerProduto(i: number): void {
+        if (i >= 0 && i < this.produtos.length) {
+            this.produtos.splice(i, 1);
+            this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+            this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+        }
     }
 
     onRelatorio(): void {
