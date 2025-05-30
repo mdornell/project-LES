@@ -56,27 +56,40 @@ export class DreDiarioComponent {
     }
 
     gerarDados() {
-        const datasSet = new Set([
-            ...this.vendas.map(v => v.dataHora),
-            ...this.pagamentosFornecedor.map(p => p.dataVencimento)
-        ]);
-        const datas = Array.from(datasSet).sort((a, b) => {
-            const [da, ma, ya] = a.split('/').map(Number);
-            const [db, mb, yb] = b.split('/').map(Number);
-            // Ordena da data mais recente para a mais distante
+        const mapaDias = new Map<string, { entrada: number; saida: number }>();
+
+        for (const venda of this.vendas) {
+            const data = venda.dataHora;
+            if (!mapaDias.has(data)) {
+                mapaDias.set(data, { entrada: 0, saida: 0 });
+            }
+            mapaDias.get(data)!.entrada += venda.valorTotal;
+        }
+
+        for (const pagamento of this.pagamentosFornecedor) {
+            const data = pagamento.dataVencimento;
+            if (!mapaDias.has(data)) {
+                mapaDias.set(data, { entrada: 0, saida: 0 });
+            }
+            mapaDias.get(data)!.saida += pagamento.valorPago;
+        }
+
+        this.dados = Array.from(mapaDias.entries()).map(([data, valores]) => ({
+            data,
+            entrada: valores.entrada,
+            saida: valores.saida
+        }));
+
+        // Ordena da mais recente para a mais antiga
+        this.dados.sort((a, b) => {
+            const [da, ma, ya] = a.data.split('/').map(Number);
+            const [db, mb, yb] = b.data.split('/').map(Number);
             return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
         });
-
-        this.dados = datas.map(data => {
-            const vendasDia = this.vendas.filter(v => v.dataHora === data);
-            const pagamentosDia = this.pagamentosFornecedor.filter(p => p.dataVencimento === data);
-            return {
-                data,
-                entrada: vendasDia.reduce((s, v) => s + v.valorTotal, 0),
-                saida: pagamentosDia.reduce((s, p) => s + p.valorPago, 0),
-            };
-        });
     }
+
+
+
 
     calcularSaldos() {
         const entradas = this.dados.reduce((soma, d) => soma + d.entrada, 0);
