@@ -22,6 +22,7 @@ public class ClienteDTO {
     private String codigoRFID;
     private Boolean ativo;
     private Date dataAniversario;
+    private Date dataVencimentoCartao;
 
     public ClienteDTO(Cliente cliente) {
         this.id = cliente.getId();
@@ -31,5 +32,6 @@ public class ClienteDTO {
         this.codigoRFID = cliente.getCodigoRFID();
         this.ativo = cliente.getAtivo();
         this.dataAniversario = cliente.getDataAniversario();
+        this.dataVencimentoCartao = cliente.getDataVencimentoCartao();
     }
 }

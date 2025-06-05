@@ -2,6 +2,7 @@ package com.example.les_api.domain.cliente;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +30,10 @@ public class Cliente {
     private Double saldo;
     private String codigoRFID;
     private Boolean ativo;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "dataVencimentoCartao")
+    private Date dataVencimentoCartao;
 
     @Temporal(TemporalType.DATE)
     private Date dataAniversario;
