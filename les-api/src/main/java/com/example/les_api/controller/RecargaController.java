@@ -31,13 +31,12 @@ public class RecargaController {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
+        cliente.setSaldo(cliente.getSaldo() + dto.getValor());
+        clienteRepository.save(cliente);
         Recarga recarga = new Recarga();
         recarga.setValor(dto.getValor());
         recarga.setCliente(cliente);
         recarga.setDataRecarga(Timestamp.valueOf(dto.getData())); // Formato: yyyy-MM-dd HH:mm:ss
-
-        // cliente.setSaldo(cliente.getSaldo() + dto.getValor());
-        // clienteRepository.save(cliente);
 
         recargaRepository.save(recarga);
         return ResponseEntity.ok("Recarga registrada com sucesso.");

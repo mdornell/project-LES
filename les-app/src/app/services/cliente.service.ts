@@ -9,6 +9,7 @@ import { Cliente } from '../types/cliente';
 export class ClienteService {
 
     apiUrl: string = 'http://localhost:8080/cliente';
+    apiUrl2: string = 'http://localhost:8080/recargas';
 
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
@@ -52,6 +53,12 @@ export class ClienteService {
     listClientesEmAberto(dias?: number) {
         const params = dias !== undefined ? { params: { dias } } : {};
         return this.httpCliente.get<Cliente[]>(this.apiUrl + "/em-aberto", { ...this.apiAuth, ...params }).pipe(take(1));
+    }
+
+    registrarRecarga(dto: { valor: number; clienteId: number; data: string }) {
+        console.log('DTO de recarga:', dto);
+        // Change 'post' to 'put' if your backend expects a PUT request
+        return this.httpCliente.post(this.apiUrl2 + "/registrar-recarga", dto, this.apiAuth).pipe(take(1));
     }
 
 
