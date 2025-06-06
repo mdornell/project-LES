@@ -10,6 +10,9 @@
         <nav>
             <ul class="nav flex-column">
                 <li class="nav-item">
+                    <a href="/home/" class="nav-link text-secondary">Inicio</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-secondary" (click)="toggleSubmenu($event)">Produtos</a>
                     <ul class="nav flex-column ms-3" *ngIf="isSubmenuVisible">
                         <li class="nav-item">
@@ -84,7 +87,7 @@
         </nav>
 
         <div class="mt-auto d-flex gap-2">
-            <a href="/cliente" class="flex-grow-1">
+            <a href="/home/cliente/login" class="flex-grow-1">
                 <button class="btn btn-info w-100 d-flex align-items-center justify-content-center">
                     <i class="bi bi-person-bounding-box"></i>
                 </button>

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClienteService } from '../../services/cliente.service';
+import { Cliente } from '../../types/cliente';
 
 @Component({
     selector: 'app-login-cliente',
@@ -21,6 +22,8 @@ export class LoginClienteComponent {
     clientesEmAberto: any = null;
     erro: string = '';
 
+    listaClientes: any[] = [];
+
     constructor(
         private fb: FormBuilder,
         private clienteService: ClienteService,
@@ -32,7 +35,9 @@ export class LoginClienteComponent {
         });
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.carregarListaClientes();
+    }
 
     onSubmit(): void {
         if (this.rfidForm.valid) {
@@ -42,8 +47,25 @@ export class LoginClienteComponent {
 
             this.clienteService.listByRfid(rfid).subscribe(
                 cliente => {
-                    this.cliente = cliente;
-                    this.carregarClientesDia();
+                    if (cliente) {
+                        // Inverte o valor de 'ativo'
+                        cliente.ativo = !cliente.ativo;
+                        // Salva o cliente com o novo valor de 'ativo'
+                        this.clienteService.save(cliente).subscribe(
+                            clienteSalvo => {
+                                this.cliente = clienteSalvo;
+                                this.carregarClientes();
+                                this.carregarListaClientes();
+                                // Atualiza o formulário e a tela
+                                this.rfidForm.reset();
+                            },
+                            error => {
+                                this.erro = 'Erro ao salvar o cliente.';
+                            }
+                        );
+                    } else {
+                        this.erro = 'Cliente não encontrado.';
+                    }
                 },
                 error => {
                     this.erro = 'Cliente não encontrado ou erro ao buscar.';
@@ -52,7 +74,7 @@ export class LoginClienteComponent {
         }
     }
 
-    carregarClientesDia(): void {
+    carregarClientes(): void {
         this.clienteService.listClientesEmAberto().subscribe(clientes => {
             const clientesFiltrados = clientes.filter((c: any) => c.nome === this.cliente.nome);
             if (clientesFiltrados.length > 0) {
@@ -72,10 +94,10 @@ export class LoginClienteComponent {
         window.location.href = '/home';
     }
 
-    irParaVenda(): void {
-        if (this.cliente && this.cliente._id) {
+    irParaVenda(element: Cliente): void {
+        if (element && element._id) {
             // Navega diretamente para a tela de venda com o ID do cliente a partir da rota 'home'
-            this.router.navigate(['/home', 'venda', this.cliente._id]).catch(err => {
+            this.router.navigate(['/home', 'venda', element._id]).catch(err => {
                 console.error('Erro ao navegar para a tela de venda:', err);
                 this.erro = 'Erro ao navegar para a tela de venda. Tente novamente.';
             });
@@ -93,4 +115,14 @@ export class LoginClienteComponent {
     }
 
 
+    carregarListaClientes(): void {
+        this.clienteService.list().subscribe(
+            (clientes: any[]) => {
+                this.listaClientes = clientes.filter(cliente => cliente.ativo);
+            },
+            error => {
+                this.erro = 'Erro ao carregar lista de clientes.';
+            }
+        );
+    }
 }
