@@ -58,7 +58,7 @@ public class ClienteController {
                         cliente.getEmail(),
                         cliente.getSaldo(),
                         cliente.getCodigoRFID(),
-                        cliente.getAtivo(),
+                        cliente.isAtivo(),
                         cliente.getDataAniversario()));
         return ResponseEntity.ok(clienteService.salvar(cliente));
     }

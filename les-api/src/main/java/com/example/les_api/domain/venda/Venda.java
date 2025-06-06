@@ -1,6 +1,8 @@
 package com.example.les_api.domain.venda;
 
+import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.cliente.Cliente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -27,6 +29,8 @@ public class Venda {
 
     private Double valorTotal; // << NOVO CAMPO AQUI
 
+    private Double peso;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
@@ -34,5 +38,9 @@ public class Venda {
     @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ItemVenda> itens;
+
+    @JsonIgnore
+    @ManyToOne
+    private Acesso acesso;
 }
 

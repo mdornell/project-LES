@@ -54,7 +54,7 @@ public class ClienteService {
                         cliente.getEmail(),
                         cliente.getSaldo(),
                         cliente.getCodigoRFID(),
-                        cliente.getAtivo(),
+                        cliente.isAtivo(),
                         cliente.getDataAniversario()));
 
         atualizarSaldoCliente(cliente, cliente.getSaldo());
@@ -68,7 +68,7 @@ public class ClienteService {
         cliente.setNome(atualizado.getNome());
         cliente.setEmail(atualizado.getEmail());
         cliente.setCodigoRFID(atualizado.getCodigoRFID());
-        cliente.setAtivo(atualizado.getAtivo());
+        cliente.setAtivo(atualizado.isAtivo());
         cliente.setDataAniversario(atualizado.getDataAniversario());
 
         atualizarSaldoCliente(cliente, atualizado.getSaldo());
@@ -99,7 +99,7 @@ public class ClienteService {
                     long dias = ChronoUnit.DAYS.between(
                             v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                             hoje.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                    return new ClienteEmAbertoDTO(
+                    return new ClienteEmAbertoDTO(v.getCliente().getId(),
                             v.getCliente().getNome(),
                             v.getValorTotal(),
                             dias);
