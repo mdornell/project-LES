@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AniversariantesComponent } from './pages/aniversariantes/aniversariantes.component';
 import { ClienteFormComponent } from './pages/cliente/cliente-form/cliente-form.component';
 import { ClienteComponent } from './pages/cliente/cliente.component';
+import { RecargaComponent } from './pages/cliente/recarga/recarga.component';
 import { ClientesDiariosComponent } from './pages/clientes-diarios/clientes-diarios.component';
 import { ClientesEmAbertoComponent } from './pages/clientes-em-aberto/clientes-em-aberto.component';
 import { DreDiarioComponent } from './pages/dre-diario/dre-diario.component';
@@ -48,6 +49,7 @@ export const routes: Routes = [
             { path: 'cliente', component: ClienteComponent },
             { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
+            { path: 'cliente/recarga/:id', component: RecargaComponent },
 
             // Produtos
             { path: 'produto', component: ProdutoComponent },

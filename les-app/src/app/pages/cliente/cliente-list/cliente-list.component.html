@@ -28,11 +28,15 @@
 
                 <!-- Ações Column -->
                 <td class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-sm btn-primary px-4" (click)="onEdit(element)"
+                    <button class="btn btn-sm btn-primary px-2" (click)="onEdit(element)"
                         aria-label="Editar um cliente">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button type="button" class="btn btn-sm btn-danger px-4" aria-label="Remover um cliente"
+                    <button class="btn btn-sm btn-warning px-2" (click)="onRecharge(element)"
+                        aria-label="Recarregar saldo do cliente">
+                        <i class="bi bi-cash-coin"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger px-2" aria-label="Remover um cliente"
                         data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="onSelected(element)">
                         <i class="bi bi-trash"></i>
                     </button>

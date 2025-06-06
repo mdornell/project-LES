@@ -41,5 +41,14 @@ export class ClienteListComponent {
         this.clienteSelected.emit(cliente);
     }
 
+    onRecharge(element: Cliente) {
+        console.log('Recharge clicked for:', element);
+        if (element && element._id) {
+            this.router.navigate(['/home/cliente/recarga', element._id]);
+        } else {
+            console.error('Cliente _id is undefined');
+        }
+    }
+
 
 }

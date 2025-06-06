@@ -1,0 +1,44 @@
+<div class="container my-4">
+    <div class="card shadow-sm rounded-4 p-4 bg-light">
+        <h4 class="fw-bold">{{ cliente.nome }}</h4>
+
+        <div class="mt-3">
+            <!-- <p class="mb-1">Cliente {{ cliente.tipo }}</p> -->
+            <p class="mb-1">Saldo: R$ {{ cliente.saldo.toFixed(2) }}</p>
+            <!-- <p class="mb-1">Limite: R$ {{ cliente.limite.toFixed(2) }}</p> -->
+            <!-- <p class="mb-0" *ngIf="cliente.saldoEmAberto > 0">
+                <span class="fw-semibold">Saldo em aberto:</span>
+                <span class="text-danger">R$ {{ cliente.saldoEmAberto.toFixed(2) }} - {{ cliente.diasEmAberto }}
+                    Dias</span>
+            </p> -->
+        </div>
+
+        <h5 class="mt-4 fw-bold">Gerenciar cartão</h5>
+
+        <div class="d-flex gap-3 mt-3 flex-wrap">
+            <button class="btn btn-danger rounded-pill px-4 shadow-sm"
+                (click)="mostrarOpcoesPagamento = !mostrarOpcoesPagamento">
+                Pagar Saldo
+            </button>
+            <button class="btn btn-danger rounded-pill px-4 shadow-sm" (click)="bloquearCartao()">
+                Bloquear Cartão
+            </button>
+        </div>
+
+        <div class="mt-3">
+            <p>
+                Está devendo <span class="text-danger">R$ {{ (200 - cliente.saldo).toFixed(2) }}</span>.
+            </p>
+        </div>
+        <div *ngIf="mostrarOpcoesPagamento" class="mt-3">
+            <p>Selecione a forma de pagamento:</p>
+            <button class="btn btn-success me-2" (click)="pagarSaldo('pix')">Pix</button>
+            <button class="btn btn-primary me-2" (click)="pagarSaldo('cartao')">Cartão</button>
+            <button class="btn btn-warning" (click)="pagarSaldo('dinheiro')">Dinheiro</button>
+        </div>
+
+        <div *ngIf="erro" class="alert alert-danger mt-4">
+            {{ erro }}
+        </div>
+    </div>
+</div>
