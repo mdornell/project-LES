@@ -29,7 +29,7 @@ public class ClienteDTO {
         this.email = cliente.getEmail();
         this.saldo = cliente.getSaldo();
         this.codigoRFID = cliente.getCodigoRFID();
-        this.ativo = cliente.getAtivo();
+        this.ativo = cliente.isAtivo();
         this.dataAniversario = cliente.getDataAniversario();
     }
 }

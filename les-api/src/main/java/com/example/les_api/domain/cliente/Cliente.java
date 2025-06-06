@@ -28,7 +28,8 @@ public class Cliente {
     private String email;
     private Double saldo;
     private String codigoRFID;
-    private Boolean ativo;
+    private boolean ativo;
+    private Date dataVencCartao;
 
     @Temporal(TemporalType.DATE)
     private Date dataAniversario;

@@ -7,4 +7,5 @@ import com.example.les_api.domain.historico.HistoricoPrecoKg;
 
 @Repository
 public interface HistoricoPrecoKgRepository extends JpaRepository<HistoricoPrecoKg, Integer> {
+    HistoricoPrecoKg findFirstByOrderByIdDesc();
 }

@@ -58,7 +58,7 @@ public class ClienteController {
                         cliente.getEmail(),
                         cliente.getSaldo(),
                         cliente.getCodigoRFID(),
-                        cliente.getAtivo(),
+                        cliente.isAtivo(),
                         cliente.getDataAniversario()));
         return ResponseEntity.ok(clienteService.salvar(cliente));
     }
@@ -75,6 +75,7 @@ public class ClienteController {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
+    
     @GetMapping("/em-aberto")
     public ResponseEntity<List<ClienteEmAbertoDTO>> listarEmAberto(
             @RequestParam(required = false) Integer dias) {

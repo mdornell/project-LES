@@ -3,10 +3,9 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { forkJoin, map } from 'rxjs';
-import { ProdutoService } from '../../services/produto.service';
+import { PagamentoFornecedorService } from '../../services/pagamento-fornecedor.service';
 import { VendaService } from '../../services/venda.service';
-import { Venda } from '../../types/venda';
+
 
 @Component({
     selector: 'app-dre-diario',
@@ -19,27 +18,78 @@ import { Venda } from '../../types/venda';
     styleUrl: './dre-diario.component.scss'
 })
 export class DreDiarioComponent {
-  
+
     dataInicio: string = '2025-02-01';
     dataFim: string = '2025-02-20';
 
-    dados = [
-        { data: '20/02/2025', entrada: 2140.52, saida: 0, clientes: 48 },
-        { data: '19/02/2025', entrada: 1957.41, saida: 2000, clientes: 49 },
-        { data: '18/02/2025', entrada: 1548.79, saida: 9600, clientes: 35 },
-        { data: '17/02/2025', entrada: 2789.86, saida: 456.40, clientes: 51 },
-        { data: '14/02/2025', entrada: 0, saida: 200, clientes: 52 },
-        { data: '14/02/2025', entrada: 2456.87, saida: 0, clientes: 52 },
-        { data: '13/02/2025', entrada: 1893.45, saida: 1400, clientes: 46 },
-        { data: '12/02/2025', entrada: 3704.82, saida: 120, clientes: 59 },
-    ];
+    vendas: any[] = [];
+    pagamentosFornecedor: any[] = [];
 
+    dados: any[] = [];
     saldoInicial = 0;
     saldoFinal = 0;
 
+    constructor(
+        private vendasService: VendaService,
+        private pagamentosFornecedorService: PagamentoFornecedorService
+    ) { }
+
     ngOnInit() {
-        this.calcularSaldos();
+        this.carregarDados();
     }
+
+    carregarDados() {
+        this.vendasService.list().subscribe(vendas => {
+            this.vendas = vendas;
+            this.pagamentosFornecedorService.list().subscribe(pagamentos => {
+                this.pagamentosFornecedor = pagamentos;
+                this.gerarDados();
+                // Ordena os dados da data mais recente para a mais antiga
+                this.dados.sort((a, b) => {
+                    const [da, ma, ya] = a.data.split('/').map(Number);
+                    const [db, mb, yb] = b.data.split('/').map(Number);
+                    return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
+                });
+                this.calcularSaldos();
+            });
+        });
+    }
+
+    gerarDados() {
+        const mapaDias = new Map<string, { entrada: number; saida: number }>();
+
+        for (const venda of this.vendas) {
+            const data = venda.dataHora;
+            if (!mapaDias.has(data)) {
+                mapaDias.set(data, { entrada: 0, saida: 0 });
+            }
+            mapaDias.get(data)!.entrada += venda.valorTotal;
+        }
+
+        for (const pagamento of this.pagamentosFornecedor) {
+            const data = pagamento.dataVencimento;
+            if (!mapaDias.has(data)) {
+                mapaDias.set(data, { entrada: 0, saida: 0 });
+            }
+            mapaDias.get(data)!.saida += pagamento.valorPago;
+        }
+
+        this.dados = Array.from(mapaDias.entries()).map(([data, valores]) => ({
+            data,
+            entrada: valores.entrada,
+            saida: valores.saida
+        }));
+
+        // Ordena da mais recente para a mais antiga
+        this.dados.sort((a, b) => {
+            const [da, ma, ya] = a.data.split('/').map(Number);
+            const [db, mb, yb] = b.data.split('/').map(Number);
+            return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
+        });
+    }
+
+
+
 
     calcularSaldos() {
         const entradas = this.dados.reduce((soma, d) => soma + d.entrada, 0);
@@ -49,7 +99,6 @@ export class DreDiarioComponent {
     }
 
     onRelatorio(): void {
-        // Seleciona a tabela pelo id ou classe no HTML
         const table = document.querySelector('table');
         if (!table) {
             alert('Tabela não encontrada!');
@@ -68,35 +117,9 @@ export class DreDiarioComponent {
 
         autoTable(doc, { html: table, startY: 25 });
 
-        // Abre o PDF em nova aba
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
     }
 
-    onRelatorio(): void {
-        // Seleciona a tabela pelo id ou classe no HTML
-        const table = document.querySelector('table');
-        if (!table) {
-            alert('Tabela não encontrada!');
-            return;
-        }
-
-        const doc = new jsPDF({
-            orientation: "portrait",
-            unit: "mm",
-            format: "a4"
-        });
-
-        doc.setFont("helvetica");
-        doc.setFontSize(16);
-        doc.text("Relatório DRE Diário", 105, 15, { align: "center" });
-
-        autoTable(doc, { html: table, startY: 25 });
-
-        // Abre o PDF em nova aba
-        const pdfBlob = doc.output('blob');
-        const url = URL.createObjectURL(pdfBlob);
-        window.open(url, '_blank');
-    }
 }
