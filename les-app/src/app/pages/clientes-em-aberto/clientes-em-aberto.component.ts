@@ -23,8 +23,6 @@ export class ClientesEmAbertoComponent {
         dias: number;
     }[] = [];
 
-    filtroDias: 'todos' | '-30' | '+30' = 'todos';
-
     constructor(private clienteService: ClienteService) { }
 
     ngOnInit(): void {
@@ -33,28 +31,44 @@ export class ClientesEmAbertoComponent {
 
     carregarClientes(): void {
         this.clienteService.listClientesEmAberto().subscribe(clientes => {
-            let filtrados = clientes;
+            const agrupados: { [nome: string]: { nome: string; saldo: number; dias: number } } = {};
 
-            if (this.filtroDias === '-30') {
-                filtrados = clientes.filter(c => c.dias <= 30);
-            } else if (this.filtroDias === '+30') {
-                filtrados = clientes.filter(c => c.dias > 30);
-            }
-
-            // Agrupamento por nome, somando saldo e mantendo o maior dias
-            const acumulados: { [nome: string]: { nome: string; saldo: number; dias: number } } = {};
-
-            filtrados.forEach(c => {
-                if (!acumulados[c.nome]) {
-                    acumulados[c.nome] = { nome: c.nome, saldo: 0, dias: c.dias };
-                }
-                acumulados[c.nome].saldo += c.valor;
-                if (c.dias > acumulados[c.nome].dias) {
-                    acumulados[c.nome].dias = c.dias;
+            clientes.forEach((cliente: any) => {
+                if (!agrupados[cliente.nome]) {
+                    agrupados[cliente.nome] = {
+                        nome: cliente.nome,
+                        saldo: cliente.valor,
+                        dias: cliente.dias
+                    };
+                } else {
+                    agrupados[cliente.nome].saldo += cliente.valor;
+                    agrupados[cliente.nome].dias = Math.max(agrupados[cliente.nome].dias, cliente.dias);
                 }
             });
 
-            this.clientesEmAberto = Object.values(acumulados);
+            this.clientesEmAberto = Object.values(agrupados);
+        });
+    }
+
+    carregarClientesDia(dias: number): void {
+        this.clienteService.listClientesEmAberto().subscribe(clientes => {
+            const agrupados: { [nome: string]: { nome: string; saldo: number; dias: number } } = {};
+
+            clientes.forEach((cliente: any) => {
+                if (!agrupados[cliente.nome]) {
+                    agrupados[cliente.nome] = {
+                        nome: cliente.nome,
+                        saldo: cliente.valor,
+                        dias: cliente.dias
+                    };
+                } else {
+                    agrupados[cliente.nome].saldo += cliente.valor;
+                    agrupados[cliente.nome].dias = Math.max(agrupados[cliente.nome].dias, cliente.dias);
+                }
+            });
+
+            // Filtra apenas os clientes com dias >= ao parâmetro, mas mantém o saldo total
+            this.clientesEmAberto = Object.values(agrupados).filter(cliente => cliente.dias >= dias);
         });
     }
 
