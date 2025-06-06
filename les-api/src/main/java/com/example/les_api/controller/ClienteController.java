@@ -75,10 +75,20 @@ public class ClienteController {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping("/em-aberto")
     public ResponseEntity<List<ClienteEmAbertoDTO>> listarEmAberto(
             @RequestParam(required = false) Integer dias) {
         return ResponseEntity.ok(clienteService.listarClientesEmAberto(Optional.ofNullable(dias)));
+    }
+
+    @GetMapping("/ativos")
+    public List<Cliente> listarClientesAtivos() {
+        return clienteService.listarClientesAtivos();
+    }
+
+    @GetMapping("/inadimplentes")
+    public List<Cliente> listarClientesInadimplentes() {
+        return clienteService.listarClientesComSaldoAbertoMaisDe30Dias();
     }
 }

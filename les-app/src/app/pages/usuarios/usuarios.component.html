@@ -64,7 +64,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let tela of telasPermissoes">
-                                <td>{{ tela }}</td>
+                                <td>{{ tela.nomeTela }}</td>
                                 <td class="text-center"><input type="checkbox"></td>
                                 <td class="text-center"><input type="checkbox"></td>
                                 <td class="text-center"><input type="checkbox"></td>
@@ -74,7 +74,8 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Salvar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="salvarPermissoes()"
+                        data-bs-dismiss="modal">Salvar</button>
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>

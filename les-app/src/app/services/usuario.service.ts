@@ -10,6 +10,7 @@ import { Usuario } from '../types/usuario';
 export class UsuarioService {
 
     apiUrl: string = 'http://localhost:8080/funcionario';
+    apiUrlPermissoes: string = 'http://localhost:8080/permissao/funcionario'
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
     constructor(private httpCliente: HttpClient) { }
@@ -44,5 +45,17 @@ export class UsuarioService {
 
     remove(record: Usuario) {
         return this.httpCliente.delete(this.apiUrl + "/" + record._id, this.apiAuth).pipe(take(1));
+    }
+
+    savePermisions(permissoes: any[], funcionario: number) {
+        // Envia as permissões para o backend usando POST com JSON.stringify
+        return this.httpCliente.post(
+            this.apiUrlPermissoes + "/" + funcionario,
+            JSON.stringify(permissoes, null, 2),
+            {
+                ...this.apiAuth,
+                headers: this.apiAuth.headers.set('Content-Type', 'application/json')
+            }
+        ).pipe(take(1));
     }
 }

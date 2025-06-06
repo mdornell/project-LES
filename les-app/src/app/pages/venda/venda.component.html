@@ -5,15 +5,18 @@
         <p class="mb-0">Entrada : {{ dataHora | date: 'HH:mm' }}</p>
     </div>
 
-    <div class="row mb-3 align-items-center">
+    <div class="row mb-3 align-items-end">
         <div class="col-md-6">
             <label for="codigoProduto" class="form-label fw-semibold">Cod. Produto</label>
             <input type="text" class="form-control" id="codigoProduto" [(ngModel)]="codigoBarras"
                 placeholder="Digite ou escaneie o código do produto" (keyup.enter)="inserirProduto()" autocomplete="off"
                 autofocus />
         </div>
-        <div class="col-md-3 mt-4 mt-md-0">
-            <button class="btn btn-maroon w-100" (click)="inserirProduto()">Inserir</button>
+        <div class="col-md-3">
+            <div class="d-flex gap-2">
+                <button class="btn btn-maroon flex-fill" (click)="inserirProduto()">Inserir</button>
+                <button class="btn btn-secondary flex-fill" (click)="listarRefeicaoMaisRecente()">Refeição</button>
+            </div>
         </div>
     </div>
 
@@ -24,13 +27,19 @@
                     <th>Descrição</th>
                     <th>Valor</th>
                     <th>Código</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let produto of produtos">
+                <tr *ngFor="let produto of produtos; let i = index">
                     <td>{{ produto.descricao }}</td>
                     <td>R$ {{ produto.valorVenda.toFixed(2) }}</td>
                     <td>{{ produto.codigoBarras }}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" (click)="removerProduto(i)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

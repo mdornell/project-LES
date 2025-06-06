@@ -1,12 +1,13 @@
 package com.example.les_api.dto;
 
+import java.time.LocalDate;
+
 import com.example.les_api.domain.pagamento.PagamentoFornecedor;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor

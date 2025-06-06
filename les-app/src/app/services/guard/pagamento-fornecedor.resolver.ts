@@ -22,7 +22,6 @@ export class PagamentoFornecedorResolver implements Resolve<PagamentoFornecedor>
 
         return of({
             id: 0,
-            fornecedorId: 0,
             dataPagamento: '',
             valor: 0,
             descricao: '',

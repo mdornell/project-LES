@@ -37,6 +37,33 @@ export class PagamentoFornecedorFormComponent implements OnInit {
         });
     }
 
+    // Método para abrir modal de fornecedores usando Bootstrap
+    abrirModalFornecedores() {
+        const modalElement = document.getElementById('modalFornecedores');
+        if (modalElement) {
+            // @ts-ignore
+            const modal = new (window as any).bootstrap.Modal(modalElement);
+            modal.show();
+        } else {
+            this.snackBar.open('Modal de fornecedores não encontrado', '', { duration: 3000 });
+        }
+    }
+
+    // Método para selecionar fornecedor (recebe o fornecedor selecionado)
+    selecionarFornecedor(fornecedor: any) {
+        this.form.patchValue({ fornecedor: fornecedor._id });
+        this.fornecedorSelecionado = fornecedor;
+        // Fechar o modal após selecionar
+        const modalElement = document.getElementById('modalFornecedores');
+        if (modalElement) {
+            // @ts-ignore
+            const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+        }
+    }
+
     ngOnInit() {
         const pagamento: PagamentoFornecedor = this.route.snapshot.data['pagamento'];
         if (pagamento) {
@@ -64,23 +91,29 @@ export class PagamentoFornecedorFormComponent implements OnInit {
         if (this.form.valid) {
             const formValue = { ...this.form.value };
 
-            // Ajuste de data se necessário, exemplo para dataPagamento:
+            // Ajuste de data para formato yyyy-MM-dd
             if (formValue.dataPagamento) {
                 const dataPagamento = new Date(formValue.dataPagamento);
-                dataPagamento.setDate(dataPagamento.getDate() + 1);
                 formValue.dataPagamento = dataPagamento.toISOString().split('T')[0];
             }
-            // Ajuste de data se necessário, exemplo para dataVencimento:
             if (formValue.dataVencimento) {
                 const dataVencimento = new Date(formValue.dataVencimento);
-                dataVencimento.setDate(dataVencimento.getDate() + 1);
                 formValue.dataVencimento = dataVencimento.toISOString().split('T')[0];
             }
 
-            // Apenas o _id do fornecedor selecionado
+            // Monta o objeto conforme o JSON desejado
+            const payload = {
+                descricao: formValue.descricao,
+                dataVencimento: formValue.dataVencimento,
+                dataPagamento: formValue.dataPagamento,
+                metodo: formValue.metodo,
+                valorPago: formValue.valorPago,
+            };
+
             const fornecedorId = this.getFornecedorSelecionadoId();
 
-            this.pagamentoService.save({ ...formValue, fornecedor: fornecedorId })
+
+            this.pagamentoService.save(payload, fornecedorId)
                 .subscribe({
                     next: () => this.onSuccess(),
                     error: () => this.onErro()
@@ -112,4 +145,6 @@ export class PagamentoFornecedorFormComponent implements OnInit {
     onErro() {
         this.snackBar.open('Erro ao salvar o registro', '', { duration: 5000 });
     }
+
+
 }

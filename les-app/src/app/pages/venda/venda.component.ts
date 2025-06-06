@@ -6,9 +6,12 @@ import { ActivatedRoute } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import { ClienteService } from '../../services/cliente.service';
 import { ProdutoService } from '../../services/produto.service';
+import { RefeicaoService } from '../../services/refeicao.service';
 import { VendaService } from '../../services/venda.service';
 import { Cliente } from '../../types/cliente';
+import { ItemVenda } from '../../types/itemVenda';
 import { Produto } from '../../types/produto';
+import { Refeicao } from '../../types/refeição';
 import { Venda } from '../../types/venda';
 
 @Component({
@@ -36,6 +39,7 @@ export class VendaComponent implements OnInit {
         private clienteService: ClienteService,
         private produtoService: ProdutoService,
         private vendaService: VendaService,
+        private refeicaoService: RefeicaoService,
         private snackBar: MatSnackBar,
     ) { }
 
@@ -142,46 +146,115 @@ export class VendaComponent implements OnInit {
         this.erro = '';
     }
 
+    listarRefeicaoMaisRecente(): void {
+        this.refeicaoService.list().subscribe({
+            next: (refeicoes: Refeicao[]) => {
+                if (refeicoes && refeicoes.length > 0) {
+                    // Ordena por dataRegistro decrescente e pega a mais recente
+                    const refeicaoMaisRecente = refeicoes.sort(
+                        (a, b) => new Date(b.dataRegistro).getTime() - new Date(a.dataRegistro).getTime()
+                    )[0];
+
+                    // Exemplo de uso: pegar peso e valor
+                    const peso = 1.5;
+                    const valor = refeicaoMaisRecente.precoKg * peso;
+
+                    this.snackBar.open(
+                        `Peso: ${peso} kg, Valor: R$ ${valor.toFixed(2)}`,
+                        '', { duration: 4000 }
+                    );
+
+                    // Exemplo de criação de um ItemVenda com base na refeição mais recente
+                    // (ajuste conforme necessário para seu fluxo)
+                    const itemVenda: ItemVenda = {
+                        _id: 0,
+                        quantidade: 1,
+                        custo: valor,
+                        produtoId: 0
+                    };
+
+                    // Adiciona a refeição como um "produto" especial na lista de produtos para exibição na tabela
+                    const produtoRefeicao: Produto = {
+                        _id: 0,
+                        nome: `Refeição (${peso}kg)`,
+                        valorVenda: valor,
+                        valorCusto: valor,
+                        codigoBarras: '0',
+                        descricao: 'Refeição',
+                        quantidade: 1,
+                        ativo: true
+                    };
+                    this.produtos.push(produtoRefeicao);
+                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+                    this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+                    // Aqui você pode adicionar o itemVenda à lista de produtos ou processar conforme necessário
+                } else {
+                    this.snackBar.open('Nenhuma refeição encontrada.', '', { duration: 3000 });
+                }
+            },
+            error: () => {
+                this.snackBar.open('Erro ao buscar refeições.', '', { duration: 3000 });
+            }
+        });
+    }
+
+    removerProduto(i: number): void {
+        if (i >= 0 && i < this.produtos.length) {
+            this.produtos.splice(i, 1);
+            this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+            this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+        }
+    }
+
     onRelatorio(): void {
         if (!this.cliente || this.produtos.length === 0) {
             this.snackBar.open('Nenhuma venda para gerar cupom.', '', { duration: 3000 });
             return;
         }
 
+        // Cálculo da altura dinâmica do cupom
+        const linhasFixas = 7; // Título, cliente, data, "Produtos:", total, saldo, espaçamentos
+        const linhasProdutos = this.produtos.length;
+        const alturaLinha = 5; // mm por linha
+        const alturaMinima = 80; // altura mínima do cupom em mm
+
+        let altura = 10 + (linhasFixas + linhasProdutos) * alturaLinha + 10;
+        if (altura < alturaMinima) altura = alturaMinima;
+
         const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
-            format: "a4"
+            format: [80, altura]
         });
 
-        let y = 15;
+        let y = 10;
         doc.setFont("courier", "normal");
-        doc.setFontSize(14);
-        doc.text("CUPOM FISCAL", 105, y, { align: "center" });
+        doc.setFontSize(12);
+        doc.text("CUPOM FISCAL", 40, y, { align: "center" });
 
-        y += 10;
-        doc.setFontSize(10);
-        doc.text(`Cliente: ${this.cliente.nome}`, 10, y);
-        y += 6;
-        doc.text(`Data: ${this.dataHora.toLocaleString()}`, 10, y);
-        y += 10;
+        y += 8;
+        doc.setFontSize(9);
+        doc.text(`Cliente: ${this.cliente.nome}`, 5, y);
+        y += 5;
+        doc.text(`Data: ${this.dataHora.toLocaleString()}`, 5, y);
+        y += 8;
 
-        doc.text("Produtos:", 10, y);
-        y += 6;
+        doc.text("Produtos:", 5, y);
+        y += 5;
 
         this.produtos.forEach((produto, idx) => {
             doc.text(
                 `${idx + 1}. ${produto.nome} - R$ ${produto.valorVenda.toFixed(2)}`,
-                12,
+                7,
                 y
             );
-            y += 6;
+            y += 5;
         });
 
-        y += 4;
-        doc.text(`Total: R$ ${this.valorGasto.toFixed(2)}`, 10, y);
-        y += 6;
-        doc.text(`Saldo após compra: R$ ${(this.saldoAnterior).toFixed(2)}`, 10, y);
+        y += 3;
+        doc.text(`Total: R$ ${this.valorGasto.toFixed(2)}`, 5, y);
+        y += 5;
+        doc.text(`Saldo após compra: R$ ${(this.saldoAnterior).toFixed(2)}`, 5, y);
 
         // Abre o PDF em nova aba
         const pdfBlob = doc.output('blob');

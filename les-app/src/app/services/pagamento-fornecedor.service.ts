@@ -22,19 +22,23 @@ export class PagamentoFornecedorService {
     }
 
     save(record: Partial<PagamentoFornecedor>, fornecedorId?: number) {
-        console.log('record', record);
-        console.log('fornecedor id', fornecedorId);
+
+        console.log('Saving PagamentoFornecedor:', record, 'fornecedorId:', fornecedorId);
         if (record._id) {
             return this.update(record._id, record);
+        }
+        if (!fornecedorId) {
+            throw new Error('fornecedorId is required for creating a new PagamentoFornecedor');
         }
         return this.create(record, fornecedorId);
     }
 
-    private create(record: Partial<PagamentoFornecedor>, fornecedorId?: number) {
-        const options = fornecedorId
-            ? { ...this.apiAuth, params: { fornecedorId: fornecedorId.toString() } }
-            : this.apiAuth;
-        return this.http.post<PagamentoFornecedor>(this.apiUrl, record, options).pipe(take(1));
+    private create(record: Partial<PagamentoFornecedor>, fornecedorId: number) {
+        return this.http.post<PagamentoFornecedor>(
+            `${this.apiUrl}/${fornecedorId}`,
+            record,
+            this.apiAuth
+        ).pipe(take(1));
     }
 
     private update(id: number, record: Partial<PagamentoFornecedor>) {
