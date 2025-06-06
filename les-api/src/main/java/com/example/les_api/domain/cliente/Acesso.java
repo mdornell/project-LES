@@ -33,13 +33,12 @@ public class Acesso {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-//    @ManyToOne
-//    @JoinColumn(name = "venda_id")
-//    private Venda venda;
+    // @ManyToOne
+    // @JoinColumn(name = "venda_id")
+    // private Venda venda;
 
     // lista de vendas
-    @OneToMany(mappedBy = "acesso", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "acesso")
     private List<Venda> vendas = new ArrayList<>();
 
 }
-

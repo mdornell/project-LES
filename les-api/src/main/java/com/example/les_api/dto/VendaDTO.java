@@ -19,7 +19,8 @@ public class VendaDTO {
     private Date dataHora;
     private String descricaoVenda;
     private Double valorTotal;
-    private ClienteDTO cliente;
+    private Double peso;
+    private Integer cliente_id;
     private List<ItemVendaDTO> itens;
 
     // Construtor que converte Venda em VendaDTO
@@ -28,7 +29,8 @@ public class VendaDTO {
         this.dataHora = venda.getDataHora();
         this.descricaoVenda = venda.getDescricaoVenda();
         this.valorTotal = venda.getValorTotal();
-        this.cliente = venda.getCliente() != null ? new ClienteDTO(venda.getCliente()) : null;
+        this.peso = venda.getPeso();
+        this.cliente_id = venda.getCliente().getId();
         this.itens = venda.getItens() != null
             ? venda.getItens().stream()
             .map(item -> new ItemVendaDTO(item))

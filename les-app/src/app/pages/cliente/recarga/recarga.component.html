@@ -25,11 +25,11 @@
             </button>
         </div>
 
-        <div class="mt-3">
+        <!-- <div class="mt-3">
             <p>
                 Está devendo <span class="text-danger">R$ {{ (200 - cliente.saldo).toFixed(2) }}</span>.
             </p>
-        </div>
+        </div> -->
         <div *ngIf="mostrarOpcoesPagamento" class="mt-3">
             <p>Selecione a forma de pagamento:</p>
             <button class="btn btn-success me-2" (click)="pagarSaldo('pix')">Pix</button>
