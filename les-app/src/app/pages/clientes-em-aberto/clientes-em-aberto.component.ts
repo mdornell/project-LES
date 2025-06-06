@@ -51,7 +51,7 @@ export class ClientesEmAbertoComponent {
     }
 
     carregarClientesDia(dias: number): void {
-        this.clienteService.listClientesEmAberto(dias).subscribe(clientes => {
+        this.clienteService.listClientesEmAberto().subscribe(clientes => {
             const agrupados: { [nome: string]: { nome: string; saldo: number; dias: number } } = {};
 
             clientes.forEach((cliente: any) => {
@@ -67,7 +67,8 @@ export class ClientesEmAbertoComponent {
                 }
             });
 
-            this.clientesEmAberto = Object.values(agrupados);
+            // Filtra apenas os clientes com dias >= ao parâmetro, mas mantém o saldo total
+            this.clientesEmAberto = Object.values(agrupados).filter(cliente => cliente.dias >= dias);
         });
     }
 
