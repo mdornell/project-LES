@@ -16,29 +16,33 @@
                 <input type="text" class="form-control" id="rfid" formControlName="rfid" placeholder="Digite seu RFID"
                     autofocus>
             </div>
-            <button type="submit" class="btn btn-primary w-100 fw-bold" [disabled]="rfidForm.invalid">Entrar</button>
+            <!-- User Info Section -->
+            <div *ngIf="cliente" class="user-info mt-4 text-start">
+                <h4 class="fw-bold">Dados do Usuário</h4>
+                <p><strong>RFID:</strong> {{ cliente.codigoRFID }}</p>
+                <p><strong>Nome:</strong> {{ cliente.nome }}</p>
+                <p><strong>Saldo:</strong> R$ {{ cliente.saldo | number:'1.2-2' }}</p>
+
+                <!-- Action Buttons -->
+                <div *ngIf="clientesEmAberto?.dias < 30 && cliente.saldo > 0"
+                    class="mt-3 d-flex justify-content-center">
+                    <button class="btn btn-success fw-bold" (click)="irParaVenda()">Entrar</button>
+                </div>
+                <div *ngIf="clientesEmAberto?.dias >= 30 || cliente.saldo <= 0" class="mt-3">
+                    <p class="text-danger fw-bold">Permissão negada: saldo insuficiente.</p>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="erro" class="error-message mt-4">
+                <p class="text-danger fw-bold">{{ erro }}</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold" [disabled]="rfidForm.invalid">Buscar
+                Cliente</button>
         </form>
 
 
-        <!-- User Info Section -->
-        <div *ngIf="cliente" class="user-info mt-4 text-start">
-            <h4 class="fw-bold">Dados do Usuário</h4>
-            <p><strong>RFID:</strong> {{ cliente.codigoRFID }}</p>
-            <p><strong>Nome:</strong> {{ cliente.nome }}</p>
-            <p><strong>Saldo:</strong> R$ {{ cliente.saldo | number:'1.2-2' }}</p>
 
-            <!-- Action Buttons -->
-            <div *ngIf="cliente.saldo > 0" class="mt-3 d-flex justify-content-center">
-                <button class="btn btn-success fw-bold" (click)="irParaVenda()">Ir para venda</button>
-            </div>
-            <div *ngIf="cliente.saldo <= 0" class="mt-3">
-                <p class="text-danger fw-bold">Permissão negada: saldo insuficiente.</p>
-            </div>
-        </div>
-
-        <!-- Error Message -->
-        <div *ngIf="erro" class="error-message mt-4">
-            <p class="text-danger fw-bold">{{ erro }}</p>
-        </div>
     </div>
 </div>

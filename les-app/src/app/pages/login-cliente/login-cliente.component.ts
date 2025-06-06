@@ -18,6 +18,7 @@ export class LoginClienteComponent {
 
     rfidForm: FormGroup;
     cliente: any = null;
+    clientesEmAberto: any = null;
     erro: string = '';
 
     constructor(
@@ -42,12 +43,28 @@ export class LoginClienteComponent {
             this.clienteService.listByRfid(rfid).subscribe(
                 cliente => {
                     this.cliente = cliente;
+                    this.carregarClientesDia();
                 },
                 error => {
                     this.erro = 'Cliente não encontrado ou erro ao buscar.';
                 }
             );
         }
+    }
+
+    carregarClientesDia(): void {
+        this.clienteService.listClientesEmAberto().subscribe(clientes => {
+            const clientesFiltrados = clientes.filter((c: any) => c.nome === this.cliente.nome);
+            if (clientesFiltrados.length > 0) {
+                // Seleciona o cliente com maior valor de "dias"
+                this.clientesEmAberto = clientesFiltrados.reduce((prev: any, curr: any) => {
+                    return (curr.dias > prev.dias) ? curr : prev;
+                });
+            } else {
+                this.clientesEmAberto = null;
+            }
+            console.log('Clientes em aberto:', this.clientesEmAberto.dias);
+        });
     }
 
     voltarHome(): void {
