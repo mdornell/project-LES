@@ -212,40 +212,49 @@ export class VendaComponent implements OnInit {
             return;
         }
 
+        // Cálculo da altura dinâmica do cupom
+        const linhasFixas = 7; // Título, cliente, data, "Produtos:", total, saldo, espaçamentos
+        const linhasProdutos = this.produtos.length;
+        const alturaLinha = 5; // mm por linha
+        const alturaMinima = 80; // altura mínima do cupom em mm
+
+        let altura = 10 + (linhasFixas + linhasProdutos) * alturaLinha + 10;
+        if (altura < alturaMinima) altura = alturaMinima;
+
         const doc = new jsPDF({
             orientation: "portrait",
             unit: "mm",
-            format: "a4"
+            format: [80, altura]
         });
 
-        let y = 15;
+        let y = 10;
         doc.setFont("courier", "normal");
-        doc.setFontSize(14);
-        doc.text("CUPOM FISCAL", 105, y, { align: "center" });
+        doc.setFontSize(12);
+        doc.text("CUPOM FISCAL", 40, y, { align: "center" });
 
-        y += 10;
-        doc.setFontSize(10);
-        doc.text(`Cliente: ${this.cliente.nome}`, 10, y);
-        y += 6;
-        doc.text(`Data: ${this.dataHora.toLocaleString()}`, 10, y);
-        y += 10;
+        y += 8;
+        doc.setFontSize(9);
+        doc.text(`Cliente: ${this.cliente.nome}`, 5, y);
+        y += 5;
+        doc.text(`Data: ${this.dataHora.toLocaleString()}`, 5, y);
+        y += 8;
 
-        doc.text("Produtos:", 10, y);
-        y += 6;
+        doc.text("Produtos:", 5, y);
+        y += 5;
 
         this.produtos.forEach((produto, idx) => {
             doc.text(
                 `${idx + 1}. ${produto.nome} - R$ ${produto.valorVenda.toFixed(2)}`,
-                12,
+                7,
                 y
             );
-            y += 6;
+            y += 5;
         });
 
-        y += 4;
-        doc.text(`Total: R$ ${this.valorGasto.toFixed(2)}`, 10, y);
-        y += 6;
-        doc.text(`Saldo após compra: R$ ${(this.saldoAnterior).toFixed(2)}`, 10, y);
+        y += 3;
+        doc.text(`Total: R$ ${this.valorGasto.toFixed(2)}`, 5, y);
+        y += 5;
+        doc.text(`Saldo após compra: R$ ${(this.saldoAnterior).toFixed(2)}`, 5, y);
 
         // Abre o PDF em nova aba
         const pdfBlob = doc.output('blob');
