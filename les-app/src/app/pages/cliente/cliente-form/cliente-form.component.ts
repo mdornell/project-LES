@@ -33,7 +33,7 @@ export class ClienteFormComponent implements OnInit {
             saldo: [0],
             codigoRFID: [''],
             dataAniversario: ['yyyy-mm-dd'],
-            ativo: [true]
+            ativo: [false]
         });
     }
 
@@ -46,7 +46,7 @@ export class ClienteFormComponent implements OnInit {
             saldo: cliente.saldo,
             codigoRFID: cliente.codigoRFID,
             dataAniversario: cliente.dataAniversario || 'yyyy-mm-dd',
-            ativo: cliente.ativo || true
+            ativo: cliente.ativo || false
         });
     }
 

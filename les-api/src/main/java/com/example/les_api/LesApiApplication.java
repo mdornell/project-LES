@@ -33,6 +33,6 @@ public class LesApiApplication {
     // funcionario.setSenha(passwordEncoder.encode("admin123"));
     // funcionarioRepository.save(funcionario);
     // };
-    // }
+    //}
 
 }
