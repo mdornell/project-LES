@@ -41,19 +41,40 @@ export class ClientesDiariosComponent {
 
         this.vendaService.list().subscribe({
             next: (vendas: Venda[]) => {
-                this.vendasFiltradas = vendas
-                    .filter(v => {
-                        const dataVenda = new Date(v.dataHora);
-                        return dataVenda >= filtroInicio && dataVenda <= filtroFim;
-                    })
-                    .map(v => ({
-                        cliente: v.cliente.nome,
-                        valorTotal: v.valorTotal,
-                        hora: new Date(v.dataHora).toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })
-                    }))
+                // Filtra vendas por data
+                const vendasFiltradas = vendas.filter(v => {
+                    const dataVenda = new Date(v.dataHora);
+                    return dataVenda >= filtroInicio && dataVenda <= filtroFim;
+                });
+
+                // Agrupa por cliente somando os valores
+                const clientesMap = new Map<string, { cliente: string; valorTotal: number; hora: string }>();
+
+                vendasFiltradas.forEach(v => {
+                    const nomeCliente = v.cliente.nome;
+                    const valor = v.valorTotal;
+                    const hora = new Date(v.dataHora).toLocaleTimeString('pt-BR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    if (clientesMap.has(nomeCliente)) {
+                        const entry = clientesMap.get(nomeCliente)!;
+                        entry.valorTotal += valor;
+                        // Mantém a menor hora (primeira compra do dia)
+                        if (hora < entry.hora) {
+                            entry.hora = hora;
+                        }
+                    } else {
+                        clientesMap.set(nomeCliente, {
+                            cliente: nomeCliente,
+                            valorTotal: valor,
+                            hora
+                        });
+                    }
+                });
+
+                this.vendasFiltradas = Array.from(clientesMap.values())
                     .sort((a, b) => a.hora.localeCompare(b.hora));
 
                 this.isLoading = false;

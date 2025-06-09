@@ -8,6 +8,7 @@ import { ClientesEmAbertoComponent } from './pages/clientes-em-aberto/clientes-e
 import { DreDiarioComponent } from './pages/dre-diario/dre-diario.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
 import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
+import { HelcomeComponent } from './pages/home/helcome/helcome.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginClienteComponent } from './pages/login-cliente/login-cliente.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -40,6 +41,9 @@ export const routes: Routes = [
         component: HomeComponent,
         canActivate: [AuthGuard],
         children: [
+
+            { path: '', component: HelcomeComponent },
+
             // Home
             { path: 'funcionario', component: UsuariosComponent },
             { path: 'funcionario/new', component: UsuariosFormComponent, resolve: { usuario: UsuarioResolver } },
@@ -50,6 +54,7 @@ export const routes: Routes = [
             { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/recarga/:id', component: RecargaComponent },
+            { path: 'cliente/login', component: LoginClienteComponent },
 
             // Produtos
             { path: 'produto', component: ProdutoComponent },
@@ -96,11 +101,6 @@ export const routes: Routes = [
             // Clientes em aberto
             { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
         ]
-    },
-
-    {
-        path: 'cliente',
-        component: LoginClienteComponent
     },
 
 ];

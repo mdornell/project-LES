@@ -48,6 +48,9 @@ export class RecargaComponent {
         if (this.cliente.saldo < 200) {
             const diferenca = 200 - this.cliente.saldo;
             this.cliente.saldo += diferenca;
+        } else {
+            this.erro = 'Saldo já é igual ou superior a R$200,00.';
+            return;
         }
 
         // Aqui você pode salvar o tipo de pagamento, se necessário

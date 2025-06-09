@@ -2,16 +2,10 @@
     <h5>Clientes em Aberto</h5>
 
     <div class="mb-3">
-        <button class="btn btn-outline-primary me-2" [class.active]="filtroDias === 'todos'"
-            (click)="filtroDias = 'todos'; carregarClientes()">
+        <button class="btn btn-outline-primary me-2" (click)="carregarClientes()">
             Todos
         </button>
-        <button class="btn btn-outline-primary me-2" [class.active]="filtroDias === '-30'"
-            (click)="filtroDias = '-30'; carregarClientes()">
-            -30 dias
-        </button>
-        <button class="btn btn-outline-primary" [class.active]="filtroDias === '+30'"
-            (click)="filtroDias = '+30'; carregarClientes()">
+        <button class="btn btn-outline-primary" (click)="carregarClientesDia(30)">
             +30 dias
         </button>
     </div>

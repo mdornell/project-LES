@@ -22,14 +22,12 @@
                 <tr>
                     <th>Nome</th>
                     <th>Valor</th>
-                    <th>Horário</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let venda of vendasFiltradas">
                     <td>{{ venda.cliente }}</td>
                     <td>{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
-                    <td>{{ venda.hora }}</td>
                 </tr>
             </tbody>
         </table>
