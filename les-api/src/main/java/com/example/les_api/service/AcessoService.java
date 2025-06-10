@@ -25,16 +25,13 @@ public class AcessoService {
     private ClienteRepository clienteRepository;
 
     @Autowired
-    private ImpressoraCupomService ImpressoraCupomService;
+    private ImpressoraCupomService impressoraCupomService;
 
     @Autowired
     private ClienteService clienteService;
 
     public boolean verificarBloqueado(Cliente cli) {
-
-        // LISTA DE CLIENTES QUE ESTÃO COM CARTÃO VENCIDO E NÃO TEM DÍVIDA
         List<ClienteEmAbertoDTO> todos = clienteService.listarClientesEmAberto(Optional.of(30));
-        // Mapeia a lista de ClienteEmAbertoDTO para uma lista de Cliente
         List<Cliente> clientesEmAberto = todos.stream()
                 .map(dto -> clienteRepository.findById(dto.getId()).orElse(null))
                 .filter(c -> c != null)
@@ -42,7 +39,6 @@ public class AcessoService {
 
         for (Cliente clienteAux : clientesEmAberto) {
             if (cli.getId().equals(clienteAux.getId())) {
-                // adicionar 30 dias a partir da data atual
                 LocalDate dataVencimento = LocalDate.now().plusDays(29);
                 java.util.Date dataVencimentoDate = java.util.Date
                         .from(dataVencimento.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
@@ -52,7 +48,6 @@ public class AcessoService {
             }
         }
 
-        // Buscar clientes com mais de 30 dias em aberto
         List<ClienteEmAbertoDTO> todosMaisDe30Dias = clienteService.listarClientesEmAberto(Optional.of(30));
         List<Cliente> bloqueados = todosMaisDe30Dias.stream()
                 .map(dto -> clienteRepository.findById(dto.getId()).orElse(null))
@@ -67,35 +62,24 @@ public class AcessoService {
         return false;
     }
 
-    public boolean entradaSaida(String codRFID) throws Exception{
-
+    public boolean entradaSaida(String codRFID) throws Exception {
         boolean retorno = false;
-
-        Acesso acesso = new Acesso();
-
         Optional<Cliente> cliente = clienteRepository.findByCodigoRFID(codRFID);
 
         if (cliente.isPresent()) {
-
-            if (cliente != null) {
-
-                if (!cliente.get().isAtivo()) {
-                    acesso = entrar(cliente.get());
-                    retorno = true;
-                } else {
-                    sair(cliente.get());
-                    retorno = false;
-                }
-
+            if (!cliente.get().isAtivo()) {
+                entrar(cliente.get());
+                retorno = true;
+            } else {
+                sair(cliente.get());
+                retorno = false;
             }
         }
         return retorno;
     }
 
     public Acesso entrar(Cliente cliente) {
-
         if (!verificarBloqueado(cliente)) {
-
             cliente.setAtivo(true);
             clienteRepository.save(cliente);
 
@@ -104,26 +88,19 @@ public class AcessoService {
             novoAcesso.setDataAcesso(LocalDate.now());
             novoAcesso.setHrEntrada(getHorarioEmString());
             return acessoRepository.save(novoAcesso);
-
         }
-        return null; 
+        return null;
     }
 
-    // Cliente sai
-    // O acesso é cadastrado
-    public Acesso sair(Cliente cliente) throws Exception  {
+    public Acesso sair(Cliente cliente) throws Exception {
         Acesso acesso = acessoRepository.findTopByClienteOrderByDataAcessoDescHrEntradaDesc(cliente);
 
         if (acesso != null) {
-
             cliente.setAtivo(false);
             clienteRepository.save(cliente);
             acesso.setHrSaida(getHorarioEmString());
-
-            //Fazer a emissão do cupom aqui
-            ImpressoraCupomService.imprimirAux(acesso);
-
-        } 
+            impressoraCupomService.imprimirAux(acesso);
+        }
 
         return acessoRepository.save(acesso);
     }
@@ -131,12 +108,15 @@ public class AcessoService {
     private String getHorarioEmString() {
         LocalTime horaAtual = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String horaFormatada = horaAtual.format(formatter);
-
-        return horaFormatada;
+        return horaAtual.format(formatter);
     }
 
     public Acesso encontrarUltimoAcesso(Cliente cli) {
         return acessoRepository.findTopByClienteOrderByDataAcessoDescHrEntradaDesc(cli);
+    }
+
+    // ✅ Novo método adicionado para o VendaController
+    public Optional<Acesso> findUltimoAcessoPorCliente(Integer clienteId) {
+        return acessoRepository.findTopByClienteIdOrderByHrEntradaDesc(clienteId);
     }
 }

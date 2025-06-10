@@ -24,5 +24,4 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Query("SELECT c FROM Cliente c WHERE c.saldo < 0 AND c.dataVencimentoCartao <= :limite")
     List<Cliente> buscarClientesComSaldoAberto(@Param("limite") Date limite);
-
 }

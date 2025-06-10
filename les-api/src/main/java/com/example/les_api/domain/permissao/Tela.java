@@ -16,4 +16,7 @@ public class Tela {
 
     @Column(nullable = false, unique = true)
     private String nome;
+
+    @Column(nullable = false, unique = true)
+    private String url;
 }

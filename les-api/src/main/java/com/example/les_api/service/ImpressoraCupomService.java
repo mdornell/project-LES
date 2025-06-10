@@ -41,8 +41,13 @@ public class ImpressoraCupomService {
     }
 
     public void imprimir(Acesso acesso) {
+        if(acesso.getVendas().isEmpty()) {
+            System.out.println("Nenhuma venda registrada para o acesso.");
+            return;
+        }
+
         try {
-            String nomeImpressora = "EPSON TM-T20X Receipt";
+            String nomeImpressora = "EPSON TM-T20X Receipt6";
             PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
             PrintService impressoraSelecionada = null;
 
@@ -77,7 +82,7 @@ public class ImpressoraCupomService {
     private String formatarCupomFiscal(List<Venda> vendas, Acesso acesso) {
         // Comando de corte de papel (GS V 1) e comando de fonte pequena
         final String COMANDO_CORTE = "\u001DVA";
-        final String COMANDO_FONTE_PEQUENA = "\u001B!\u0000"; // Fonte menor (compressão)
+        final String COMANDO_FONTE_PEQUENA = "\u001B!\u0000"; // Fonte menor (compressão)k
 
         StringBuilder cupom = new StringBuilder();
         cupom.append(COMANDO_FONTE_PEQUENA); // Aplica o comando de fonte reduzida

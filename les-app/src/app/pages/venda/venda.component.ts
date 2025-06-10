@@ -125,7 +125,7 @@ export class VendaComponent implements OnInit {
                 this.snackBar.open('Compra finalizada com sucesso.', '', {
                     duration: 2000,
                 }).afterDismissed().subscribe(() => {
-                    window.location.href = '/cliente'; // Redirect to "/cliente" after message
+                    window.location.href = '/home'; // Redirect to "/cliente" after message
                 });
                 this.onRelatorio(); // Call the report generation method
                 this.resetForm();

@@ -39,8 +39,7 @@ public class Venda {
     @JsonManagedReference
     private List<ItemVenda> itens;
 
-    @JsonIgnore
     @ManyToOne
+    @JoinColumn(name = "acesso_id")
     private Acesso acesso;
 }
-
