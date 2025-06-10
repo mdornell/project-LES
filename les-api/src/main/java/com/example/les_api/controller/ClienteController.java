@@ -19,8 +19,9 @@ import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.ClienteService;
-//import com.example.les_api.service.SaldoClienteService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -32,24 +33,28 @@ public class ClienteController {
 
     @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping
+    @Operation(summary = "Listar todos os clientes", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<List<ClienteDTO>> listarTodos() {
         return ResponseEntity.ok(clienteService.listarTodos());
     }
 
     @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar cliente por ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(clienteService.buscarPorId(id));
     }
 
     @VerificaPermissao(tela = "Cliente", acao = "ver")
     @GetMapping("/rfid/{rfid}")
+    @Operation(summary = "Buscar cliente por RFID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ClienteDTO> buscarPorRFID(@PathVariable String rfid) {
         return ResponseEntity.ok(clienteService.buscarPorRFID(rfid));
     }
 
     @VerificaPermissao(tela = "Cliente", acao = "adicionar")
     @PostMapping
+    @Operation(summary = "Salvar novo cliente", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ClienteDTO> salvar(@RequestBody Cliente cliente) {
         System.out.println(
                 String.format(
@@ -65,29 +70,34 @@ public class ClienteController {
 
     @VerificaPermissao(tela = "Cliente", acao = "editar")
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar cliente", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<ClienteDTO> atualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
         return ResponseEntity.ok(clienteService.atualizar(id, cliente));
     }
 
     @VerificaPermissao(tela = "Cliente", acao = "excluir")
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar cliente", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         clienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/em-aberto")
+    @Operation(summary = "Listar clientes em aberto", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<List<ClienteEmAbertoDTO>> listarEmAberto(
             @RequestParam(required = false) Integer dias) {
         return ResponseEntity.ok(clienteService.listarClientesEmAberto(Optional.ofNullable(dias)));
     }
 
     @GetMapping("/ativos")
+    @Operation(summary = "Listar clientes ativos", security = @SecurityRequirement(name = "bearerAuth"))
     public List<Cliente> listarClientesAtivos() {
         return clienteService.listarClientesAtivos();
     }
 
     @GetMapping("/inadimplentes")
+    @Operation(summary = "Listar clientes inadimplentes", security = @SecurityRequirement(name = "bearerAuth"))
     public List<Cliente> listarClientesInadimplentes() {
         return clienteService.listarClientesComSaldoAbertoMaisDe30Dias();
     }

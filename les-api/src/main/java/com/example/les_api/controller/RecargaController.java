@@ -14,6 +14,9 @@ import com.example.les_api.dto.RecargaDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.RecargaRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/recargas")
 public class RecargaController {
@@ -26,6 +29,7 @@ public class RecargaController {
         this.clienteRepository = clienteRepository;
     }
 
+    @Operation(summary = "Registrar uma nova recarga", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     public ResponseEntity<?> registrarRecarga(@RequestBody RecargaDTO dto) {
         Cliente cliente = clienteRepository.findById(dto.getClienteId())
