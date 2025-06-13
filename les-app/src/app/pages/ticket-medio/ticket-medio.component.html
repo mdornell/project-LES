@@ -1,0 +1,38 @@
+<!-- Título da Página -->
+<h2 class="mt-4 mb-4 text-center">Relatório de Ticket Médio</h2>
+
+<!-- Botão de Relatório -->
+<div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-dark" (click)="onRelatorio()">
+        <i class="bi bi-printer"></i> Relatório
+    </button>
+</div>
+
+<!-- Tabela de Dados -->
+<div class="table-responsive" *ngIf="dados && dados.length; else semDados">
+    <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of dados; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td class="text-start">{{ item.nome }}</td>
+                <td>
+                    {{ item.valor | currency:'BRL':'symbol':'1.2-2' }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Mensagem caso não haja dados -->
+<ng-template #semDados>
+    <div class="alert alert-info text-center mt-4">
+        Nenhum dado disponível para exibir.
+    </div>
+</ng-template>

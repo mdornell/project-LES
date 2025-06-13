@@ -19,6 +19,7 @@ import { ProdutoComponent } from './pages/produto/produto.component';
 import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
 import { ProdutosComponent } from './pages/relatorios/produtos/produtos.component';
 import { SignUpComponent } from './pages/signup/signup.component';
+import { TicketMedioComponent } from './pages/ticket-medio/ticket-medio.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { RelatorioVendaComponent } from './pages/venda/relatorio-venda/relatorio-venda.component';
@@ -88,6 +89,9 @@ export const routes: Routes = [
                 path: 'dre-diario',
                 component: DreDiarioComponent
             },
+
+            // Ticket Médio
+            { path: 'ticket-medio', component: TicketMedioComponent },
 
             // Clientes Diários
             {

@@ -71,6 +71,14 @@ export class ClienteService {
         ).pipe(take(1));
     }
 
+    sair(cliente: Cliente) {
+        return this.httpCliente.post(
+            this.apiUrl3 + '/sair',
+            cliente,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
 
 
 }
