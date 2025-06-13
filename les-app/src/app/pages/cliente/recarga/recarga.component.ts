@@ -45,18 +45,20 @@ export class RecargaComponent {
 
     pagarSaldo(tipoPagamento: 'pix' | 'cartao' | 'dinheiro') {
         console.log(`Pagamento (${tipoPagamento}) iniciado para`, this.cliente.nome);
+        var valorRecarga;
         if (this.cliente.saldo < 200) {
-            const diferenca = 200 - this.cliente.saldo;
-            this.cliente.saldo += diferenca;
+            valorRecarga = 200 - this.cliente.saldo;
         } else {
             this.erro = 'Saldo já é igual ou superior a R$200,00.';
             return;
         }
 
-        // Aqui você pode salvar o tipo de pagamento, se necessário
-        // Exemplo: this.cliente.ultimoTipoPagamento = tipoPagamento;
+        const dtoPagamento = {
+            clienteId: this.cliente._id,
+            valor: valorRecarga,
+        }
 
-        this.clienteService.save(this.cliente).subscribe({
+        this.clienteService.registrarRecarga(dtoPagamento).subscribe({
             next: () => {
                 console.log(`Saldo recarregado com sucesso para ${this.cliente.nome} via ${tipoPagamento}`);
                 this.mostrarOpcoesPagamento = false;

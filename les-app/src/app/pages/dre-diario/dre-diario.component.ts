@@ -19,15 +19,11 @@ import { VendaService } from '../../services/venda.service';
 })
 export class DreDiarioComponent {
 
-    dataInicio: string = '2025-02-01';
-    dataFim: string = '2025-02-20';
-
-    vendas: any[] = [];
-    pagamentosFornecedor: any[] = [];
-
-    dados: any[] = [];
+    dataInicio: string = new Date().toISOString().slice(0, 10);
+    dataFim: string = new Date().toISOString().slice(0, 10);
     saldoInicial = 0;
-    saldoFinal = 0;
+    dados: any[] = [];
+
 
     constructor(
         private vendasService: VendaService,
@@ -39,63 +35,23 @@ export class DreDiarioComponent {
     }
 
     carregarDados() {
-        this.vendasService.list().subscribe(vendas => {
-            this.vendas = vendas;
-            this.pagamentosFornecedorService.list().subscribe(pagamentos => {
-                this.pagamentosFornecedor = pagamentos;
-                this.gerarDados();
-                // Ordena os dados da data mais recente para a mais antiga
-                this.dados.sort((a, b) => {
-                    const [da, ma, ya] = a.data.split('/').map(Number);
-                    const [db, mb, yb] = b.data.split('/').map(Number);
-                    return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
-                });
-                this.calcularSaldos();
-            });
+        this.vendasService.getDRE(this.dataInicio, this.dataFim).subscribe((res: any) => {
+            // res: { saldoAnterior: number, relatorio: Array<{ data, receber, pagar, resultado, saldo }> }
+            this.saldoInicial = res.saldoAnterior ?? 0;
+            this.dados = (res.relatorio ?? []).map((item: any) => ({
+                data: item.data,
+                entrada: item.receber,
+                saida: item.pagar,
+                resultado: item.resultado,
+                saldo: item.saldo
+            }));
+            // Ordena os dados da data mais recente para a mais antiga
+            // this.dados.sort((a, b) => {
+            //     const [da, ma, ya] = a.data.split('/').map(Number);
+            //     const [db, mb, yb] = b.data.split('/').map(Number);
+            //     return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
+            // });
         });
-    }
-
-    gerarDados() {
-        const mapaDias = new Map<string, { entrada: number; saida: number }>();
-
-        for (const venda of this.vendas) {
-            const data = venda.dataHora;
-            if (!mapaDias.has(data)) {
-                mapaDias.set(data, { entrada: 0, saida: 0 });
-            }
-            mapaDias.get(data)!.entrada += venda.valorTotal;
-        }
-
-        for (const pagamento of this.pagamentosFornecedor) {
-            const data = pagamento.dataVencimento;
-            if (!mapaDias.has(data)) {
-                mapaDias.set(data, { entrada: 0, saida: 0 });
-            }
-            mapaDias.get(data)!.saida += pagamento.valorPago;
-        }
-
-        this.dados = Array.from(mapaDias.entries()).map(([data, valores]) => ({
-            data,
-            entrada: valores.entrada,
-            saida: valores.saida
-        }));
-
-        // Ordena da mais recente para a mais antiga
-        this.dados.sort((a, b) => {
-            const [da, ma, ya] = a.data.split('/').map(Number);
-            const [db, mb, yb] = b.data.split('/').map(Number);
-            return new Date(yb, mb - 1, db).getTime() - new Date(ya, ma - 1, da).getTime();
-        });
-    }
-
-
-
-
-    calcularSaldos() {
-        const entradas = this.dados.reduce((soma, d) => soma + d.entrada, 0);
-        const saidas = this.dados.reduce((soma, d) => soma + d.saida, 0);
-        this.saldoInicial = 9564.78; // Pode vir de outro lugar ou ser inicializado
-        this.saldoFinal = this.saldoInicial + entradas - saidas;
     }
 
     onRelatorio(): void {
