@@ -36,6 +36,7 @@ public class VendaService {
     private final ProdutoRepository produtoRepository;
     private final AcessoRepository acessoRepository;
     private final HistoricoPrecoKgRepository historicoPrecoKgRepository;
+    
 
     @Transactional
     public Venda salvar(VendaDTO dto) {
@@ -128,10 +129,10 @@ public class VendaService {
     }
 
     public List<ConsumoClienteDTO> listarConsumoClientesPorPeriodo(LocalDate inicio, LocalDate fim) {
-        return vendaRepository.consumoClientesPorPeriodo(inicio, fim);
+        return vendaRepository.buscarConsumoClientes(inicio, fim);
     }
 
     public List<TicketMedioDTO> listarTicketMedioPorPeriodo(LocalDate inicio, LocalDate fim) {
-        return vendaRepository.ticketMedioPorCliente(inicio, fim);
+        return vendaRepository.buscarTicketMedioClientes(inicio, fim);
     }
 }

@@ -19,6 +19,7 @@ import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
 import com.example.les_api.service.AcessoService;
 import com.example.les_api.repository.AcessoRepository;
+import com.example.les_api.repository.VendaRepository;
 import com.example.les_api.service.ImpressoraCupomService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +35,7 @@ public class VendaController {
     private final AcessoService acessoService;
     private final AcessoRepository acessoRepository;
     private final ImpressoraCupomService impressoraCupomService;
+    private final VendaRepository vendaRepository;
 
     @Operation(summary = "Listar todas as vendas", security = @SecurityRequirement(name = "bearerAuth"))
     @VerificaPermissao(tela = "Venda", acao = "ver")
@@ -70,7 +72,7 @@ public class VendaController {
     @PostMapping("/finalizar")
     public ResponseEntity<?> finalizarVenda(@RequestBody VendaDTO vendaDTO) throws Exception {
         Venda venda = vendaService.salvar(vendaDTO);
-        
+
         Optional<Acesso> acessoOptional = acessoService.findUltimoAcessoPorCliente(venda.getCliente().getId());
 
         if (acessoOptional.isPresent()) {
@@ -93,17 +95,17 @@ public class VendaController {
         return ResponseEntity.ok().body("Venda realizada com sucesso!");
     }
 
-    @GetMapping("/consumo-cliente")
-    public List<ConsumoClienteDTO> getConsumoCliente(
+    @GetMapping("/clientes/consumo")
+    public List<ConsumoClienteDTO> getConsumoClientes(
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
-        return vendaService.listarConsumoClientesPorPeriodo(inicio, fim);
+        return vendaRepository.buscarConsumoClientes(inicio, fim);
     }
 
-    @GetMapping("/ticket-medio")
-    public List<TicketMedioDTO> getTicketMedioCliente(
+    @GetMapping("/clientes/ticket-medio")
+    public List<TicketMedioDTO> getTicketMedioClientes(
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
-        return vendaService.listarTicketMedioPorPeriodo(inicio, fim);
+        return vendaRepository.buscarTicketMedioClientes(inicio, fim);
     }
 }
