@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.dto.DREDiarioDTO;
+import com.example.les_api.dto.DREPeriodoDTO;
 import com.example.les_api.service.RelatorioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class RelatorioController {
 
     @Operation(summary = "Gerar DRE por período", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/dre")
-    public List<DREDiarioDTO> getDREPorPeriodo(
+    public DREPeriodoDTO getDREPorPeriodo(
             @RequestParam("inicio") String inicio,
             @RequestParam("fim") String fim) {
 
