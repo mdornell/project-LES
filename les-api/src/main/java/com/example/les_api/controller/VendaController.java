@@ -1,15 +1,19 @@
 package com.example.les_api.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.venda.Venda;
+import com.example.les_api.dto.ConsumoClienteDTO;
+import com.example.les_api.dto.TicketMedioDTO;
 import com.example.les_api.dto.VendaDTO;
 import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
@@ -87,5 +91,19 @@ public class VendaController {
         }
 
         return ResponseEntity.ok().body("Venda realizada com sucesso!");
+    }
+
+    @GetMapping("/consumo-cliente")
+    public List<ConsumoClienteDTO> getConsumoCliente(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        return vendaService.listarConsumoClientesPorPeriodo(inicio, fim);
+    }
+
+    @GetMapping("/ticket-medio")
+    public List<TicketMedioDTO> getTicketMedioCliente(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        return vendaService.listarTicketMedioPorPeriodo(inicio, fim);
     }
 }
