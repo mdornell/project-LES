@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PagamentoFornecedor } from '../../types/pagamento-Fornecedor';
 import { PagamentoFornecedorService } from '../pagamento-fornecedor.service';
 
@@ -15,9 +15,7 @@ export class PagamentoFornecedorResolver implements Resolve<PagamentoFornecedor>
         const id = route.params['id'];
 
         if (id) {
-            return this.service.listById(id).pipe(
-                tap(pagamento => console.log('Pagamento de fornecedor carregado:', pagamento))
-            );
+            return id;
         }
 
         return of({
