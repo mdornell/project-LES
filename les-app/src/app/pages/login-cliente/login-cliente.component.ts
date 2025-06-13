@@ -48,21 +48,27 @@ export class LoginClienteComponent {
             this.clienteService.listByRfid(rfid).subscribe(
                 cliente => {
                     if (cliente) {
-                        // Inverte o valor de 'ativo'
-                        cliente.ativo = !cliente.ativo;
-                        // Salva o cliente com o novo valor de 'ativo'
-                        this.clienteService.save(cliente).subscribe(
-                            clienteSalvo => {
-                                this.cliente = clienteSalvo;
-                                this.carregarClientes();
-                                this.carregarListaClientes();
-                                // Atualiza o formulário e a tela
-                                this.rfidForm.reset();
-                            },
-                            error => {
-                                this.erro = 'Erro ao salvar o cliente.';
-                            }
-                        );
+                        this.cliente = cliente; // Sempre retorna o cliente desse rfid
+                        if (cliente.saldo > 0) {
+                            // Inverte o valor de 'ativo' somente se saldo > 0
+                            // 
+                            this.clienteService.entradaSaida(cliente.codigoRFID).subscribe(
+                                clienteSalvo => {
+                                    this.cliente = clienteSalvo;
+                                    this.carregarClientes();
+                                    this.carregarListaClientes();
+                                    this.rfidForm.reset();
+                                },
+                                error => {
+                                    this.erro = 'Erro ao salvar o cliente.';
+                                }
+                            );
+                        } else {
+                            // Não atualiza 'ativo', mas mantém cliente retornado
+                            this.carregarClientes();
+                            this.carregarListaClientes();
+                            this.rfidForm.reset();
+                        }
                     } else {
                         this.erro = 'Cliente não encontrado.';
                     }

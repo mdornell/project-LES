@@ -1,3 +1,12 @@
+<div class="mb-3">
+    <button class="btn btn-outline-primary me-2" [class.active]="tabela === 'abertos'" (click)="tabela = 'abertos'">
+        Pagamentos em Aberto
+    </button>
+    <button class="btn btn-outline-success" [class.active]="tabela === 'concluidos'" (click)="tabela = 'concluidos'">
+        Pagamentos Concluídos
+    </button>
+</div>
+
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead class="table-dark">
@@ -5,28 +14,28 @@
                 <th>ID</th>
                 <th>Descrição</th>
                 <th>Data Vencimento</th>
-                <th>Data Pagamento</th>
+                <th *ngIf="tabela === 'concluidos'">Data Pagamento</th>
                 <th>Método</th>
                 <th>Valor Pago</th>
-                <!-- <th>Fornecedor</th> -->
-                <th>Ações</th>
+                <th style="width: 48px; text-align: center;">
+                    <button class="btn btn-success btn-sm" (click)="onAdd()" aria-label="Novo Pagamento">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let p of pagamentos">
+            <tr *ngFor="let p of pagamentosFiltrados">
                 <td>{{ p._id }}</td>
                 <td>{{ p.descricao }}</td>
-                <td>{{ p.dataVencimento }}</td>
-                <td>{{ p.dataPagamento }}</td>
+                <td>{{ p.dataVencimento | date:'dd/MM/yyyy' }}</td>
+                <td *ngIf="tabela === 'concluidos'">{{ p.dataPagamento | date:'dd/MM/yyyy' }}</td>
                 <td>{{ p.metodo }}</td>
                 <td>{{ p.valorPago | currency:'BRL' }}</td>
-                <!-- <td>{{ p.fornecedor?.nome }}</td> -->
-                <!-- Ações Column -->
                 <td class="d-flex justify-content-center gap-1">
                     <button class="btn btn-sm btn-primary px-3" (click)="onEdit(p)" aria-label="Editar um produto">
                         <i class="bi bi-pencil-square"></i>
                     </button>
-
                     <button type="button" class="btn btn-sm btn-danger px-3" aria-label="Remover um produto"
                         (click)="onSelect(p)">
                         <i class="bi bi-trash"></i>

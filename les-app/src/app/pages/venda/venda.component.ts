@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import { ClienteService } from '../../services/cliente.service';
 import { ProdutoService } from '../../services/produto.service';
 import { RefeicaoService } from '../../services/refeicao.service';
 import { VendaService } from '../../services/venda.service';
 import { Cliente } from '../../types/cliente';
-import { ItemVenda } from '../../types/itemVenda';
 import { Produto } from '../../types/produto';
 import { Refeicao } from '../../types/refeição';
 import { Venda } from '../../types/venda';
@@ -33,6 +32,9 @@ export class VendaComponent implements OnInit {
     erro: string = '';
     produtos: Produto[] = [];
     dataHora: Date = new Date();
+    pesoRefeicao: number | null = null;
+    refeicao: number = 0;
+    valorRefeicao: number = 0;
 
     constructor(
         private route: ActivatedRoute,
@@ -41,6 +43,7 @@ export class VendaComponent implements OnInit {
         private vendaService: VendaService,
         private refeicaoService: RefeicaoService,
         private snackBar: MatSnackBar,
+        private router: Router,
     ) { }
 
     ngOnInit(): void {
@@ -60,6 +63,8 @@ export class VendaComponent implements OnInit {
                 this.erro = 'ID do cliente não fornecido.';
             }
         });
+
+        this.listarRefeicaoMaisRecente();
     }
 
     inserirProduto(): void {
@@ -69,8 +74,6 @@ export class VendaComponent implements OnInit {
             });
             return;
         }
-
-
 
         this.produtoService.listByCodigo(this.codigoBarras).subscribe({
             next: (produto) => {
@@ -111,29 +114,33 @@ export class VendaComponent implements OnInit {
             custo: produto.valorCusto,
         }));
 
-        const novaVenda: Venda = {
-            cliente: this.cliente,
+        const novaVenda: Partial<Venda> = {
             dataHora: this.dataHora,
-            itens: itensVenda,
+            descricaoVenda: '',
             valorTotal: this.valorGasto,
-            descricaoVenda: ''
+            peso: this.pesoRefeicao || 0, // Use the pesoRefeicao if provided
+            cliente_id: this.cliente._id,
+            itens: itensVenda
         };
 
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
-
                 this.snackBar.open('Compra finalizada com sucesso.', '', {
                     duration: 2000,
                 }).afterDismissed().subscribe(() => {
-                    window.location.href = '/home'; // Redirect to "/cliente" after message
+                    this.router.navigate(['/home']); // Redirect using Angular Router
                 });
                 this.onRelatorio(); // Call the report generation method
                 this.resetForm();
+                this.resetForm();
             },
-            error: () => {
-                this.snackBar.open('Compra não realizada, erro ao salvar venda.', '', {
-                    duration: 5000,
-                });
+            error: (err) => {
+                console.error('Erro ao salvar venda:', err);
+                this.snackBar.open(
+                    `Compra não realizada: ${err?.message || 'erro desconhecido.'}`,
+                    '',
+                    { duration: 5000 }
+                );
             }
         });
     }
@@ -150,44 +157,25 @@ export class VendaComponent implements OnInit {
         this.refeicaoService.list().subscribe({
             next: (refeicoes: Refeicao[]) => {
                 if (refeicoes && refeicoes.length > 0) {
-                    // Ordena por dataRegistro decrescente e pega a mais recente
-                    const refeicaoMaisRecente = refeicoes.sort(
-                        (a, b) => new Date(b.dataRegistro).getTime() - new Date(a.dataRegistro).getTime()
+                    // Ordena por data/hora decrescente e pega a mais recente
+                    const refeicaoMaisRecente = refeicoes.sort((a, b) =>
+                        new Date(b.dataRegistro).getTime() - new Date(a.dataRegistro).getTime()
                     )[0];
-
-                    // Exemplo de uso: pegar peso e valor
-                    const peso = 1.5;
-                    const valor = refeicaoMaisRecente.precoKg * peso;
-
-                    this.snackBar.open(
-                        `Peso: ${peso} kg, Valor: R$ ${valor.toFixed(2)}`,
-                        '', { duration: 4000 }
-                    );
-
-                    // Exemplo de criação de um ItemVenda com base na refeição mais recente
-                    // (ajuste conforme necessário para seu fluxo)
-                    const itemVenda: ItemVenda = {
-                        _id: 0,
-                        quantidade: 1,
-                        custo: valor,
-                        produtoId: 0
-                    };
-
-                    // Adiciona a refeição como um "produto" especial na lista de produtos para exibição na tabela
-                    const produtoRefeicao: Produto = {
-                        _id: 0,
-                        nome: `Refeição (${peso}kg)`,
-                        valorVenda: valor,
-                        valorCusto: valor,
-                        codigoBarras: '0',
-                        descricao: 'Refeição',
-                        quantidade: 1,
-                        ativo: true
-                    };
-                    this.produtos.push(produtoRefeicao);
-                    this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
-                    this.saldoAnterior = this.cliente.saldo - this.valorGasto;
-                    // Aqui você pode adicionar o itemVenda à lista de produtos ou processar conforme necessário
+                    if (refeicaoMaisRecente.precoKg !== 0) {
+                        this.valorRefeicao = refeicaoMaisRecente.precoKg;
+                    }
+                    if (this.pesoRefeicao !== null && this.pesoRefeicao !== undefined && this.pesoRefeicao !== 0) {
+                        this.refeicao = refeicaoMaisRecente.precoKg * this.pesoRefeicao;
+                        // Acumula valor gasto com produtos e refeição
+                        const valorProdutos = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+                        this.valorGasto = valorProdutos + this.refeicao;
+                        this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+                    } else {
+                        // Se o campo de peso foi deletado (null, undefined ou 0), restaura valores anteriores
+                        this.valorGasto = this.produtos.reduce((acc, prod) => acc + prod.valorVenda, 0);
+                        this.saldoAnterior = this.cliente.saldo - this.valorGasto;
+                        this.refeicao = 0; // Zera o cálculo da refeição
+                    }
                 } else {
                     this.snackBar.open('Nenhuma refeição encontrada.', '', { duration: 3000 });
                 }

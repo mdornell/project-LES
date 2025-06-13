@@ -10,6 +10,7 @@ export class ClienteService {
 
     apiUrl: string = 'http://localhost:8080/cliente';
     apiUrl2: string = 'http://localhost:8080/recargas';
+    apiUrl3: string = 'http://localhost:8080/acesso';
 
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
@@ -55,11 +56,21 @@ export class ClienteService {
         return this.httpCliente.get<Cliente[]>(this.apiUrl + "/em-aberto", { ...this.apiAuth, ...params }).pipe(take(1));
     }
 
-    registrarRecarga(dto: { valor: number; clienteId: number; data: string }) {
-        console.log('DTO de recarga:', dto);
-        // Change 'post' to 'put' if your backend expects a PUT request
-        return this.httpCliente.post(this.apiUrl2 + "/registrar-recarga", dto, this.apiAuth).pipe(take(1));
+    registrarRecarga(dto: { clienteId: number; valor: number; }) {
+        return this.httpCliente.post(
+            this.apiUrl2 + "/registrar-recarga",
+            dto,
+            { ...this.apiAuth, responseType: 'text' as 'json' } // <- isso aqui
+        ).pipe(take(1));
     }
+
+    entradaSaida(rfid: string) {
+        return this.httpCliente.get<boolean>(
+            `${this.apiUrl3}/${rfid}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
 
 
 }

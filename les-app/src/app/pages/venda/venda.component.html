@@ -6,25 +6,43 @@
     </div>
 
     <div class="row mb-3 align-items-end">
-        <div class="col-md-6">
-            <label for="codigoProduto" class="form-label fw-semibold">Cod. Produto</label>
-            <input type="text" class="form-control" id="codigoProduto" [(ngModel)]="codigoBarras"
-                placeholder="Digite ou escaneie o código do produto" (keyup.enter)="inserirProduto()" autocomplete="off"
-                autofocus />
-        </div>
-        <div class="col-md-3">
-            <div class="d-flex gap-2">
-                <button class="btn btn-maroon flex-fill" (click)="inserirProduto()">Inserir</button>
-                <button class="btn btn-secondary flex-fill" (click)="listarRefeicaoMaisRecente()">Refeição</button>
+        <div class="col-md-6 d-flex align-items-end">
+            <div class="flex-grow-1 me-2">
+                <label for="codigoProduto" class="form-label fw-semibold">Cod. Produto</label>
+                <input type="text" class="form-control" id="codigoProduto" [(ngModel)]="codigoBarras"
+                    placeholder="Digite ou escaneie o código do produto" (keyup.enter)="inserirProduto()"
+                    autocomplete="off" autofocus />
+            </div>
+            <div style="width: 120px;">
+                <button class="btn btn-maroon w-100" (click)="inserirProduto()">Inserir</button>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="row g-2 align-items-end">
+                <div class="col-12 col-lg-4">
+                    <label for="pesoRefeicao" class="form-label fw-semibold">Peso (Kg)</label>
+                    <input type="number" class="form-control" id="pesoRefeicao" [(ngModel)]="pesoRefeicao"
+                        placeholder="Digite o peso em gramas" min="0" (blur)="listarRefeicaoMaisRecente()" />
+                </div>
+                <div class="col-12 col-lg-4">
+                    <label class="form-label fw-semibold text-muted">Total Refeição</label>
+                    <input type="text" class="form-control" [value]="'R$ ' + refeicao.toFixed(2)" readonly disabled />
+                </div>
+                <div class="col-12 col-lg-4">
+                    <label class="form-label fw-semibold text-muted">Valor da Refeição (R$)</label>
+                    <input type="text" class="form-control" [value]="'R$ ' + valorRefeicao.toFixed(2)" readonly
+                        disabled />
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped text-center align-middle">
             <thead class="table-maroon text-white">
                 <tr>
-                    <th>Descrição</th>
+                    <th>Nome Produto</th>
                     <th>Valor</th>
                     <th>Código</th>
                     <th>Ações</th>
@@ -32,7 +50,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let produto of produtos; let i = index">
-                    <td>{{ produto.descricao }}</td>
+                    <td>{{ produto.nome }}</td>
                     <td>R$ {{ produto.valorVenda.toFixed(2) }}</td>
                     <td>{{ produto.codigoBarras }}</td>
                     <td>
