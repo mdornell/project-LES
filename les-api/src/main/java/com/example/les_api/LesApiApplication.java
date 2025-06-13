@@ -1,12 +1,7 @@
 package com.example.les_api;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.example.les_api.domain.funcionario.Funcionario;
-import com.example.les_api.repository.FuncionarioRepository;
 
 @SpringBootApplication
 public class LesApiApplication {
@@ -19,10 +14,10 @@ public class LesApiApplication {
     // public CommandLineRunner initAdmin(FuncionarioRepository
     // funcionarioRepository) {
     // return args -> {
-    // // deleta todos os funcionarios
+    // // Deleta todos os funcionários
     // funcionarioRepository.deleteAll();
 
-    // // cria um novo funcionario admin
+    // // Cria um novo funcionário admin
     // Funcionario funcionario = new Funcionario();
     // funcionario.setNome("admin");
     // funcionario.setCargo("Admin");
@@ -33,6 +28,6 @@ public class LesApiApplication {
     // funcionario.setSenha(passwordEncoder.encode("admin123"));
     // funcionarioRepository.save(funcionario);
     // };
-    //}
+    // }
 
 }
