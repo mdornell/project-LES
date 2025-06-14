@@ -54,4 +54,19 @@ export class VendaService {
             this.apiAuth
         ).pipe(take(1));
     }
+
+
+    getConsumoClientes(inicio: string, fim: string) {
+        return this.httpClient.get(
+            `${this.apiUrl}/clientes/consumo?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+    getTicketMedioClientes(inicio: string, fim: string) {
+        return this.httpClient.get(
+            `${this.apiUrl}/clientes/ticket-medio?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
 }

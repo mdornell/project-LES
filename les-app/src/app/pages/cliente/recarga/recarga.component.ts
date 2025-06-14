@@ -62,6 +62,7 @@ export class RecargaComponent {
             next: () => {
                 console.log(`Saldo recarregado com sucesso para ${this.cliente.nome} via ${tipoPagamento}`);
                 this.mostrarOpcoesPagamento = false;
+                window.location.reload();
             },
             error: (error) => {
                 console.error('Erro ao recarregar saldo:', error);

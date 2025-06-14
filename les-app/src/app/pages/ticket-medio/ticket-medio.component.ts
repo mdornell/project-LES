@@ -1,35 +1,50 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { VendaService } from '../../services/venda.service';
 
 interface RelatorioItem {
-    nome: string;
-    valor: number;
+    nomeCliente: string;
+    ticketMedio: number;
 }
 
 @Component({
     selector: 'app-ticket-medio',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        FormsModule
     ],
     templateUrl: './ticket-medio.component.html',
-    styleUrl: './ticket-medio.component.scss'
+    styleUrls: ['./ticket-medio.component.scss']
 })
-export class TicketMedioComponent {
-    inicio: string = '';
-    fim: string = '';
+export class TicketMedioComponent implements OnInit {
 
-    dados: RelatorioItem[] = [
-        { nome: 'Marco Dornel', valor: 50 },
-        { nome: 'Bruno Carvalho', valor: 50 },
-        { nome: 'Rafael Pere', valor: 100 },
-        { nome: 'Lucas Almeida', valor: 40 },
-        { nome: 'Juliana Rocha', valor: 50 },
-        { nome: 'Pedro Oliveira', valor: 20 },
-        { nome: 'Ronan Jardim', valor: 150 },
-        { nome: 'Larissa Silva', valor: 150 }
-    ];
+    dataInicio: string = new Date().toISOString().slice(0, 10);
+    dataFim: string = new Date().toISOString().slice(0, 10);
+
+    dados: RelatorioItem[] = [];
+
+    constructor(
+        private vendaService: VendaService
+    ) {
+    }
+
+    ngOnInit() {
+        this.carregarDados();
+    }
+
+    carregarDados(): void {
+        if (this.dataInicio && this.dataFim) {
+            this.vendaService.getTicketMedioClientes(this.dataInicio, this.dataFim).subscribe(
+                (dados: any) => {
+                    this.dados = dados as RelatorioItem[];
+                }
+            );
+        }
+    }
 
     onRelatorio(): void {
         // Seleciona a tabela de produtos pelo id ou classe no HTML
