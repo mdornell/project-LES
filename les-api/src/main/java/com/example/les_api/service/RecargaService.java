@@ -1,14 +1,15 @@
 package com.example.les_api.service;
 
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.recarga.Recarga;
 import com.example.les_api.dto.RecargaDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.RecargaRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 @Service
 public class RecargaService {
@@ -27,6 +28,7 @@ public class RecargaService {
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
         // Atualiza o saldo do cliente
+        System.out.println("Atualizando saldo do cliente: " + cliente.getId());
         cliente.setSaldo(cliente.getSaldo() + dto.getValor());
         clienteRepository.save(cliente);
 

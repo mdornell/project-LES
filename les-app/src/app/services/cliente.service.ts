@@ -58,15 +58,23 @@ export class ClienteService {
 
     registrarRecarga(dto: { clienteId: number; valor: number; }) {
         return this.httpCliente.post(
-            this.apiUrl2 + "/registrar-recarga",
+            this.apiUrl2,
             dto,
-            { ...this.apiAuth, responseType: 'text' as 'json' } // <- isso aqui
+            { ...this.apiAuth, responseType: 'text' as 'json' }
         ).pipe(take(1));
     }
 
     entradaSaida(rfid: string) {
         return this.httpCliente.get<boolean>(
             `${this.apiUrl3}/${rfid}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+    sair(cliente: Cliente) {
+        return this.httpCliente.post(
+            this.apiUrl3 + '/sair',
+            cliente,
             this.apiAuth
         ).pipe(take(1));
     }
