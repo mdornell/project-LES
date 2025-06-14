@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.venda.Venda;
+import com.example.les_api.dto.ClienteResumoDTO;
 import com.example.les_api.dto.ConsumoClienteDTO;
 import com.example.les_api.dto.TicketMedioDTO;
 import com.example.les_api.dto.VendaDTO;
@@ -107,5 +108,10 @@ public class VendaController {
             @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
         return vendaRepository.buscarTicketMedioClientes(inicio, fim);
+    }
+
+    @GetMapping("/clientes/resumo")
+    public List<ClienteResumoDTO> getResumoClientes() {
+        return vendaRepository.listarResumoClientes();
     }
 }
