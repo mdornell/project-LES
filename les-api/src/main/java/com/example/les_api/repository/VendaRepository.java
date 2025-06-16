@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.example.les_api.domain.venda.Venda;
+import com.example.les_api.dto.ClienteResumoDTO;
 import com.example.les_api.dto.ConsumoClienteDTO;
 import com.example.les_api.dto.TicketMedioDTO;
 
@@ -31,4 +32,14 @@ public interface VendaRepository extends JpaRepository<Venda, Integer> {
                         "GROUP BY c.nome ORDER BY SUM(v.valorTotal)/COUNT(v) DESC")
         List<TicketMedioDTO> buscarTicketMedioClientes(LocalDate inicio, LocalDate fim);
 
+        @Query("SELECT new com.example.les_api.dto.ClienteResumoDTO(" +
+                        "c.nome, " +
+                        "SUM(v.valorTotal), " +
+                        "c.saldo, " +
+                        "MAX(v.dataHora)) " +
+                        "FROM Venda v " +
+                        "JOIN v.cliente c " +
+                        "GROUP BY c.id, c.nome, c.saldo " +
+                        "ORDER BY c.nome")
+        List<ClienteResumoDTO> listarResumoClientes();
 }
