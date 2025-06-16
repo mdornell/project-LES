@@ -130,7 +130,7 @@ export class VendaComponent implements OnInit {
                 }).afterDismissed().subscribe(() => {
                     this.router.navigate(['/home']); // Redirect using Angular Router
                 });
-                this.onRelatorio(); // Call the report generation method
+                // this.onRelatorio(); // Call the report generation method
                 this.resetForm();
                 this.resetForm();
             },

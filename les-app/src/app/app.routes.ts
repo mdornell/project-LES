@@ -5,6 +5,7 @@ import { ClienteComponent } from './pages/cliente/cliente.component';
 import { RecargaComponent } from './pages/cliente/recarga/recarga.component';
 import { ClientesDiariosComponent } from './pages/clientes-diarios/clientes-diarios.component';
 import { ClientesEmAbertoComponent } from './pages/clientes-em-aberto/clientes-em-aberto.component';
+import { ConsumoDiarioComponent } from './pages/consumo-diario/consumo-diario.component';
 import { DreDiarioComponent } from './pages/dre-diario/dre-diario.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
 import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
@@ -92,6 +93,10 @@ export const routes: Routes = [
 
             // Ticket Médio
             { path: 'ticket-medio', component: TicketMedioComponent },
+
+            // Consumo Diário
+            { path: 'consumo-diario', component: ConsumoDiarioComponent },
+
 
             // Clientes Diários
             {

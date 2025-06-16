@@ -55,9 +55,10 @@ export class DreDiarioComponent {
     }
 
     onRelatorio(): void {
+        // Seleciona a tabela DRE pelo id ou classe no HTML
         const table = document.querySelector('table');
         if (!table) {
-            alert('Tabela não encontrada!');
+            alert('Tabela DRE não encontrada!');
             return;
         }
 
