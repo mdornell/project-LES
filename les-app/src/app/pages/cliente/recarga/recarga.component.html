@@ -1,27 +1,18 @@
 <div class="container my-4">
     <div class="card shadow-sm rounded-4 p-4 bg-light">
-        <h4 class="fw-bold">{{ cliente.nome }}</h4>
-
         <div class="mt-3">
-            <!-- <p class="mb-1">Cliente {{ cliente.tipo }}</p> -->
+            <h4 class="fw-bold">{{ cliente.nome }}</h4>
             <p class="mb-1">Saldo: R$ {{ cliente.saldo.toFixed(2) }}</p>
-            <!-- <p class="mb-1">Limite: R$ {{ cliente.limite.toFixed(2) }}</p> -->
-            <!-- <p class="mb-0" *ngIf="cliente.saldoEmAberto > 0">
-                <span class="fw-semibold">Saldo em aberto:</span>
-                <span class="text-danger">R$ {{ cliente.saldoEmAberto.toFixed(2) }} - {{ cliente.diasEmAberto }}
-                    Dias</span>
-            </p> -->
         </div>
 
         <h5 class="mt-4 fw-bold">Gerenciar cartão</h5>
 
-        <div class="d-flex gap-3 mt-3 flex-wrap">
+        <div class="d-flex gap-3 mt-3 flex-wrap align-items-center">
+            <input type="number" min="0" class="form-control w-auto" placeholder="Valor a adicionar"
+                [(ngModel)]="valorAdicionar" />
             <button class="btn btn-danger rounded-pill px-4 shadow-sm"
                 (click)="mostrarOpcoesPagamento = !mostrarOpcoesPagamento">
-                Pagar Saldo
-            </button>
-            <button class="btn btn-danger rounded-pill px-4 shadow-sm" (click)="bloquearCartao()">
-                Bloquear Cartão
+                Adicionar Saldo
             </button>
         </div>
 

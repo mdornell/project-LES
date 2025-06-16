@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClienteService } from '../../../services/cliente.service';
 import { Cliente } from '../../../types/cliente';
@@ -8,7 +9,8 @@ import { Cliente } from '../../../types/cliente';
     selector: 'app-recarga',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        FormsModule
     ],
     templateUrl: './recarga.component.html',
     styleUrl: './recarga.component.scss'
@@ -17,6 +19,7 @@ export class RecargaComponent {
 
     cliente!: Cliente;
     erro: string | undefined;
+    valorAdicionar: number | null = null;
 
     mostrarOpcoesPagamento: boolean = false;
 
@@ -45,18 +48,17 @@ export class RecargaComponent {
 
     pagarSaldo(tipoPagamento: 'pix' | 'cartao' | 'dinheiro') {
         console.log(`Pagamento (${tipoPagamento}) iniciado para`, this.cliente.nome);
-        var valorRecarga;
-        if (this.cliente.saldo < 200) {
-            valorRecarga = 200 - this.cliente.saldo;
-        } else {
-            this.erro = 'Saldo já é igual ou superior a R$200,00.';
+
+        if (this.valorAdicionar == null) {
+            this.erro = 'Informe um valor para adicionar.';
             return;
         }
-
         const dtoPagamento = {
             clienteId: this.cliente._id,
-            valor: valorRecarga,
-        }
+            valor: this.valorAdicionar,
+        };
+
+        console.log('Dados do pagamento:', dtoPagamento);
 
         this.clienteService.registrarRecarga(dtoPagamento).subscribe({
             next: () => {
