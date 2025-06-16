@@ -69,4 +69,11 @@ export class VendaService {
             this.apiAuth
         ).pipe(take(1));
     }
+
+    getResumoClientes() {
+        return this.httpClient.get<any[]>(
+            `${this.apiUrl}/clientes/resumo`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
 }

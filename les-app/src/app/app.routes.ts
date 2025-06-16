@@ -19,13 +19,13 @@ import { ProdutoFormComponent } from './pages/produto/produto-form/produto-form.
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
 import { ProdutosComponent } from './pages/relatorios/produtos/produtos.component';
+import { ResumoClienteComponent } from './pages/resumo-cliente/resumo-cliente.component';
 import { SignUpComponent } from './pages/signup/signup.component';
 import { TicketMedioComponent } from './pages/ticket-medio/ticket-medio.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { RelatorioVendaComponent } from './pages/venda/relatorio-venda/relatorio-venda.component';
 import { VendaComponent } from './pages/venda/venda.component';
-import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
 import { PagamentoFornecedorResolver } from './services/guard/pagamento-fornecedor.resolver';
@@ -41,7 +41,7 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         children: [
 
             { path: '', component: HelcomeComponent },
@@ -97,6 +97,8 @@ export const routes: Routes = [
             // Consumo Diário
             { path: 'consumo-diario', component: ConsumoDiarioComponent },
 
+            // Consumo Diário
+            { path: 'resumo-cliente', component: ResumoClienteComponent },
 
             // Clientes Diários
             {
@@ -111,5 +113,7 @@ export const routes: Routes = [
             { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
         ]
     },
+
+
 
 ];

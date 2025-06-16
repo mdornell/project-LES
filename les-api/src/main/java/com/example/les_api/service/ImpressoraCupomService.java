@@ -1,8 +1,14 @@
 package com.example.les_api.service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import javax.print.*;
+import java.util.Optional;
+
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 
@@ -11,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.cliente.Cliente;
-import com.example.les_api.domain.historico.HistoricoPrecoKg;
 import com.example.les_api.domain.venda.ItemVenda;
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.repository.ClienteRepository;
@@ -57,7 +62,12 @@ public class ImpressoraCupomService {
             }
 
             Venda ultimaVenda = acesso.getVendas().get(acesso.getVendas().size() - 1);
-            String texto = formatarCupomFiscal(ultimaVenda, acesso);
+            Cliente cliente = ultimaVenda.getCliente();
+            double saldoAtual = cliente.getSaldo();
+            double valorVenda = ultimaVenda.getValorTotal();
+            double saldoAnterior = saldoAtual + valorVenda;
+
+            String texto = formatarCupomFiscal(ultimaVenda, acesso, saldoAnterior, saldoAtual);
             String conteudo = texto + "\n\n\n\n";
             byte[] bytes = conteudo.getBytes(StandardCharsets.ISO_8859_1);
 
@@ -73,7 +83,7 @@ public class ImpressoraCupomService {
         }
     }
 
-    private String formatarCupomFiscal(Venda venda, Acesso acesso) {
+    private String formatarCupomFiscal(Venda venda, Acesso acesso, double saldoAnterior, double saldoAtual) {
         final String COMANDO_CORTE = "\u001DVA";
         final String COMANDO_FONTE_PEQUENA = "\u001B!\u0000";
 
@@ -100,7 +110,7 @@ public class ImpressoraCupomService {
         int totalItens = 0;
 
         // 1. Refeição
-        double valorRefeicao = venda.getPeso(); // campo já contém valor em R$
+        double valorRefeicao = venda.getPeso();
         double precoKg = historicoPrecoKgRepository.findFirstByOrderByIdDesc().getPrecoKg();
         double pesoBruto = valorRefeicao / precoKg;
 
@@ -126,7 +136,11 @@ public class ImpressoraCupomService {
 
         cupom.append(linhaTracejada);
         cupom.append(String.format("%-36s %d%n", "TOTAL DE ITENS:", totalItens));
-        cupom.append(String.format("%-36s R$ %8.2f%n%n", "TOTAL:", totalGeral));
+        cupom.append(String.format("%-36s R$ %8.2f%n", "TOTAL:", totalGeral));
+        cupom.append(linhaTracejada);
+        cupom.append(String.format("%-36s R$ %8.2f%n", "Saldo anterior:", saldoAnterior));
+        cupom.append(String.format("%-36s R$ %8.2f%n", "Saldo atual:", saldoAtual));
+        cupom.append(linhaTracejada);
         cupom.append(centralizarTexto("Obrigado pela preferencia!", LARGURA_CUPOM)).append("\n");
         cupom.append(centralizarTexto("Volte sempre!", LARGURA_CUPOM)).append("\n");
 
@@ -138,4 +152,5 @@ public class ImpressoraCupomService {
         int espacos = (largura - texto.length()) / 2;
         return espacos <= 0 ? texto : " ".repeat(espacos) + texto;
     }
+
 }
