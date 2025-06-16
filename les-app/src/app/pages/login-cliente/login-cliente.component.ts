@@ -49,18 +49,26 @@ export class LoginClienteComponent {
                 cliente => {
                     if (cliente) {
                         this.cliente = cliente; // Sempre retorna o cliente desse rfid
-                        if (cliente.saldo > 0) {
-                            // Inverte o valor de 'ativo' somente se saldo > 0
-                            // 
+                        if (cliente.ativo && cliente.saldo > 0) {
+                            this.irParaVenda(cliente);
+                        } else if (cliente.saldo > 0) {
+                            // Chama entradaSaida, mas agora espera um boolean
                             this.clienteService.entradaSaida(cliente.codigoRFID).subscribe(
-                                clienteSalvo => {
-                                    this.cliente = clienteSalvo;
-                                    this.carregarClientes();
-                                    this.carregarListaClientes();
-                                    this.rfidForm.reset();
+                                sucesso => {
+                                    if (sucesso) {
+                                        // Atualiza cliente após sucesso
+                                        this.clienteService.listByRfid(rfid).subscribe(clienteAtualizado => {
+                                            this.cliente = clienteAtualizado;
+                                            this.carregarClientes();
+                                            this.carregarListaClientes();
+                                            this.rfidForm.reset();
+                                        });
+                                    } else {
+                                        this.erro = 'Erro ao registrar entrada/saída do cliente.';
+                                    }
                                 },
                                 error => {
-                                    this.erro = 'Erro ao salvar o cliente.';
+                                    this.erro = 'Erro ao registrar entrada/saída do cliente.';
                                 }
                             );
                         } else {
