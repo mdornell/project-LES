@@ -150,7 +150,7 @@ export class VendaComponent implements OnInit {
                     this.snackBar.open('Compra finalizada com sucesso.', '', {
                         duration: 2000,
                     }).afterDismissed().subscribe(() => {
-                        this.router.navigate(['/home']);
+                        this.router.navigate(['/login']);
                     });
                     this.resetForm();
                 }

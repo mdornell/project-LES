@@ -36,7 +36,6 @@ export class LoginClienteComponent {
     }
 
     ngOnInit(): void {
-        this.carregarListaClientes();
     }
 
     onSubmit(): void {
@@ -50,7 +49,11 @@ export class LoginClienteComponent {
                     if (cliente) {
                         this.cliente = cliente; // Sempre retorna o cliente desse rfid
                         if (cliente.ativo && cliente.saldo > 0) {
-                            this.irParaVenda(cliente);
+                            this.erro = 'Login realizado com sucesso!';
+                            setTimeout(() => {
+                                this.erro = '';
+                                this.irParaVenda(cliente);
+                            }, 3000);
                         } else if (cliente.saldo > 0) {
                             // Chama entradaSaida, mas agora espera um boolean
                             this.clienteService.entradaSaida(cliente.codigoRFID).subscribe(
@@ -59,8 +62,11 @@ export class LoginClienteComponent {
                                         // Atualiza cliente após sucesso
                                         this.clienteService.listByRfid(rfid).subscribe(clienteAtualizado => {
                                             this.cliente = clienteAtualizado;
-                                            this.carregarClientes();
-                                            this.carregarListaClientes();
+                                            this.erro = 'Login realizado com sucesso!';
+                                            setTimeout(() => {
+                                                this.erro = '';
+                                                this.cliente = null
+                                            }, 5000);
                                             this.rfidForm.reset();
                                         });
                                     } else {
@@ -73,8 +79,7 @@ export class LoginClienteComponent {
                             );
                         } else {
                             // Não atualiza 'ativo', mas mantém cliente retornado
-                            this.carregarClientes();
-                            this.carregarListaClientes();
+
                             this.rfidForm.reset();
                         }
                     } else {
@@ -88,30 +93,11 @@ export class LoginClienteComponent {
         }
     }
 
-    carregarClientes(): void {
-        this.clienteService.listClientesEmAberto().subscribe(clientes => {
-            const clientesFiltrados = clientes.filter((c: any) => c.nome === this.cliente.nome);
-            if (clientesFiltrados.length > 0) {
-                // Seleciona o cliente com maior valor de "dias"
-                this.clientesEmAberto = clientesFiltrados.reduce((prev: any, curr: any) => {
-                    return (curr.dias > prev.dias) ? curr : prev;
-                });
-            } else {
-                this.clientesEmAberto = null;
-            }
-            console.log('Clientes em aberto:', this.clientesEmAberto.dias);
-        });
-    }
-
-    voltarHome(): void {
-        // Navega para a página inicial
-        window.location.href = '/home';
-    }
 
     irParaVenda(element: Cliente): void {
         if (element && element._id) {
-            // Navega diretamente para a tela de venda com o ID do cliente a partir da rota 'home'
-            this.router.navigate(['/home', 'venda', element._id]).catch(err => {
+            // Navega diretamente para a tela de venda com o ID do cliente
+            this.router.navigate(['/venda', element._id]).catch(err => {
                 console.error('Erro ao navegar para a tela de venda:', err);
                 this.erro = 'Erro ao navegar para a tela de venda. Tente novamente.';
             });
@@ -128,15 +114,11 @@ export class LoginClienteComponent {
         });
     }
 
-
-    carregarListaClientes(): void {
-        this.clienteService.list().subscribe(
-            (clientes: any[]) => {
-                this.listaClientes = clientes.filter(cliente => cliente.ativo);
-            },
-            error => {
-                this.erro = 'Erro ao carregar lista de clientes.';
-            }
-        );
+    irParaSair(): void {
+        // Navega para a página inicial
+        this.router.navigate(['/logout']).catch(err => {
+            this.erro = 'Erro ao ir para a página de saida. Tente novamente.';
+        });
     }
 }
+

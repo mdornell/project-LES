@@ -11,7 +11,9 @@ import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/forn
 import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
 import { HelcomeComponent } from './pages/home/helcome/helcome.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ClientesAtivosComponent } from './pages/login-cliente/clientes-ativos/clientes-ativos.component';
 import { LoginClienteComponent } from './pages/login-cliente/login-cliente.component';
+import { LogoutClienteComponent } from './pages/login-cliente/logout-cliente/logout-cliente.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PagamentoFornecedorFormComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor-form/pagamento-fornecedor-form.component';
 import { PagamentoFornecedorComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor.component';
@@ -26,6 +28,7 @@ import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-f
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { RelatorioVendaComponent } from './pages/venda/relatorio-venda/relatorio-venda.component';
 import { VendaComponent } from './pages/venda/venda.component';
+import { AuthGuard } from './services/auth-guard.service';
 import { ClienteResolver } from './services/guard/cliente.resolver';
 import { FornecedorResolver } from './services/guard/fornecedor.resolver';
 import { PagamentoFornecedorResolver } from './services/guard/pagamento-fornecedor.resolver';
@@ -41,7 +44,7 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-        // canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
         children: [
 
             { path: '', component: HelcomeComponent },
@@ -56,7 +59,8 @@ export const routes: Routes = [
             { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/recarga/:id', component: RecargaComponent },
-            { path: 'cliente/login', component: LoginClienteComponent },
+            { path: 'cliente/ativos', component: ClientesAtivosComponent },
+
 
             // Produtos
             { path: 'produto', component: ProdutoComponent },
@@ -76,20 +80,14 @@ export const routes: Routes = [
             { path: 'pagamento-fornecedor/edit/:id', component: PagamentoFornecedorFormComponent, resolve: { fornecedor: PagamentoFornecedorResolver } },
 
             //Vendas
-            { path: 'venda/:id', component: VendaComponent },
+
             { path: 'relatorio-venda', component: RelatorioVendaComponent },
 
             // Aniversariantes
-            {
-                path: 'aniversariantes',
-                component: AniversariantesComponent
-            },
+            { path: 'aniversariantes', component: AniversariantesComponent },
 
             //DRE Diário
-            {
-                path: 'dre-diario',
-                component: DreDiarioComponent
-            },
+            { path: 'dre-diario', component: DreDiarioComponent },
 
             // Ticket Médio
             { path: 'ticket-medio', component: TicketMedioComponent },
@@ -101,10 +99,7 @@ export const routes: Routes = [
             { path: 'resumo-cliente', component: ResumoClienteComponent },
 
             // Clientes Diários
-            {
-                path: 'clientes-diarios',
-                component: ClientesDiariosComponent
-            },
+            { path: 'clientes-diarios', component: ClientesDiariosComponent },
 
             // Relatórios
             { path: 'relatorio-produto', component: ProdutosComponent },
@@ -113,6 +108,9 @@ export const routes: Routes = [
             { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
         ]
     },
+    { path: 'login', component: LoginClienteComponent },
+    { path: 'logout', component: LogoutClienteComponent },
+    { path: 'venda/:id', component: VendaComponent },
 
 
 
