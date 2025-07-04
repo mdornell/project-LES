@@ -6,7 +6,13 @@ import java.util.List;
 
 import com.example.les_api.domain.venda.Venda;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +36,7 @@ public class Acesso {
     private Double valorConsumido;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     // @ManyToOne

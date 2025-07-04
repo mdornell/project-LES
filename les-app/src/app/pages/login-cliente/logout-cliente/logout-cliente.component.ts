@@ -50,19 +50,14 @@ export class LogoutClienteComponent {
                     if (cliente) {
                         this.cliente = cliente; // Sempre retorna o cliente desse rfid
                         // Chama entradaSaida sempre, não vai para venda
-                        this.clienteService.entradaSaida(cliente.codigoRFID).subscribe(
+                        this.clienteService.entradaSaida(rfid).subscribe(
                             sucesso => {
                                 const tempo = Date.now() - inicio;
                                 if (sucesso) {
                                     // Atualiza cliente após sucesso
-                                    this.clienteService.listByRfid(rfid).subscribe(clienteAtualizado => {
-                                        this.cliente = clienteAtualizado;
-                                        this.rfidForm.reset();
-                                        setTimeout(() => {
-                                            this.cliente = null;
-                                        }, 2000); // Limpa os dados do cliente após 2 segundos
-                                        console.log(`Tempo de execução: ${tempo} ms`);
-                                    });
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000);
                                 } else {
                                     this.erro = 'Erro ao registrar entrada/saída do cliente.';
                                 }

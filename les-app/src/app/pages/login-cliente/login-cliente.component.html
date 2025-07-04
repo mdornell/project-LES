@@ -37,6 +37,10 @@
                     </div> -->
                     <div *ngIf="clientesEmAberto?.dias >= 30 || cliente.saldo <= 0" class="mt-3">
                         <p class="text-danger fw-bold">Permissão negada: saldo insuficiente.</p>
+                        <button class="btn btn-sm btn-warning px-2" (click)="onRecharge()"
+                            aria-label="Recarregar saldo do cliente">
+                            Recarregar <i class="bi bi-cash-coin"></i>
+                        </button>
                     </div>
                 </div>
             </form>

@@ -45,7 +45,7 @@ public class ImpressoraCupomService {
         }
 
         try {
-            String nomeImpressora = "EPSON TM-T20X Receipt6";
+            String nomeImpressora = "EPSON TM-T20X Receipt";
             PrintService[] services = PrintServiceLookup.lookupPrintServices(null, null);
             PrintService impressoraSelecionada = null;
 

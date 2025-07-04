@@ -8,7 +8,14 @@ import java.util.Optional;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.venda.Venda;
@@ -16,12 +23,12 @@ import com.example.les_api.dto.ClienteResumoDTO;
 import com.example.les_api.dto.ConsumoClienteDTO;
 import com.example.les_api.dto.TicketMedioDTO;
 import com.example.les_api.dto.VendaDTO;
-import com.example.les_api.security.VerificaPermissao;
-import com.example.les_api.service.VendaService;
-import com.example.les_api.service.AcessoService;
 import com.example.les_api.repository.AcessoRepository;
 import com.example.les_api.repository.VendaRepository;
+import com.example.les_api.security.VerificaPermissao;
+import com.example.les_api.service.AcessoService;
 import com.example.les_api.service.ImpressoraCupomService;
+import com.example.les_api.service.VendaService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -90,7 +97,7 @@ public class VendaController {
             acessoRepository.save(acesso);
 
             // Realiza a impressão com os dados da venda
-            impressoraCupomService.imprimirAux(acesso);
+            // impressoraCupomService.imprimirAux(acesso);
         }
 
         return ResponseEntity.ok().body("Venda realizada com sucesso!");

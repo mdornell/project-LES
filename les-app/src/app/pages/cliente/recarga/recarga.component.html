@@ -32,4 +32,26 @@
             {{ erro }}
         </div>
     </div>
+
+
+    <div class="card shadow-sm rounded-4 p-4 bg-light mt-4">
+        <h5 class="fw-bold mb-3">Quitar Dívidas</h5>
+        <div class="mb-2">
+            <label class="form-label">Valor das dívidas:</label>
+            <span class="fw-semibold">R$ {{ valorDividas?.toFixed(2) || '0.00' }}</span>
+            <button class="btn btn-link btn-sm ms-2" (click)="buscarValorDividas()">
+                Atualizar
+            </button>
+        </div>
+        <button class="btn btn-outline-success rounded-pill px-4"
+            [disabled]="!valorDividas || valorDividas <= 0 || quitando" (click)="quitarDividasCliente()">
+            Quitar Dívidas
+        </button>
+        <!-- <div *ngIf="erroQuitar" class="alert alert-danger mt-3">
+            {{ erroQuitar }}
+        </div> -->
+        <div *ngIf="sucessoQuitar" class="alert alert-success mt-3">
+            Dívidas quitadas com sucesso!
+        </div>
+    </div>
 </div>

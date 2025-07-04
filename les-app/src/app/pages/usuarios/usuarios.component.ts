@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Observable } from 'rxjs';
@@ -26,8 +26,6 @@ export class UsuariosComponent {
     usuarioSelected: Usuario | null = null;
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
         private usuarioService: UsuarioService,
         private permissionService: PermissaoService,
         private snackBar: MatSnackBar
@@ -97,8 +95,12 @@ export class UsuariosComponent {
     }
 
     // Carrega permissões dinamicamente do backend
-    carregarPermissoes(funcionarioId: number) {
-        this.permissionService.carregarPermissoes(funcionarioId).subscribe(permissoes => {
+    carregarPermissoes() {
+        if (!this.usuarioSelected?._id) {
+            this.snackBar.open('Selecione um funcionário para carregar permissões.', 'X', { duration: 5000 });
+            return;
+        }
+        this.permissionService.listarPorFuncionario(this.usuarioSelected._id).subscribe(permissoes => {
             this.telasPermissoes = permissoes.map(p => ({
                 nomeTela: p.tela?.nome || '',
                 podeVer: p.podeVer || false,
@@ -116,8 +118,7 @@ export class UsuariosComponent {
             return;
         }
 
-        const permissoesJSON = this.telasPermissoes.map((tela, index) => ({
-            // Use o id real da tela se disponível, caso contrário remova telaId
+        const permissoesJSON = this.telasPermissoes.map((tela) => ({
             nomeTela: tela.nomeTela,
             podeVer: tela.podeVer,
             podeAdicionar: tela.podeAdicionar,
@@ -126,10 +127,9 @@ export class UsuariosComponent {
         }));
 
         this.permissionService.salvarPermissoes(this.usuarioSelected._id, permissoesJSON)
-            .subscribe(
-                () => this.onPermissoesSuccess(),
-                () => this.onPermissoesErro()
-            );
+            .subscribe({
+                next: () => this.onPermissoesSuccess(),
+                error: () => this.onPermissoesErro()
+            });
     }
-
 }

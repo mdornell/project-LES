@@ -106,11 +106,14 @@ export const routes: Routes = [
 
             // Clientes em aberto
             { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
+
+            { path: 'venda/:id', component: VendaComponent },
         ]
     },
     { path: 'login', component: LoginClienteComponent },
     { path: 'logout', component: LogoutClienteComponent },
     { path: 'venda/:id', component: VendaComponent },
+    { path: 'recarga/:id', component: RecargaComponent },
 
 
 

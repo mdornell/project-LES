@@ -15,32 +15,22 @@ export class PermissaoService {
         }
     }
 
-    carregarPermissoes(funcionarioId: number) {
-        return this.http.get<any[]>(`/api/permissao/funcionario/${funcionarioId}`).pipe(
-            map(response => {
-                this.permissoes = response;
-                localStorage.setItem('permissoes', JSON.stringify(response));
-                return response;
+    listarPorFuncionario(id: number) {
+        return this.http.get<any[]>(`/permissao/funcionario/${id}`).pipe(
+            map(permissoes => {
+                this.permissoes = permissoes;
+                localStorage.setItem('permissoes', JSON.stringify(permissoes));
+                return permissoes;
             })
         );
     }
 
-    salvarPermissoes(funcionarioId: number, permissoes: any[]) {
-        return this.http.post<void>(`/api/permissao/funcionario/${funcionarioId}`, permissoes).pipe(
+    salvarPermissoes(id: number, permissoes: any[]) {
+        return this.http.post<void>(`/permissao/funcionario/${id}`, permissoes).pipe(
             map(() => {
                 this.permissoes = permissoes;
                 localStorage.setItem('permissoes', JSON.stringify(permissoes));
             })
         );
-    }
-
-    temPermissao(tela: string, tipo: 'podeVer' | 'podeAdicionar' | 'podeEditar' | 'podeExcluir'): boolean {
-        const permissao = this.permissoes.find(p => p.tela?.nome?.toLowerCase() === tela.toLowerCase());
-        return permissao ? permissao[tipo] : false;
-    }
-
-    limparPermissoes() {
-        this.permissoes = [];
-        localStorage.removeItem('permissoes');
     }
 }

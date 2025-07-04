@@ -102,9 +102,16 @@ public class ClienteController {
         return clienteService.listarClientesComSaldoAbertoMaisDe30Dias();
     }
 
-    @PostMapping("/clientes/{id}/quitar-dividas")
+    @PostMapping("/{id}/quitar-dividas")
     public ResponseEntity<String> quitarDividas(@PathVariable Integer id) {
         clienteService.quitarDividasDoCliente(id);
         return ResponseEntity.ok("Dívidas quitadas com sucesso.");
+    }
+
+    @GetMapping("/{id}/valor-dividas")
+    @Operation(summary = "Obter valor total das dívidas em aberto do cliente", security = @SecurityRequirement(name = "bearerAuth"))
+    public ResponseEntity<Double> valorDividasAPagar(@PathVariable Integer id) {
+        double total = clienteService.valorDividasAPagar(id);
+        return ResponseEntity.ok(total);
     }
 }

@@ -11,11 +11,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.dto.RecargaDTO;
+import com.example.les_api.repository.AcessoRepository;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.VendaRepository;
 
@@ -31,6 +33,9 @@ public class ClienteService {
 
     @Autowired
     private VendaRepository vendaRepository;
+
+    @Autowired
+    private AcessoRepository acessoRepository;
 
     public List<ClienteDTO> listarTodos() {
         return clienteRepository.findAll()
@@ -81,10 +86,22 @@ public class ClienteService {
         return new ClienteDTO(cliente);
     }
 
-    public void deletar(Integer id) {
-        Cliente cliente = clienteRepository.findById(id)
+    public void deletar(Integer clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        clienteRepository.delete(cliente);
+
+        // Busca todos os acessos vinculados ao cliente
+        List<Acesso> acessos = acessoRepository.findByCliente(cliente);
+
+        // Desvincula o cliente dos acessos
+        for (Acesso acesso : acessos) {
+            acesso.setCliente(null);
+        }
+
+        acessoRepository.saveAll(acessos);
+
+        // Agora sim, pode excluir o cliente
+        clienteRepository.deleteById(clienteId);
     }
 
     public List<ClienteDTO> buscarAniversariantes() {
@@ -138,6 +155,30 @@ public class ClienteService {
         clienteRepository.save(cliente);
     }
 
+    public double valorDividasAPagar(Integer clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        // Busca todas as vendas do cliente
+        List<Venda> todasAsVendas = vendaRepository.findAll();
+
+        // Filtra apenas as não pagas do cliente informado
+        List<Venda> pendentes = todasAsVendas.stream()
+                .filter(v -> v.getCliente().getId().equals(clienteId) && !Boolean.TRUE.equals(v.isPaga()))
+                .collect(Collectors.toList());
+
+        if (pendentes.isEmpty()) {
+            throw new RuntimeException("Nenhuma venda pendente para este cliente.");
+        }
+
+        // Soma o valor total das pendentes
+        double total = pendentes.stream()
+                .mapToDouble(Venda::getValorTotal)
+                .sum();
+
+        return total;
+    }
+
     @Transactional
     public void quitarDividasDoCliente(Integer clienteId) {
         Cliente cliente = clienteRepository.findById(clienteId)
@@ -166,11 +207,8 @@ public class ClienteService {
         recargaDTO.setValor(total);
         recargaService.registrarRecarga(recargaDTO);
 
-        // Marca as vendas como pagas
+        // Marcar todas as vendas como pagas
         pendentes.forEach(v -> v.setPaga(true));
         vendaRepository.saveAll(pendentes);
-
-        // Atualiza o saldo com o novo valor total
-        atualizarSaldoCliente(cliente, cliente.getSaldo() - total);
     }
 }

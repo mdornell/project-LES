@@ -66,7 +66,7 @@ export class LoginClienteComponent {
                                             setTimeout(() => {
                                                 this.erro = '';
                                                 this.cliente = null
-                                            }, 5000);
+                                            }, 2500);
                                             this.rfidForm.reset();
                                         });
                                     } else {
@@ -119,6 +119,14 @@ export class LoginClienteComponent {
         this.router.navigate(['/logout']).catch(err => {
             this.erro = 'Erro ao ir para a página de saida. Tente novamente.';
         });
+    }
+
+    onRecharge() {
+        if (this.cliente && this.cliente._id) {
+            this.router.navigate(['/recarga', this.cliente._id]);
+        } else {
+            console.error('Cliente _id is undefined');
+        }
     }
 }
 

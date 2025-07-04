@@ -35,6 +35,7 @@ export class RecargaComponent {
                 this.clienteService.listById(Number(clienteId)).subscribe({
                     next: (cliente: Cliente) => {
                         this.cliente = cliente;
+                        this.buscarValorDividas(); // Buscar valor das dívidas ao carregar cliente
                     },
                     error: () => {
                         this.erro = 'Erro ao buscar cliente.';
@@ -76,5 +77,43 @@ export class RecargaComponent {
     bloquearCartao() {
         console.log('Cartão bloqueado para', this.cliente.nome);
         // lógica para bloqueio
+    }
+
+    valorDividas: number | null = null;
+    quitando: boolean = false;
+    erroQuitar: string | null = null;
+    sucessoQuitar: boolean = false;
+
+    buscarValorDividas() {
+        if (!this.cliente?._id) return;
+        this.clienteService.valorDividasAPagar(this.cliente._id).subscribe({
+            next: (valor: number) => {
+                this.valorDividas = valor;
+                this.erroQuitar = null;
+            },
+            error: () => {
+                this.erroQuitar = 'Erro ao buscar valor das dívidas.';
+                this.valorDividas = null;
+            }
+        });
+    }
+
+    quitarDividasCliente() {
+        if (!this.cliente?._id || !this.valorDividas || this.valorDividas <= 0) return;
+        this.quitando = true;
+        this.erroQuitar = null;
+        this.sucessoQuitar = false;
+        this.clienteService.quitarDividas(this.cliente._id).subscribe({
+            next: () => {
+                this.sucessoQuitar = true;
+                this.valorDividas = 0;
+            },
+            error: () => {
+                this.erroQuitar = 'Erro ao quitar dívidas.';
+            },
+            complete: () => {
+                this.quitando = false;
+            }
+        });
     }
 }

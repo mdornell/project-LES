@@ -106,9 +106,10 @@ export class VendaComponent implements OnInit {
             return;
         }
 
+        // Garante que só IDs e dados necessários sejam enviados
         const itensVenda = this.produtos.map(produto => ({
             _id: 0,
-            produtoId: produto._id,
+            produtoId: produto._id, // Deve ser apenas o ID (string ou número)
             quantidade: 1,
             preco: produto.valorVenda,
             custo: produto.valorCusto,
@@ -118,42 +119,29 @@ export class VendaComponent implements OnInit {
             dataHora: this.dataHora,
             descricaoVenda: '',
             valorTotal: this.valorGasto,
-            peso: this.pesoRefeicao || 0, // Use the pesoRefeicao if provided
-            cliente_id: this.cliente._id,
+            peso: this.pesoRefeicao || 0,
+            cliente_id: this.cliente._id, // Também apenas o ID
             itens: itensVenda
         };
 
+        if (this.valorGasto === 0) {
+            this.snackBar.open('Nenhum valor gasto. Retornando.', '', {
+                duration: 2000,
+            }).afterDismissed().subscribe(() => {
+                this.router.navigate(['/login']);
+                this.resetForm();
+            });
+            return;
+        }
+
         this.vendaService.save(novaVenda).subscribe({
             next: () => {
-                // Chama a API de entrada/saída com o RFID do cliente após salvar a venda
-                if (this.cliente && this.cliente.codigoRFID) {
-                    this.clienteService.entradaSaida(this.cliente.codigoRFID).subscribe({
-                        next: () => {
-                            this.snackBar.open('Compra finalizada com sucesso.', '', {
-                                duration: 2000,
-                            }).afterDismissed().subscribe(() => {
-                                this.router.navigate(['/home']);
-                            });
-                            this.resetForm();
-                        },
-                        error: (err) => {
-                            console.error('Erro ao registrar entrada/saída:', err);
-                            this.snackBar.open(
-                                `Compra salva, mas erro ao registrar entrada/saída: ${err?.message || 'erro desconhecido.'}`,
-                                '',
-                                { duration: 5000 }
-                            );
-                            this.resetForm();
-                        }
-                    });
-                } else {
-                    this.snackBar.open('Compra finalizada com sucesso.', '', {
-                        duration: 2000,
-                    }).afterDismissed().subscribe(() => {
-                        this.router.navigate(['/login']);
-                    });
+                this.snackBar.open('Compra finalizada com sucesso.', '', {
+                    duration: 2000,
+                }).afterDismissed().subscribe(() => {
+                    this.router.navigate(['/login']);
                     this.resetForm();
-                }
+                });
             },
             error: (err) => {
                 console.error('Erro ao salvar venda:', err);
@@ -165,6 +153,7 @@ export class VendaComponent implements OnInit {
             }
         });
     }
+
 
     private resetForm(): void {
         this.produtos = [];

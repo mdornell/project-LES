@@ -31,7 +31,7 @@ export class VendaService {
 
     private create(record: Partial<Venda>) {
         return this.httpClient.post(
-            this.apiUrl + "/finalizar",
+            this.apiUrl,
             record,
             {
                 ...this.apiAuth,

@@ -71,10 +71,24 @@ export class ClienteService {
         ).pipe(take(1));
     }
 
-    sair(cliente: Cliente) {
-        return this.httpCliente.post(
-            this.apiUrl3 + '/sair',
-            cliente,
+    sair(id: number) {
+        return this.httpCliente.get<boolean>(
+            `${this.apiUrl3}/sair/${id}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+    quitarDividas(id: number) {
+        return this.httpCliente.post<string>(
+            `${this.apiUrl}/${id}/quitar-dividas`,
+            {},
+            { ...this.apiAuth, responseType: 'text' as 'json' }
+        ).pipe(take(1));
+    }
+
+    valorDividasAPagar(id: number) {
+        return this.httpCliente.get<number>(
+            `${this.apiUrl}/${id}/valor-dividas`,
             this.apiAuth
         ).pipe(take(1));
     }
