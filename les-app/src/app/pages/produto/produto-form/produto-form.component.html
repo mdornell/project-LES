@@ -16,14 +16,13 @@
                 <div class="mb-3">
                     <label for="nomeProduto" class="form-label">Nome:</label>
                     <input type="text" class="form-control" id="nomeProduto" formControlName="nome"
-                        pattern="^[A-Za-zÀ-ÿ\s]+$" title="Apenas letras são permitidas." minlength="3" maxlength="150"
-                        required />
+                        title="Apenas letras são permitidas." minlength="3" maxlength="150" required />
                 </div>
 
                 <!-- Descrição -->
                 <div class="mb-3">
                     <label for="descricao" class="form-label">Descrição:</label>
-                    <textarea class="form-control" id="descricao" formControlName="descricao" rows="3" minlength="10"
+                    <textarea class="form-control" id="descricao" formControlName="descricao" rows="3" minlength="2"
                         maxlength="500" required></textarea>
                 </div>
 

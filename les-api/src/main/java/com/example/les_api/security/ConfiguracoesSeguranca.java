@@ -26,6 +26,23 @@ public class ConfiguracoesSeguranca {
     @Autowired
     FiltroSeguranca filtro;
 
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws
+    // Exception {
+    // http
+    // .csrf(csrf -> csrf.disable())
+    // .cors(cors -> cors.configure(http))
+    // .sessionManagement(session ->
+    // session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    // .authorizeHttpRequests(authorize -> authorize
+    // .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+    // .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+    // .requestMatchers(HttpMethod.GET, "/cliente/saldo/rfid/**").permitAll()
+    // .anyRequest().authenticated())
+    // .addFilterBefore(filtro, UsernamePasswordAuthenticationFilter.class);
+    // return http.build();
+    // }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,6 +53,7 @@ public class ConfiguracoesSeguranca {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cliente/saldo/rfid/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(filtro, UsernamePasswordAuthenticationFilter.class);
         return http.build();

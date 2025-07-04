@@ -1,22 +1,30 @@
 package com.example.les_api.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.venda.Venda;
+import com.example.les_api.dto.ClienteResumoDTO;
+import com.example.les_api.dto.ConsumoClienteDTO;
+import com.example.les_api.dto.TicketMedioDTO;
 import com.example.les_api.dto.VendaDTO;
 import com.example.les_api.security.VerificaPermissao;
 import com.example.les_api.service.VendaService;
 import com.example.les_api.service.AcessoService;
 import com.example.les_api.repository.AcessoRepository;
+import com.example.les_api.repository.VendaRepository;
 import com.example.les_api.service.ImpressoraCupomService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -28,13 +36,16 @@ public class VendaController {
     private final AcessoService acessoService;
     private final AcessoRepository acessoRepository;
     private final ImpressoraCupomService impressoraCupomService;
+    private final VendaRepository vendaRepository;
 
+    @Operation(summary = "Listar todas as vendas", security = @SecurityRequirement(name = "bearerAuth"))
     @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping
     public ResponseEntity<List<VendaDTO>> listarTodos() {
         return ResponseEntity.ok(vendaService.listarTodas());
     }
 
+    @Operation(summary = "Buscar venda por ID", security = @SecurityRequirement(name = "bearerAuth"))
     @VerificaPermissao(tela = "Venda", acao = "ver")
     @GetMapping("/{id}")
     public ResponseEntity<VendaDTO> buscarPorId(@PathVariable Integer id) {
@@ -43,12 +54,14 @@ public class VendaController {
         return ResponseEntity.ok(vendaDTO);
     }
 
+    @Operation(summary = "Salvar uma nova venda", security = @SecurityRequirement(name = "bearerAuth"))
     @VerificaPermissao(tela = "Venda", acao = "adicionar")
     @PostMapping
     public ResponseEntity<Venda> salvar(@RequestBody VendaDTO vendaDTO) {
         return ResponseEntity.ok(vendaService.salvar(vendaDTO));
     }
 
+    @Operation(summary = "Deletar uma venda por ID", security = @SecurityRequirement(name = "bearerAuth"))
     @VerificaPermissao(tela = "Venda", acao = "excluir")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Integer id) {
@@ -60,7 +73,7 @@ public class VendaController {
     @PostMapping("/finalizar")
     public ResponseEntity<?> finalizarVenda(@RequestBody VendaDTO vendaDTO) throws Exception {
         Venda venda = vendaService.salvar(vendaDTO);
-        
+
         Optional<Acesso> acessoOptional = acessoService.findUltimoAcessoPorCliente(venda.getCliente().getId());
 
         if (acessoOptional.isPresent()) {
@@ -81,5 +94,24 @@ public class VendaController {
         }
 
         return ResponseEntity.ok().body("Venda realizada com sucesso!");
+    }
+
+    @GetMapping("/clientes/consumo")
+    public List<ConsumoClienteDTO> getConsumoClientes(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        return vendaRepository.buscarConsumoClientes(inicio, fim);
+    }
+
+    @GetMapping("/clientes/ticket-medio")
+    public List<TicketMedioDTO> getTicketMedioClientes(
+            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        return vendaRepository.buscarTicketMedioClientes(inicio, fim);
+    }
+
+    @GetMapping("/clientes/resumo")
+    public List<ClienteResumoDTO> getResumoClientes() {
+        return vendaRepository.listarResumoClientes();
     }
 }

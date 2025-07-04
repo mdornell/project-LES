@@ -18,7 +18,9 @@ import { PagamentoFornecedorListComponent } from './pagamento-fornecedor-list/pa
 })
 export class PagamentoFornecedorComponent {
     pagamentos$: Observable<PagamentoFornecedor[]>;
+    pagamentos: PagamentoFornecedor[] = [];
     pagamentoSelected: PagamentoFornecedor | null = null;
+    tabela: 'abertos' | 'concluidos' = 'abertos';
 
     constructor(
         private pagamentoService: PagamentoFornecedorService,
@@ -26,10 +28,7 @@ export class PagamentoFornecedorComponent {
         private route: ActivatedRoute
     ) {
         this.pagamentos$ = this.pagamentoService.list();
-    }
-
-    onAdd() {
-        this.router.navigate(['new'], { relativeTo: this.route });
+        this.pagamentos$.subscribe(pags => this.pagamentos = pags);
     }
 
     onEdit(pagamento: PagamentoFornecedor) {
@@ -40,12 +39,14 @@ export class PagamentoFornecedorComponent {
         if (this.pagamentoSelected?._id) {
             this.pagamentoService.remove(this.pagamentoSelected).subscribe(() => {
                 this.pagamentos$ = this.pagamentoService.list();
+                this.pagamentos$.subscribe(pags => this.pagamentos = pags);
                 this.pagamentoSelected = null;
             });
         }
     }
 
-    onSelecionar(pagamento: PagamentoFornecedor) {
+    onSelect(pagamento: PagamentoFornecedor) {
         this.pagamentoSelected = pagamento;
+        this.onDelete();
     }
 }

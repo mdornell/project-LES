@@ -17,7 +17,7 @@ import { Venda } from '../../../types/venda';
 })
 export class RelatorioVendaComponent {
     vendas: Venda[] = [];
-    produtosMap = new Map<number, string>();
+    produtosMap = new Map<string, string>();
     carregando = true;
     dataInicio?: string;
     dataFim?: string;
@@ -36,7 +36,7 @@ export class RelatorioVendaComponent {
         this.produtoService.list().subscribe({
             next: (produtos) => {
                 produtos.forEach(prod => {
-                    this.produtosMap.set(prod._id, prod.nome);
+                    this.produtosMap.set(prod._id?.toString(), prod.nome);
                 });
                 this.buscarVendas();
             },
@@ -64,7 +64,6 @@ export class RelatorioVendaComponent {
         });
     }
 
-
     filtrarPorData(vendas: Venda[]): Venda[] {
         if (!this.dataInicio && !this.dataFim) return vendas;
         return vendas.filter(venda => {
@@ -81,7 +80,7 @@ export class RelatorioVendaComponent {
         return venda.itens.reduce((soma, item) => soma + item.quantidade * item.custo, 0);
     }
 
-    getNomeProduto(produtoId: number): string {
-        return this.produtosMap.get(produtoId) || 'Produto não encontrado';
+    getNomeProduto(produtoId: string | number): string {
+        return this.produtosMap.get(produtoId.toString()) || 'Produto não encontrado';
     }
 }

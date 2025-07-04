@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Observable } from 'rxjs';
+import { PermissaoService } from '../../services/permissoes.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../types/usuario';
 import { UsuariosListComponent } from './usuarios-list/usuarios-list.component';
@@ -24,34 +25,23 @@ export class UsuariosComponent {
     usuarios$: Observable<Usuario[]>;
     usuarioSelected: Usuario | null = null;
 
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private usuarioService: UsuarioService,
+        private permissionService: PermissaoService,
+        private snackBar: MatSnackBar
+    ) {
+        this.usuarios$ = this.usuarioService.list();
+    }
+
     telasPermissoes: {
         nomeTela: string;
         podeVer: boolean;
         podeAdicionar: boolean;
         podeEditar: boolean;
         podeExcluir: boolean;
-    }[] = [
-            { nomeTela: "Dashboard", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Produto", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Cliente", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Venda", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Fornecedor", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Relatórios", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Recarga", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "PagamentoFornecedor", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Acesso", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false },
-            { nomeTela: "Funcionário", podeVer: false, podeAdicionar: false, podeEditar: false, podeExcluir: false }
-        ];
-
-
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private usuarioService: UsuarioService,
-        private snackBar: MatSnackBar
-    ) {
-        this.usuarios$ = this.usuarioService.list();
-    }
+    }[] = [];
 
     ngOnInit() {
     }
@@ -97,27 +87,6 @@ export class UsuariosComponent {
         window.open(url, '_blank');
     }
 
-    salvarPermissoes(): void {
-        if (!this.usuarioSelected?._id) {
-            this.snackBar.open('Selecione um funcionário para salvar permissões.', 'X', { duration: 5000 });
-            return;
-        }
-
-        const permissoesJSON = this.telasPermissoes.map((tela, index) => ({
-            telaId: index + 1,
-            nomeTela: tela.nomeTela,
-            podeVer: tela.podeVer,
-            podeAdicionar: tela.podeAdicionar,
-            podeEditar: tela.podeEditar,
-            podeExcluir: tela.podeExcluir
-        }));
-
-        this.usuarioService.savePermisions(permissoesJSON, this.usuarioSelected._id)
-            .subscribe(
-                () => this.onPermissoesSuccess(),
-                () => this.onPermissoesErro()
-            );
-    }
 
     onPermissoesSuccess() {
         this.snackBar.open('Permissões salvas com sucesso', '', { duration: 5000 });
@@ -125,6 +94,42 @@ export class UsuariosComponent {
 
     onPermissoesErro() {
         this.snackBar.open('Erro ao salvar permissões', '', { duration: 5000 });
+    }
+
+    // Carrega permissões dinamicamente do backend
+    carregarPermissoes(funcionarioId: number) {
+        this.permissionService.carregarPermissoes(funcionarioId).subscribe(permissoes => {
+            this.telasPermissoes = permissoes.map(p => ({
+                nomeTela: p.tela?.nome || '',
+                podeVer: p.podeVer || false,
+                podeAdicionar: p.podeAdicionar || false,
+                podeEditar: p.podeEditar || false,
+                podeExcluir: p.podeExcluir || false
+            }));
+        });
+    }
+
+    // Salva permissões dinamicamente
+    salvarPermissoes(): void {
+        if (!this.usuarioSelected?._id) {
+            this.snackBar.open('Selecione um funcionário para salvar permissões.', 'X', { duration: 5000 });
+            return;
+        }
+
+        const permissoesJSON = this.telasPermissoes.map((tela, index) => ({
+            // Use o id real da tela se disponível, caso contrário remova telaId
+            nomeTela: tela.nomeTela,
+            podeVer: tela.podeVer,
+            podeAdicionar: tela.podeAdicionar,
+            podeEditar: tela.podeEditar,
+            podeExcluir: tela.podeExcluir
+        }));
+
+        this.permissionService.salvarPermissoes(this.usuarioSelected._id, permissoesJSON)
+            .subscribe(
+                () => this.onPermissoesSuccess(),
+                () => this.onPermissoesErro()
+            );
     }
 
 }

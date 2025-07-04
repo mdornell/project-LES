@@ -4,6 +4,7 @@ import com.example.les_api.domain.pagamento.PagamentoFornecedor;
 import com.example.les_api.domain.recarga.Recarga;
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.DREDiarioDTO;
+import com.example.les_api.dto.DREPeriodoDTO;
 import com.example.les_api.repository.PagamentoFornecedorRepository;
 import com.example.les_api.repository.RecargaRepository;
 import com.example.les_api.repository.VendaRepository;
@@ -30,40 +31,44 @@ public class RelatorioService {
         this.recargaRepository = recargaRepository;
     }
 
-    public List<DREDiarioDTO> gerarDREPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
-        // Cálculo automático do saldo anterior
+    public DREPeriodoDTO gerarDREPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+        // Cálculo do saldo anterior
         Date limite = java.sql.Date.valueOf(dataInicio);
         double totalRecargas = recargaRepository.totalRecargasAntes(limite);
         double totalPagamentos = pagamentoRepository.totalPagamentosAntes(dataInicio);
         double saldoAnterior = totalRecargas - totalPagamentos;
 
-        // Agrupamento de recebimentos (vendas)
-        List<Venda> vendas = vendaRepository.findAll();
-        Map<LocalDate, Double> recebimentosPorDia = vendas.stream()
-                .filter(v -> v.getDataHora() != null)
+        // Recargas no período
+        List<Recarga> recargas = recargaRepository.findAll();
+        Map<LocalDate, Double> recargasPorDia = recargas.stream()
+                .filter(r -> r.getDataRecarga() != null)
                 .collect(Collectors.groupingBy(
-                        v -> v.getDataHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        Collectors.summingDouble(Venda::getValorTotal)
+                        r -> r.getDataRecarga().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        Collectors.summingDouble(Recarga::getValor)
                 ));
-        recebimentosPorDia.keySet().removeIf(d -> d.isBefore(dataInicio) || d.isAfter(dataFim));
+        recargasPorDia.keySet().removeIf(d -> d.isBefore(dataInicio) || d.isAfter(dataFim));
 
-        // Agrupamento de pagamentos
+        // Pagamentos efetivados ou vencendo no período
         List<PagamentoFornecedor> pagamentos = pagamentoRepository.findAll();
         Map<LocalDate, Double> pagamentosPorDia = pagamentos.stream()
-                .filter(p -> p.getDataPagamento() != null)
+                .filter(p -> {
+                    LocalDate dataReferencia = p.getDataPagamento() != null
+                            ? p.getDataPagamento()
+                            : (p.getDataVencimento() != null ? p.getDataVencimento() : null);
+                    return dataReferencia != null && !dataReferencia.isBefore(dataInicio) && !dataReferencia.isAfter(dataFim);
+                })
                 .collect(Collectors.groupingBy(
-                        PagamentoFornecedor::getDataPagamento,
+                        p -> p.getDataPagamento() != null ? p.getDataPagamento() : p.getDataVencimento(),
                         Collectors.summingDouble(PagamentoFornecedor::getValorPago)
                 ));
-        pagamentosPorDia.keySet().removeIf(d -> d.isBefore(dataInicio) || d.isAfter(dataFim));
 
-        // Construção do relatório
+        // Construção do relatório diário
         List<DREDiarioDTO> resultado = new ArrayList<>();
         double saldo = saldoAnterior;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
 
         for (LocalDate dia = dataInicio; !dia.isAfter(dataFim); dia = dia.plusDays(1)) {
-            double receber = recebimentosPorDia.getOrDefault(dia, 0.0);
+            double receber = recargasPorDia.getOrDefault(dia, 0.0);
             double pagar = pagamentosPorDia.getOrDefault(dia, 0.0);
             double resultadoDia = receber - pagar;
             saldo += resultadoDia;
@@ -77,6 +82,6 @@ public class RelatorioService {
             ));
         }
 
-        return resultado;
+        return new DREPeriodoDTO(saldoAnterior, resultado);
     }
 }

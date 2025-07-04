@@ -16,17 +16,26 @@ export class PermissaoService {
     }
 
     carregarPermissoes(funcionarioId: number) {
-        return this.http.get<any[]>(`/permissao/funcionario/${funcionarioId}`).pipe(
+        return this.http.get<any[]>(`/api/permissao/funcionario/${funcionarioId}`).pipe(
             map(response => {
                 this.permissoes = response;
-                localStorage.setItem('permissoes', JSON.stringify(response)); // Salva no localStorage
+                localStorage.setItem('permissoes', JSON.stringify(response));
                 return response;
             })
         );
     }
 
+    salvarPermissoes(funcionarioId: number, permissoes: any[]) {
+        return this.http.post<void>(`/api/permissao/funcionario/${funcionarioId}`, permissoes).pipe(
+            map(() => {
+                this.permissoes = permissoes;
+                localStorage.setItem('permissoes', JSON.stringify(permissoes));
+            })
+        );
+    }
+
     temPermissao(tela: string, tipo: 'podeVer' | 'podeAdicionar' | 'podeEditar' | 'podeExcluir'): boolean {
-        const permissao = this.permissoes.find(p => p.nomeTela.toLowerCase() === tela.toLowerCase());
+        const permissao = this.permissoes.find(p => p.tela?.nome?.toLowerCase() === tela.toLowerCase());
         return permissao ? permissao[tipo] : false;
     }
 

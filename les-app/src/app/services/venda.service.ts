@@ -9,6 +9,7 @@ import { Venda } from '../types/venda';
 export class VendaService {
 
     private readonly apiUrl = 'http://localhost:8080/venda';
+    private readonly apiUrl2 = 'http://localhost:8080/relatorios';
     apiAuth: { headers: HttpHeaders } = { headers: new HttpHeaders().set("Authorization", "Bearer " + localStorage.getItem("auth-token") || '') };
 
     constructor(private httpClient: HttpClient) { }
@@ -29,7 +30,14 @@ export class VendaService {
     }
 
     private create(record: Partial<Venda>) {
-        return this.httpClient.post<Venda>(this.apiUrl, record, this.apiAuth).pipe(take(1));
+        return this.httpClient.post(
+            this.apiUrl + "/finalizar",
+            record,
+            {
+                ...this.apiAuth,
+                responseType: 'text' as 'json'
+            }
+        ).pipe(take(1));
     }
 
     private update(record: Partial<Venda>) {
@@ -38,5 +46,34 @@ export class VendaService {
 
     remove(record: Venda) {
         return this.httpClient.delete(this.apiUrl + "/" + record._id, this.apiAuth).pipe(take(1));
+    }
+
+    getDRE(inicio: string, fim: string) {
+        return this.httpClient.get(
+            `${this.apiUrl2}/dre?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+
+    getConsumoClientes(inicio: string, fim: string) {
+        return this.httpClient.get(
+            `${this.apiUrl}/clientes/consumo?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+    getTicketMedioClientes(inicio: string, fim: string) {
+        return this.httpClient.get(
+            `${this.apiUrl}/clientes/ticket-medio?inicio=${encodeURIComponent(inicio)}&fim=${encodeURIComponent(fim)}`,
+            this.apiAuth
+        ).pipe(take(1));
+    }
+
+    getResumoClientes() {
+        return this.httpClient.get<any[]>(
+            `${this.apiUrl}/clientes/resumo`,
+            this.apiAuth
+        ).pipe(take(1));
     }
 }

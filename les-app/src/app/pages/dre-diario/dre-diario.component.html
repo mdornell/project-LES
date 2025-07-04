@@ -3,7 +3,7 @@
     <div class="card shadow">
         <div class="card-body">
             <h5 class="card-title">DRE Diário</h5>
-            <!-- <form class="row g-2 align-items-end mb-3">
+            <form class="row g-2 align-items-end mb-3">
                 <div class="col-auto">
                     <label for="inicio" class="form-label">Início</label>
                     <input type="date" class="form-control form-control-sm" id="inicio" [(ngModel)]="dataInicio"
@@ -15,36 +15,38 @@
                         name="dataFim">
                 </div>
                 <div class="col-auto">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="carregarDados()">Aplicar</button>
+                </div>
+                <div class="col-auto">
                     <label for="saldoInicial" class="form-label">Saldo Inicial</label>
                     <input type="text" class="form-control form-control-sm" id="saldoInicial"
                         [value]="saldoInicial | currency:'BRL'" disabled>
                 </div>
-                <div class="col-auto">
-                    <label for="saldoFinal" class="form-label">Saldo Final</label>
-                    <input type="text" class="form-control form-control-sm" id="saldoFinal"
-                        [value]="saldoFinal | currency:'BRL'" disabled>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="aplicarFiltro()">Aplicar</button>
-                </div>
-            </form> -->
+
+
+            </form>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-danger text-white text-center">
                         <tr>
                             <th scope="col">Data</th>
-                            <th scope="col">Entrada</th>
-                            <th scope="col">Saída</th>
-                            <!-- <th scope="col">Clientes</th> -->
+                            <th scope="col">Receber</th>
+                            <th scope="col">Pagar</th>
+                            <th scope="col">Resultado</th>
+                            <th scope="col">Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let item of dados" class="text-center">
-                            <td>{{ item.data | date:'dd/MM/yyyy' }}</td>
+                            <td>{{ item.data }}</td>
                             <td class="text-success fw-semibold">{{ item.entrada | currency:'BRL' }}</td>
                             <td class="text-danger fw-semibold">{{ item.saida | currency:'BRL' }}</td>
-                            <!-- <td>{{ item.clientes }}</td> -->
+                            <td [ngClass]="{'text-success': item.resultado >= 0, 'text-danger': item.resultado < 0}"
+                                class="fw-semibold">
+                                {{ item.resultado | currency:'BRL' }}
+                            </td>
+                            <td class="fw-semibold">{{ item.saldo | currency:'BRL' }}</td>
                         </tr>
                     </tbody>
                 </table>

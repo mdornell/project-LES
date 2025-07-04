@@ -5,12 +5,15 @@ import { ClienteComponent } from './pages/cliente/cliente.component';
 import { RecargaComponent } from './pages/cliente/recarga/recarga.component';
 import { ClientesDiariosComponent } from './pages/clientes-diarios/clientes-diarios.component';
 import { ClientesEmAbertoComponent } from './pages/clientes-em-aberto/clientes-em-aberto.component';
+import { ConsumoDiarioComponent } from './pages/consumo-diario/consumo-diario.component';
 import { DreDiarioComponent } from './pages/dre-diario/dre-diario.component';
 import { FornecedorFormComponent } from './pages/fornecedor/fornecedor-form/fornecedor-form.component';
 import { FornecedorComponent } from './pages/fornecedor/fornecedor.component';
 import { HelcomeComponent } from './pages/home/helcome/helcome.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ClientesAtivosComponent } from './pages/login-cliente/clientes-ativos/clientes-ativos.component';
 import { LoginClienteComponent } from './pages/login-cliente/login-cliente.component';
+import { LogoutClienteComponent } from './pages/login-cliente/logout-cliente/logout-cliente.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PagamentoFornecedorFormComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor-form/pagamento-fornecedor-form.component';
 import { PagamentoFornecedorComponent } from './pages/pagamento-fornecedor/pagamento-fornecedor.component';
@@ -18,7 +21,9 @@ import { ProdutoFormComponent } from './pages/produto/produto-form/produto-form.
 import { ProdutoComponent } from './pages/produto/produto.component';
 import { RefeicaoComponent } from './pages/refeicao/refeicao.component';
 import { ProdutosComponent } from './pages/relatorios/produtos/produtos.component';
+import { ResumoClienteComponent } from './pages/resumo-cliente/resumo-cliente.component';
 import { SignUpComponent } from './pages/signup/signup.component';
+import { TicketMedioComponent } from './pages/ticket-medio/ticket-medio.component';
 import { UsuariosFormComponent } from './pages/usuarios/usuarios-form/usuarios-form.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { RelatorioVendaComponent } from './pages/venda/relatorio-venda/relatorio-venda.component';
@@ -54,7 +59,8 @@ export const routes: Routes = [
             { path: 'cliente/new', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/edit/:id', component: ClienteFormComponent, resolve: { cliente: ClienteResolver } },
             { path: 'cliente/recarga/:id', component: RecargaComponent },
-            { path: 'cliente/login', component: LoginClienteComponent },
+            { path: 'cliente/ativos', component: ClientesAtivosComponent },
+
 
             // Produtos
             { path: 'produto', component: ProdutoComponent },
@@ -74,26 +80,26 @@ export const routes: Routes = [
             { path: 'pagamento-fornecedor/edit/:id', component: PagamentoFornecedorFormComponent, resolve: { fornecedor: PagamentoFornecedorResolver } },
 
             //Vendas
-            { path: 'venda/:id', component: VendaComponent },
+
             { path: 'relatorio-venda', component: RelatorioVendaComponent },
 
             // Aniversariantes
-            {
-                path: 'aniversariantes',
-                component: AniversariantesComponent
-            },
+            { path: 'aniversariantes', component: AniversariantesComponent },
 
             //DRE Diário
-            {
-                path: 'dre-diario',
-                component: DreDiarioComponent
-            },
+            { path: 'dre-diario', component: DreDiarioComponent },
+
+            // Ticket Médio
+            { path: 'ticket-medio', component: TicketMedioComponent },
+
+            // Consumo Diário
+            { path: 'consumo-diario', component: ConsumoDiarioComponent },
+
+            // Consumo Diário
+            { path: 'resumo-cliente', component: ResumoClienteComponent },
 
             // Clientes Diários
-            {
-                path: 'clientes-diarios',
-                component: ClientesDiariosComponent
-            },
+            { path: 'clientes-diarios', component: ClientesDiariosComponent },
 
             // Relatórios
             { path: 'relatorio-produto', component: ProdutosComponent },
@@ -102,5 +108,10 @@ export const routes: Routes = [
             { path: 'clientes-em-aberto', component: ClientesEmAbertoComponent },
         ]
     },
+    { path: 'login', component: LoginClienteComponent },
+    { path: 'logout', component: LogoutClienteComponent },
+    { path: 'venda/:id', component: VendaComponent },
+
+
 
 ];

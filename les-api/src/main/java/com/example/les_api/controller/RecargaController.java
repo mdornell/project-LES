@@ -5,6 +5,9 @@ import com.example.les_api.service.RecargaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/recargas")
 public class RecargaController {
@@ -15,6 +18,7 @@ public class RecargaController {
         this.recargaService = recargaService;
     }
 
+    @Operation(summary = "Registrar uma nova recarga", security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping
     public ResponseEntity<?> registrarRecarga(@RequestBody RecargaDTO dto) {
         recargaService.registrarRecarga(dto);
