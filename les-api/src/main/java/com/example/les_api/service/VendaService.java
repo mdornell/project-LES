@@ -47,6 +47,7 @@ public class VendaService {
         venda.setCliente(cliente);
         venda.setDescricaoVenda(dto.getDescricaoVenda());
         venda.setDataHora(new Date());
+        venda.setPaga(false);
 
         List<ItemVenda> itens = dto.getItens().stream().map(itemDto -> {
             Produto produto = produtoRepository.findById(itemDto.getProdutoId())

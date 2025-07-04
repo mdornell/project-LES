@@ -25,6 +25,9 @@ public class Venda {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataHora;
 
+    @Column(nullable = false)
+    private boolean paga = false;
+
     private String descricaoVenda;
 
     private Double valorTotal; // << NOVO CAMPO AQUI

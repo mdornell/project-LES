@@ -15,14 +15,19 @@ import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
+import com.example.les_api.dto.RecargaDTO;
 import com.example.les_api.repository.ClienteRepository;
 import com.example.les_api.repository.VendaRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private RecargaService recargaService;
 
     @Autowired
     private VendaRepository vendaRepository;
@@ -131,5 +136,41 @@ public class ClienteService {
         }
 
         clienteRepository.save(cliente);
+    }
+
+    @Transactional
+    public void quitarDividasDoCliente(Integer clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+
+        // Busca todas as vendas do cliente
+        List<Venda> todasAsVendas = vendaRepository.findAll();
+
+        // Filtra apenas as não pagas do cliente informado
+        List<Venda> pendentes = todasAsVendas.stream()
+                .filter(v -> v.getCliente().getId().equals(clienteId) && !Boolean.TRUE.equals(v.isPaga()))
+                .collect(Collectors.toList());
+
+        if (pendentes.isEmpty()) {
+            throw new RuntimeException("Nenhuma venda pendente para este cliente.");
+        }
+
+        // Soma o valor total das pendentes
+        double total = pendentes.stream()
+                .mapToDouble(Venda::getValorTotal)
+                .sum();
+
+        // Cria DTO de recarga e chama o método existente
+        RecargaDTO recargaDTO = new RecargaDTO();
+        recargaDTO.setClienteId(clienteId);
+        recargaDTO.setValor(total);
+        recargaService.registrarRecarga(recargaDTO);
+
+        // Marca as vendas como pagas
+        pendentes.forEach(v -> v.setPaga(true));
+        vendaRepository.saveAll(pendentes);
+
+        // Atualiza o saldo com o novo valor total
+        atualizarSaldoCliente(cliente, cliente.getSaldo() - total);
     }
 }

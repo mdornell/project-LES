@@ -101,4 +101,10 @@ public class ClienteController {
     public List<Cliente> listarClientesInadimplentes() {
         return clienteService.listarClientesComSaldoAbertoMaisDe30Dias();
     }
+
+    @PostMapping("/clientes/{id}/quitar-dividas")
+    public ResponseEntity<String> quitarDividas(@PathVariable Integer id) {
+        clienteService.quitarDividasDoCliente(id);
+        return ResponseEntity.ok("Dívidas quitadas com sucesso.");
+    }
 }

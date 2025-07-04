@@ -16,9 +16,10 @@ public interface VendaRepository extends JpaRepository<Venda, Integer> {
         @Query("SELECT DATE(v.dataHora), COUNT(DISTINCT v.cliente.id) FROM Venda v GROUP BY DATE(v.dataHora)")
         List<Object[]> clientesPorDia();
 
-        // @Query("SELECT DATE(v.dataHora), SUM(iv.custo), SUM(iv.preco) FROM Venda v
-        // JOIN v.itens iv GROUP BY DATE(v.dataHora)")
-        // List<Object[]> dreDiario();
+
+    @Query("SELECT v FROM Venda v WHERE v.cliente.id = :clienteId AND v.paga = false")
+    List<Venda> buscarVendasNaoPagasPorCliente(@Param("clienteId") Integer clienteId);
+  
         @Query("SELECT new com.example.les_api.dto.ConsumoClienteDTO(c.nome, SUM(v.valorTotal)) " +
                         "FROM Venda v JOIN v.cliente c " +
                         "WHERE DATE(v.dataHora) BETWEEN :inicio AND :fim " +
