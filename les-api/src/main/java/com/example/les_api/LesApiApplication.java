@@ -19,7 +19,7 @@ public class LesApiApplication {
 
     // // Cria um novo funcionário admin
     // Funcionario funcionario = new Funcionario();
-    // funcionario.setNome("admin");
+    // funcionario.setNome("Ronan Jardim");
     // funcionario.setCargo("Admin");
     // funcionario.setEmail("admin@admin.com");
     // org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder

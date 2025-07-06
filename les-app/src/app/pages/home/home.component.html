@@ -12,11 +12,11 @@
                 <li class="nav-item">
                     <a href="/home/" class="nav-link text-secondary">Inicio</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="/home/cliente/login/" class="nav-link text-secondary">Clientes Ativos</a>
-                </li> -->
                 <li class="nav-item">
-                    <a class="nav-link text-secondary" (click)="toggleSubmenu($event)">Produtos</a>
+                    <a class="nav-link text-secondary d-flex align-items-center" (click)="toggleSubmenu($event)">
+                        Produtos
+                        <i class="bi bi-caret-down ms-2"></i>
+                    </a>
                     <ul class="nav flex-column ms-3" *ngIf="isSubmenuVisible">
                         <li class="nav-item">
                             <a href="/home/produto/" class="nav-link text-secondary">Produtos</a>

@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
     selector: 'app-home',
     standalone: true,
     imports: [
         RouterOutlet,
-        CommonModule
+        CommonModule,
+        RouterLink
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -15,6 +17,20 @@ import { RouterOutlet } from '@angular/router';
 export class HomeComponent {
 
     isSubmenuVisible: boolean = false;
+
+    telas: {
+        nomeTela: string;
+        rota: string;
+    }[] = [];
+
+    constructor(
+        private usuarioService: UsuarioService
+    ) {
+    }
+
+    ngOnInit() {
+        this.listarTelas();
+    }
 
     logout(): void {
         console.log('User logged out');
@@ -31,6 +47,15 @@ export class HomeComponent {
 
     closeSubmenu(): void {
         this.isSubmenuVisible = false;
+    }
+
+    listarTelas() {
+        this.usuarioService.listTelas().subscribe(telas => {
+            this.telas = telas.map(tela => ({
+                nomeTela: tela.nome,
+                rota: tela.rota
+            }));
+        });
     }
 
 }

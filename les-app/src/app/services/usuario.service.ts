@@ -58,4 +58,8 @@ export class UsuarioService {
             }
         ).pipe(take(1));
     }
+
+    listTelas() {
+        return this.httpCliente.get<any[]>('http://localhost:8080/telas', this.apiAuth).pipe(take(1));
+    }
 }

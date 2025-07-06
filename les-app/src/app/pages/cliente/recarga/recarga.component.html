@@ -12,7 +12,7 @@
                 [(ngModel)]="valorAdicionar" />
             <button class="btn btn-danger rounded-pill px-4 shadow-sm"
                 (click)="mostrarOpcoesPagamento = !mostrarOpcoesPagamento">
-                Adicionar Saldo
+                Adicionar Crédito
             </button>
         </div>
 
@@ -39,9 +39,9 @@
         <div class="mb-2">
             <label class="form-label">Valor das dívidas:</label>
             <span class="fw-semibold">R$ {{ valorDividas?.toFixed(2) || '0.00' }}</span>
-            <button class="btn btn-link btn-sm ms-2" (click)="buscarValorDividas()">
+            <!-- <button class="btn btn-link btn-sm ms-2" (click)="buscarValorDividas()">
                 Atualizar
-            </button>
+            </button> -->
         </div>
         <button class="btn btn-outline-success rounded-pill px-4"
             [disabled]="!valorDividas || valorDividas <= 0 || quitando" (click)="quitarDividasCliente()">

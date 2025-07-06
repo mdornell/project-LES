@@ -94,19 +94,15 @@ export class UsuariosComponent {
         this.snackBar.open('Erro ao salvar permissões', '', { duration: 5000 });
     }
 
-    // Carrega permissões dinamicamente do backend
-    carregarPermissoes() {
-        if (!this.usuarioSelected?._id) {
-            this.snackBar.open('Selecione um funcionário para carregar permissões.', 'X', { duration: 5000 });
-            return;
-        }
-        this.permissionService.listarPorFuncionario(this.usuarioSelected._id).subscribe(permissoes => {
-            this.telasPermissoes = permissoes.map(p => ({
-                nomeTela: p.tela?.nome || '',
-                podeVer: p.podeVer || false,
-                podeAdicionar: p.podeAdicionar || false,
-                podeEditar: p.podeEditar || false,
-                podeExcluir: p.podeExcluir || false
+    // Carrega permissões dinamicamente do backend ou lista todas as telas se não houver permissões
+    listarTelas() {
+        this.usuarioService.listTelas().subscribe(telas => {
+            this.telasPermissoes = telas.map(tela => ({
+                nomeTela: tela.nome,
+                podeVer: false,
+                podeAdicionar: false,
+                podeEditar: false,
+                podeExcluir: false
             }));
         });
     }

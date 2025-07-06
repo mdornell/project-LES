@@ -92,7 +92,4 @@ export class ClienteService {
             this.apiAuth
         ).pipe(take(1));
     }
-
-
-
 }

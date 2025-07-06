@@ -33,6 +33,9 @@ export class ClientesAtivosComponent {
 
     ngOnInit(): void {
         this.carregarListaClientes();
+        setInterval(() => {
+            this.carregarListaClientes();
+        }, 10000);
     }
 
     carregarClientes(): void {
