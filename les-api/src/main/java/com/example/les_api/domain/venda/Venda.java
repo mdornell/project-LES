@@ -38,11 +38,12 @@ public class Venda {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ItemVenda> itens;
 
     @ManyToOne
-    @JoinColumn(name = "acesso_id")
+    @JoinColumn(name = "acesso_id", nullable = true) // Permite desvincular o acesso
     private Acesso acesso;
+
 }

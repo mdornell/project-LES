@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.les_api.domain.cliente.Acesso;
 import com.example.les_api.domain.cliente.Cliente;
+import com.example.les_api.domain.recarga.Recarga;
 import com.example.les_api.domain.venda.Venda;
 import com.example.les_api.dto.ClienteDTO;
 import com.example.les_api.dto.ClienteEmAbertoDTO;
 import com.example.les_api.dto.RecargaDTO;
 import com.example.les_api.repository.AcessoRepository;
 import com.example.les_api.repository.ClienteRepository;
+import com.example.les_api.repository.RecargaRepository;
 import com.example.les_api.repository.VendaRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,6 +30,10 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private RecargaRepository recargaRepository;
+
     @Autowired
     private RecargaService recargaService;
 
@@ -86,22 +92,36 @@ public class ClienteService {
         return new ClienteDTO(cliente);
     }
 
+    @Transactional
     public void deletar(Integer clienteId) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Busca todos os acessos vinculados ao cliente
-        List<Acesso> acessos = acessoRepository.findByCliente(cliente);
-
-        // Desvincula o cliente dos acessos
-        for (Acesso acesso : acessos) {
-            acesso.setCliente(null);
+        // 1. Apagar todas as vendas diretamente ligadas ao cliente
+        List<Venda> vendasCliente = vendaRepository.findByCliente(cliente);
+        for (Venda venda : vendasCliente) {
+            // Cascade ALL em itens já cuida do delete
+            vendaRepository.delete(venda);
         }
 
-        acessoRepository.saveAll(acessos);
+        // 2. Apagar todas as vendas associadas a acessos do cliente
+        List<Acesso> acessos = acessoRepository.findByCliente(cliente);
+        for (Acesso acesso : acessos) {
+            List<Venda> vendas = vendaRepository.findByAcesso(acesso);
+            for (Venda venda : vendas) {
+                vendaRepository.delete(venda); // Itens já vão por cascade
+            }
+        }
 
-        // Agora sim, pode excluir o cliente
-        clienteRepository.deleteById(clienteId);
+        // 3. Apagar todos os acessos
+        acessoRepository.deleteAll(acessos);
+
+        // 4. Apagar todas as recargas
+        List<Recarga> recargas = recargaRepository.findByCliente(cliente);
+        recargaRepository.deleteAll(recargas);
+
+        // 5. Por fim, apagar o cliente
+        clienteRepository.delete(cliente);
     }
 
     public List<ClienteDTO> buscarAniversariantes() {

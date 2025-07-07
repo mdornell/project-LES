@@ -23,6 +23,6 @@ public class Recarga {
     private Date dataRecarga;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false) // ou true se quiser permitir cliente nulo
     private Cliente cliente;
 }

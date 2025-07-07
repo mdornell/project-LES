@@ -1,5 +1,6 @@
 package com.example.les_api.repository;
 
+import com.example.les_api.domain.cliente.Cliente;
 import com.example.les_api.domain.recarga.Recarga;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,6 @@ public interface RecargaRepository extends JpaRepository<Recarga, Integer> {
             "GROUP BY FUNCTION('DATE', r.dataRecarga)")
     List<Object[]> totaisPorDia(@Param("inicio") Date inicio, @Param("fim") Date fim);
 
+    List<Recarga> findByCliente(Cliente cliente);
+    
 }

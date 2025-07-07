@@ -6,21 +6,13 @@ import java.util.List;
 
 import com.example.les_api.domain.venda.Venda;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Acesso {
 
     @Id
@@ -36,15 +28,9 @@ public class Acesso {
     private Double valorConsumido;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    // @ManyToOne
-    // @JoinColumn(name = "venda_id")
-    // private Venda venda;
-
-    // lista de vendas
     @OneToMany(mappedBy = "acesso")
     private List<Venda> vendas = new ArrayList<>();
-
 }
